@@ -1,0 +1,165 @@
+/*
+ * @File   : ble.c
+ * @brief  : source file containing function definition for BLE
+ * @Author : Madhukar Arora
+ * @References : Used Silicon Labs Example Provided in Class Lecture 10 as reference.
+ *
+ */
+
+
+#include "ble.h"
+
+#define TICKS_PER_SECOND    (32768)
+
+
+
+
+void measure_temperature(float tempC)
+{
+	uint8_t htm_temperature_buffer[5]; /* Stores the temperature data in the Health Thermometer (HTM) format. */
+	uint8_t flags = 0x00;   /* HTM flags set as 0 for Celsius, no time stamp and no temperature type. */
+
+	uint32_t temperature;   /* Stores the temperature data read from the sensor in the correct format */
+	uint8_t *p = htm_temperature_buffer; /* Pointer to HTM temperature buffer needed for converting values to bitstream. */
+
+	/* Convert flags to bitstream and append them in the HTM temperature data buffer (htm_temperature_buffer) */
+	UINT8_TO_BITSTREAM(p, flags);
+
+
+	/* Convert sensor data to correct temperature format */
+	temperature = FLT_TO_UINT32(tempC * 1000, -3);
+	/* Convert temperature to bitstream and place it in the HTM temperature data buffer (htm_temperature_buffer) */
+	UINT32_TO_BITSTREAM(p, temperature);
+
+	/* Send indication of the temperature in htm_temperature_buffer to all "listening" clients.
+	 * This enables the Health Thermometer in the EFR Connect app to display the temperature.
+	 *  0xFF as connection ID will send indications to all connections. */
+	gecko_cmd_gatt_server_send_characteristic_notification(
+			0xFF, gattdb_temperature_measurement, 5, htm_temperature_buffer);
+}
+
+
+
+
+void ble_EventHandler(struct gecko_cmd_packet* evt){
+
+	static uint8_t connection_handle = 0;
+	int rssi = 0;
+
+
+	/* Handle events */
+	switch (BGLIB_MSG_ID(evt->header)) {
+
+
+	case gecko_evt_system_boot_id: /*indicates device has started and radio is ready*/
+
+		/* Set advertising parameters.
+		 * Advertising minimum and max to 250 ms.
+		 * 250 * 1.6 = 400ms
+		 */
+		gecko_cmd_le_gap_set_advertise_timing(0, 400, 400, 0, 0);
+
+
+
+		/* Start general advertising and enable connections. */
+		gecko_cmd_le_gap_start_advertising(0, le_gap_general_discoverable, le_gap_connectable_scannable);
+		break;
+
+	case gecko_evt_le_connection_opened_id: /*indicates new connection was opened and role of BT Module*/
+
+		LOG_INFO("connection opened\r\n");
+
+		/*EXTRA CREDIT : Enable timer when bluetooth connection opened*/
+		letimer0_Init();
+
+		connection_handle = evt->data.evt_le_connection_opened.connection;
+		//connection interval 75ms, slave latency 300ms. 1.25ms unit
+		gecko_cmd_le_connection_set_parameters(connection_handle,60,60,3,600);
+		break;
+
+	case gecko_evt_le_connection_closed_id: /*indicates connection was closed*/
+
+		/*disable timer when connection closed*/
+		LETIMER_IntDisable(LETIMER0,LETIMER_IEN_UF);
+
+		connection_handle = 0;
+
+		//force radio to idle state and allow device to sleep
+		gecko_cmd_system_halt(1);
+
+		//set global maximum TX power to 0
+		gecko_cmd_system_set_tx_power(TX_PWR_0DB);
+
+		//start advertising with specified discoverable and connectable modes
+		gecko_cmd_system_halt(0);
+		gecko_cmd_le_gap_start_advertising(0,le_gap_general_discoverable,le_gap_connectable_scannable);
+
+		break;
+
+	case gecko_evt_le_connection_rssi_id:/*when RSSI command is completed*/
+		rssi = evt->data.evt_le_connection_rssi.rssi;
+
+		if(rssi > RSSI_NEG35DB){
+			gecko_cmd_system_set_tx_power(TX_PWR_MIN);
+		}
+		else if(rssi > RSSI_NEG45DB && rssi <= RSSI_NEG35DB){
+			gecko_cmd_system_set_tx_power(TX_PWR_NEG20DB);
+		}
+		else if(rssi > RSSI_NEG55DB && rssi <= RSSI_NEG45DB){
+			gecko_cmd_system_set_tx_power(TX_PWR_NEG15DB);
+		}
+		else if(rssi > RSSI_NEG65DB && rssi <= RSSI_NEG55DB){
+			gecko_cmd_system_set_tx_power(TX_PWR_NEG5DB);
+		}
+		else if(rssi > RSSI_NEG75DB && rssi <= RSSI_NEG65DB){
+			gecko_cmd_system_set_tx_power(TX_PWR_0DB);
+		}
+		else if(rssi > RSSI_NEG85DB && rssi <= RSSI_NEG75DB){
+			gecko_cmd_system_set_tx_power(TX_PWR_5DB);
+		}
+		else{
+			gecko_cmd_system_set_tx_power(TX_PWR_MAX);
+		}
+
+		break;
+
+	case gecko_evt_system_external_signal_id:/*indicates external signal has been received*/
+
+		break;
+
+
+
+		/* This event is generated when a connected client has either
+		 * 1) changed a Characteristic Client Configuration, meaning that they have enabled
+		 * or disabled Notifications or Indications, or
+		 * 2) sent a confirmation upon a successful reception of the indication. */
+	case gecko_evt_gatt_server_characteristic_status_id:
+		/* Check that the characteristic in question is temperature - its ID is defined
+		 * in gatt.xml as "temperature_measurement". Also check that status_flags = 1, meaning that
+		 * the characteristic client configuration was changed (notifications or indications
+		 * enabled or disabled). */
+		if ((evt->data.evt_gatt_server_characteristic_status.characteristic == gattdb_temperature_measurement)
+				&& (evt->data.evt_gatt_server_characteristic_status.status_flags == gatt_server_client_config)) {
+			if (evt->data.evt_gatt_server_characteristic_status.client_config_flags == gatt_indication) {
+				/* Indications have been turned ON - start the repeating timer. The 1st parameter '32768'
+				 * tells the timer to run for 1 second (32.768 kHz oscillator), the 2nd parameter is
+				 * the timer handle and the 3rd parameter '0' tells the timer to repeat continuously until
+				 * stopped manually.*/
+				gecko_cmd_hardware_set_soft_timer(TICKS_PER_SECOND, 0, 0);
+			} else if (evt->data.evt_gatt_server_characteristic_status.client_config_flags == gatt_disable) {
+				/* Indications have been turned OFF - stop the timer. */
+				gecko_cmd_hardware_set_soft_timer(0, 0, 0);
+			}
+		}
+		if(evt->data.evt_gatt_server_characteristic_status.status_flags == gatt_server_confirmation)
+		{
+			gecko_cmd_le_connection_get_rssi(evt->data.evt_gatt_server_characteristic_status.connection);
+		}
+		break;
+
+	default:
+		break;
+	}
+}
+
+
