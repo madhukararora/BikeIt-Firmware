@@ -119,7 +119,7 @@ appPlugin: stack_bridge=false
     <characteristic id="pressure" name="Pressure" sourceId="org.bluetooth.characteristic.pressure" uuid="2A6D">
       <informativeText/>
       <value length="4" type="hex" variable_length="false"/>
-      <properties indicate="false" indicate_requirement="excluded" notify="false" notify_requirement="optional" read="true" read_requirement="mandatory" reliable_write="false" reliable_write_requirement="excluded" write="false" write_no_response="false" write_no_response_requirement="excluded" write_requirement="excluded"/>
+      <properties indicate="false" indicate_requirement="excluded" notify="true" notify_requirement="optional" read="true" read_requirement="mandatory" reliable_write="false" reliable_write_requirement="excluded" write="false" write_no_response="false" write_no_response_requirement="excluded" write_requirement="excluded"/>
       <descriptor id="es_measurement_11" name="Environmental Sensing Measurement" sourceId="org.bluetooth.descriptor.es_measurement" uuid="290C">
         <properties read="true" read_requirement="mandatory" write="false" write_requirement="excluded"/>
         <value length="1" type="hex" variable_length="false"/>

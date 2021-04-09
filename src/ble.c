@@ -12,7 +12,29 @@
 #define TICKS_PER_SECOND    (32768)
 
 
+void measure_pressure(float pressPa)
+{
+	uint8_t es_pressure_buffer[4]; /* Stores the temperature data in the Health Thermometer (HTM) format. */
+	//uint8_t flags = 0x00;   /* HTM flags set as 0 for Celsius, no time stamp and no temperature type. */
 
+	uint32_t pressure;   /* Stores the temperature data read from the sensor in the correct format */
+	uint8_t *p = es_pressure_buffer; /* Pointer to HTM temperature buffer needed for converting values to bitstream. */
+
+	/* Convert flags to bitstream and append them in the HTM temperature data buffer (htm_temperature_buffer) */
+	//UINT8_TO_BITSTREAM(p, flags);
+
+
+	/* Convert sensor data to correct pressure format */
+	pressure = FLT_TO_UINT32(pressPa * 1000, -3);
+	/* Convert temperature to bitstream and place it in the ES Pressure data buffer (es_pressure_buffer) */
+	UINT32_TO_BITSTREAM(p, pressure);
+
+	/* Send indication of the temperature in htm_temperature_buffer to all "listening" clients.
+	 * This enables the Environmental Sensing in the EFR Connect app to display the temperature.
+	 *  0xFF as connection ID will send indications to all connections. */
+	gecko_cmd_gatt_server_send_characteristic_notification(
+			0xFF, gattdb_pressure, 5, es_pressure_buffer);
+}
 
 void measure_temperature(float tempC)
 {

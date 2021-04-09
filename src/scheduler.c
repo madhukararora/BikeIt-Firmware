@@ -143,6 +143,8 @@ void process_event(struct gecko_cmd_packet* evt){
 		}
 		break;
 	case POWER_OFF:
+		measure_pressure((float)1.234);
+		measure_temperature((float)1.234);
 		if((evt->data.evt_system_external_signal.extsignals) == I2C_TRANSFER_DONE){
 			sleep_block_off(sleepEM2);
 			NVIC_DisableIRQ(I2C0_IRQn);

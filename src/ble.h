@@ -52,6 +52,7 @@
  */
 void measure_temperature(float tempC);
 
+void measure_pressure(float pressPa);
 
 /**
  * @brief  : ble_EventHandler function to handle the BLE Events
