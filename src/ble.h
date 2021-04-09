@@ -22,7 +22,17 @@
 #include "timers.h"
 #include "log.h"
 
-
+/*
+ * Temporary GNSS packet data struct
+ */
+typedef struct gnss_data
+{
+	int32_t lon;
+	int32_t lat;
+	float fLon;
+	float fLat;
+	int32_t gSpeed;
+} gnss_data;
 
 /*  Macro Definitions for RSSI*/
 #define RSSI_NEG35DB		(-35)
@@ -51,8 +61,19 @@
  * Credits : Used Silicon Labs Example Provided in Class Lecture as reference.
  */
 void measure_temperature(float tempC);
-
+/**
+ * @brief : Function for taking a single pressure measurement with BME280 sensor.
+ * @param : pressPa is the pressure measured using I2C
+ * @return : void
+ */
 void measure_pressure(float pressPa);
+
+/**
+ * @brief : Function for getting GNSS location and speed measurements with uBlox MAX-M8-Q module.
+ * @param : gnss_data* dat is the temporary struct containing GNSS packet data (TBD)
+ * @return : void
+ */
+void measure_navigation(struct gnss_data* dat);
 
 /**
  * @brief  : ble_EventHandler function to handle the BLE Events

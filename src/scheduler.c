@@ -8,7 +8,7 @@
 
 #include "scheduler.h"
 
-
+gnss_data ublox;
 
 static void sleep_block_on(SLEEP_EnergyMode_t sleep_mode){
 	CORE_DECLARE_IRQ_STATE;
@@ -51,6 +51,12 @@ void scheduler_Init(void)
 	temp_Si7021.data_16 = 0;
 	temp_Si7021.temp_code = 0;
 	temp_Si7021.tempC = 0;
+
+	ublox.lat = 400024;
+	ublox.lon = 1051537;
+	ublox.fLat = 400024.0;
+	ublox.fLon = 1051537.0;
+	ublox.gSpeed = 15;
 }
 
 
@@ -143,8 +149,9 @@ void process_event(struct gecko_cmd_packet* evt){
 		}
 		break;
 	case POWER_OFF:
-		measure_pressure((float)1.234);
+		measure_pressure((float)1.2);
 		measure_temperature((float)1.234);
+		measure_navigation(&ublox);
 		if((evt->data.evt_system_external_signal.extsignals) == I2C_TRANSFER_DONE){
 			sleep_block_off(sleepEM2);
 			NVIC_DisableIRQ(I2C0_IRQn);

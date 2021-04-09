@@ -11,29 +11,49 @@
 
 #define TICKS_PER_SECOND    (32768)
 
+void measure_navigation(struct gnss_data* dat)
+{
+	uint8_t ln_buffer[28]; /* Stores the location and navigation data in the Location and Navigation (LN) format. */
+//	uint16_t flags = 0x04;   /* LN Flag set to bit 2 for location present*/
+	uint16_t flags = 0x05;   /* LN Flag set to bit 1 for instantaneous speed and bit 2 for location present*/
+
+	uint16_t groundspeed = (uint16_t)(dat->gSpeed * 100);	// units is 1/100 of a m/s
+	int32_t longitude = dat->lon;   // Stores the longitude data read from the sensor in the correct format
+	int32_t latitude = dat->lat;   // Stores the latitude data read from the sensor in the correct format
+	uint8_t *p = ln_buffer; /* Pointer to LN buffer needed for converting values to bitstream. */
+
+	/* Convert flags to bitstream and append them in the LN data buffer (ln_buffer) */
+	UINT16_TO_BITSTREAM(p, flags);
+
+	/* Convert temperature to bitstream and place it in the ES Pressure data buffer (es_pressure_buffer) */
+	UINT16_TO_BITSTREAM(p, groundspeed);
+	UINT32_TO_BITSTREAM(p, latitude);	// issue with sign conversion
+	UINT32_TO_BITSTREAM(p, longitude);	// issue with sign conversion
+
+	/* Send indication of the temperature in ln_buffer to all "listening" clients.
+	 * This enables the Location and Navigation in the EFR Connect app to display the temperature.
+	 *  0xFF as connection ID will send indications to all connections. */
+	gecko_cmd_gatt_server_send_characteristic_notification(
+			0xFF, gattdb_location_and_speed, 12, ln_buffer);
+}
 
 void measure_pressure(float pressPa)
 {
-	uint8_t es_pressure_buffer[4]; /* Stores the temperature data in the Health Thermometer (HTM) format. */
-	//uint8_t flags = 0x00;   /* HTM flags set as 0 for Celsius, no time stamp and no temperature type. */
+	uint8_t es_pressure_buffer[4]; /* Stores the pressure data in the Environmental Sensing (ES) format. */
 
-	uint32_t pressure;   /* Stores the temperature data read from the sensor in the correct format */
-	uint8_t *p = es_pressure_buffer; /* Pointer to HTM temperature buffer needed for converting values to bitstream. */
+	uint32_t pressure;   /* Stores the pressure data read from the sensor in the correct format */
+	uint8_t *p = es_pressure_buffer; /* Pointer to ES pressure buffer needed for converting values to bitstream. */
 
-	/* Convert flags to bitstream and append them in the HTM temperature data buffer (htm_temperature_buffer) */
-	//UINT8_TO_BITSTREAM(p, flags);
-
-
-	/* Convert sensor data to correct pressure format */
-	pressure = FLT_TO_UINT32(pressPa * 1000, -3);
+	/* Convert sensor data to correct pressure format (resolution of 0.1 Pa) */
+	pressure = FLT_TO_UINT32(pressPa * 10, -1);
 	/* Convert temperature to bitstream and place it in the ES Pressure data buffer (es_pressure_buffer) */
 	UINT32_TO_BITSTREAM(p, pressure);
 
-	/* Send indication of the temperature in htm_temperature_buffer to all "listening" clients.
+	/* Send indication of the temperature in es_pressure_buffer to all "listening" clients.
 	 * This enables the Environmental Sensing in the EFR Connect app to display the temperature.
 	 *  0xFF as connection ID will send indications to all connections. */
 	gecko_cmd_gatt_server_send_characteristic_notification(
-			0xFF, gattdb_pressure, 5, es_pressure_buffer);
+			0xFF, gattdb_pressure, 4, es_pressure_buffer);
 }
 
 void measure_temperature(float tempC)
@@ -46,7 +66,6 @@ void measure_temperature(float tempC)
 
 	/* Convert flags to bitstream and append them in the HTM temperature data buffer (htm_temperature_buffer) */
 	UINT8_TO_BITSTREAM(p, flags);
-
 
 	/* Convert sensor data to correct temperature format */
 	temperature = FLT_TO_UINT32(tempC * 1000, -3);
@@ -118,7 +137,7 @@ void ble_EventHandler(struct gecko_cmd_packet* evt){
 
 		break;
 
-	case gecko_evt_le_connection_rssi_id:/*when RSSI command is completed*/
+	case gecko_evt_le_connection_rssi_id:/*when RSSI command is completed*/ // most likely will want to remove this since we have little gain
 		rssi = evt->data.evt_le_connection_rssi.rssi;
 
 		if(rssi > RSSI_NEG35DB){
