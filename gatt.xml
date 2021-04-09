@@ -59,6 +59,113 @@
     </characteristic>
   </service>
   
+  <!--Location and Navigation-->
+  <service advertise="false" id="location_and_navigation" name="Location and Navigation" requirement="mandatory" sourceId="org.bluetooth.service.location_and_navigation" type="primary" uuid="1819">
+    <informativeText>Abstract:  This service exposes location and navigation-related data from a Location and Navigation sensor intended for outdoor activity applications.  Summary:  The Location and Navigation Service (LN Service) exposes location and navigation-related data from a Location and Navigation sensor (Server) intended for outdoor activity applications.  </informativeText>
+    
+    <!--LN Feature-->
+    <characteristic id="ln_feature" name="LN Feature" sourceId="org.bluetooth.characteristic.ln_feature" uuid="2A6A">
+      <informativeText>Summary:  The LN Feature characteristic is used to report a list of features supported by the device.  </informativeText>
+      <value length="4" type="hex" variable_length="false"/>
+      <properties indicate="false" indicate_requirement="excluded" notify="false" notify_requirement="excluded" read="true" read_requirement="mandatory" reliable_write="false" reliable_write_requirement="excluded" write="false" write_no_response="false" write_no_response_requirement="excluded" write_requirement="excluded"/>
+    </characteristic>
+    
+    <!--Location and Speed Characteristic-->
+    <characteristic id="location_and_speed" name="Location and Speed Characteristic" sourceId="org.bluetooth.characteristic.location_and_speed" uuid="2A67">
+      <informativeText>Summary:  The Location and Speed characteristic is a variable length structure containing a Flags field and, based on the contents of the Flags field, may contain a combination of data fields listed below. Note that it is possible for this characteristic to exceed the default LE MTU size.  </informativeText>
+      <value length="28" type="hex" variable_length="false"/>
+      <properties indicate="false" indicate_requirement="excluded" notify="true" notify_requirement="mandatory" read="false" read_requirement="excluded" reliable_write="false" reliable_write_requirement="excluded" write="false" write_no_response="false" write_no_response_requirement="excluded" write_requirement="excluded"/>
+      
+      <!--Client Characteristic Configuration-->
+      <descriptor id="client_characteristic_configuration" name="Client Characteristic Configuration" sourceId="org.bluetooth.descriptor.gatt.client_characteristic_configuration" uuid="2902">
+        <properties read="true" read_requirement="mandatory" write="true" write_requirement="mandatory"/>
+        <value length="2" type="hex" variable_length="false"/>
+      </descriptor>
+    </characteristic>
+    
+    <!--Position Quality-->
+    <characteristic id="position_quality" name="Position Quality" sourceId="org.bluetooth.characteristic.position_quality" uuid="2A69">
+      <informativeText>Summary:  The Position Quality characteristic is a variable length structure containing a Flags field and at least one of the optional data fields listed below  </informativeText>
+      <value length="16" type="hex" variable_length="false"/>
+      <properties indicate="false" indicate_requirement="excluded" notify="false" notify_requirement="excluded" read="true" read_requirement="mandatory" reliable_write="false" reliable_write_requirement="excluded" write="false" write_no_response="false" write_no_response_requirement="excluded" write_requirement="excluded"/>
+    </characteristic>
+    
+    <!--LN Control Point-->
+    <characteristic id="ln_control_point" name="LN Control Point" sourceId="org.bluetooth.characteristic.ln_control_point" uuid="2A6B">
+      <informativeText>Summary:  The LN Control Point characteristic is used to request a specific function to be executed on the receiving device.  </informativeText>
+      <value length="3" type="hex" variable_length="true"/>
+      <properties indicate="true" indicate_requirement="mandatory" notify="false" notify_requirement="excluded" read="false" read_requirement="excluded" reliable_write="false" reliable_write_requirement="excluded" write="true" write_no_response="false" write_no_response_requirement="excluded" write_requirement="mandatory"/>
+      
+      <!--Client Characteristic Configuration-->
+      <descriptor id="client_characteristic_configuration_2" name="Client Characteristic Configuration" sourceId="org.bluetooth.descriptor.gatt.client_characteristic_configuration" uuid="2902">
+        <properties read="true" read_requirement="mandatory" write="true" write_requirement="mandatory"/>
+        <value length="2" type="hex" variable_length="false"/>
+      </descriptor>
+    </characteristic>
+    
+    <!--Navigation-->
+    <characteristic id="navigation" name="Navigation" sourceId="org.bluetooth.characteristic.navigation" uuid="2A68">
+      <informativeText>Summary:  The Navigation characteristic is a variable length structure containing a Flags field, a Bearing field, a Heading field and, based on the contents of the Flags field, may contain a combination of data fields listed below.  </informativeText>
+      <value length="19" type="hex" variable_length="false"/>
+      <properties indicate="false" indicate_requirement="excluded" notify="true" notify_requirement="mandatory" read="false" read_requirement="excluded" reliable_write="false" reliable_write_requirement="excluded" write="false" write_no_response="false" write_no_response_requirement="excluded" write_requirement="excluded"/>
+      
+      <!--Client Characteristic Configuration-->
+      <descriptor id="client_characteristic_configuration_3" name="Client Characteristic Configuration" sourceId="org.bluetooth.descriptor.gatt.client_characteristic_configuration" uuid="2902">
+        <properties read="true" read_requirement="mandatory" write="true" write_requirement="mandatory"/>
+        <value length="2" type="hex" variable_length="false"/>
+      </descriptor>
+    </characteristic>
+  </service>
+  
+  <!--Environmental Sensing-->
+  <service advertise="false" id="environmental_sensing" name="Environmental Sensing" requirement="mandatory" sourceId="org.bluetooth.service.environmental_sensing" type="primary" uuid="181A">
+    <informativeText>Abstract:  This service exposes measurement data from an environmental sensor intended for sports and fitness applications. A wide range of environmental parameters is supported.  Summary:  The Environmental Sensing Service (ESS) exposes measurement data from an environmental sensor intended for sports and fitness applications. A wide range of environmental parameters is supported.  </informativeText>
+    
+    <!--Descriptor Value Changed-->
+    <characteristic id="descriptor_value_changed" name="Descriptor Value Changed" sourceId="org.bluetooth.characteristic.descriptor_value_changed" uuid="2A7D">
+      <informativeText/>
+      <value length="1" type="hex" variable_length="false"/>
+      <properties indicate="true" indicate_requirement="mandatory" notify="false" notify_requirement="excluded" read="false" read_requirement="excluded" reliable_write="false" reliable_write_requirement="excluded" write="false" write_no_response="false" write_no_response_requirement="excluded" write_requirement="excluded"/>
+    </characteristic>
+    
+    <!--Pressure-->
+    <characteristic id="pressure" name="Pressure" sourceId="org.bluetooth.characteristic.pressure" uuid="2A6D">
+      <informativeText/>
+      <value length="4" type="hex" variable_length="false"/>
+      <properties indicate="false" indicate_requirement="excluded" notify="false" notify_requirement="optional" read="true" read_requirement="mandatory" reliable_write="false" reliable_write_requirement="excluded" write="false" write_no_response="false" write_no_response_requirement="excluded" write_requirement="excluded"/>
+      
+      <!--Environmental Sensing Measurement-->
+      <descriptor id="es_measurement_11" name="Environmental Sensing Measurement" sourceId="org.bluetooth.descriptor.es_measurement" uuid="290C">
+        <properties read="true" read_requirement="mandatory" write="false" write_requirement="excluded"/>
+        <value length="1" type="hex" variable_length="false"/>
+      </descriptor>
+      
+      <!--Environmental Sensing Trigger Setting-->
+      <descriptor id="es_trigger_setting_11" name="Environmental Sensing Trigger Setting" sourceId="org.bluetooth.descriptor.es_trigger_setting" uuid="290D">
+        <properties read="true" read_requirement="mandatory" write="false" write_requirement="c1"/>
+        <value length="1" type="hex" variable_length="false"/>
+      </descriptor>
+      
+      <!--Environmental Sensing Configuration-->
+      <descriptor id="es_configuration_11" name="Environmental Sensing Configuration" sourceId="org.bluetooth.descriptor.es_configuration" uuid="290B">
+        <properties read="true" read_requirement="mandatory" write="false" write_requirement="c1"/>
+        <value length="1" type="hex" variable_length="false"/>
+      </descriptor>
+      
+      <!--Characteristic User Description-->
+      <descriptor id="characteristic_user_description_11" name="Characteristic User Description" sourceId="org.bluetooth.descriptor.gatt.characteristic_user_description" uuid="2901">
+        <properties read="true" read_requirement="mandatory" write="false" write_requirement="optional"/>
+        <value length="1" type="utf-8" variable_length="false"/>
+      </descriptor>
+      
+      <!--Valid Range-->
+      <descriptor id="valid_range_11" name="Valid Range" sourceId="org.bluetooth.descriptor.valid_range" uuid="2906">
+        <properties read="true" read_requirement="mandatory" write="false" write_requirement="excluded"/>
+        <value length="8" type="hex" variable_length="false"/>
+      </descriptor>
+    </characteristic>
+  </service>
+  
   <!--Health Thermometer-->
   <service advertise="false" id="health_thermometer" name="Health Thermometer" requirement="mandatory" sourceId="org.bluetooth.service.health_thermometer" type="primary" uuid="1809">
     <informativeText>Abstract:  The Health Thermometer service exposes temperature and other data from a thermometer intended for healthcare and fitness applications.  Summary:  The Health Thermometer service is instantiated as a Primary Service. There are one or more instantiations of the Health Thermometer service per device claiming conformance with this specification.  </informativeText>
@@ -70,7 +177,7 @@
       <properties indicate="true" indicate_requirement="mandatory" notify="false" notify_requirement="excluded" read="false" read_requirement="excluded" reliable_write="false" reliable_write_requirement="excluded" write="false" write_no_response="false" write_no_response_requirement="excluded" write_requirement="excluded"/>
       
       <!--Client Characteristic Configuration-->
-      <descriptor id="client_characteristic_configuration" name="Client Characteristic Configuration" sourceId="org.bluetooth.descriptor.gatt.client_characteristic_configuration" uuid="2902">
+      <descriptor id="client_characteristic_configuration_4" name="Client Characteristic Configuration" sourceId="org.bluetooth.descriptor.gatt.client_characteristic_configuration" uuid="2902">
         <properties read="true" read_requirement="mandatory" write="true" write_requirement="mandatory"/>
         <value length="2" type="hex" variable_length="false"/>
       </descriptor>
@@ -90,7 +197,7 @@
       <properties indicate="false" indicate_requirement="excluded" notify="true" notify_requirement="mandatory" read="false" read_requirement="excluded" reliable_write="false" reliable_write_requirement="excluded" write="false" write_no_response="false" write_no_response_requirement="excluded" write_requirement="excluded"/>
       
       <!--Client Characteristic Configuration-->
-      <descriptor id="client_characteristic_configuration_2" name="Client Characteristic Configuration" sourceId="org.bluetooth.descriptor.gatt.client_characteristic_configuration" uuid="2902">
+      <descriptor id="client_characteristic_configuration_2_2" name="Client Characteristic Configuration" sourceId="org.bluetooth.descriptor.gatt.client_characteristic_configuration" uuid="2902">
         <properties read="true" read_requirement="mandatory" write="true" write_requirement="mandatory"/>
         <value length="2" type="hex" variable_length="false"/>
       </descriptor>
@@ -103,15 +210,33 @@
       <properties indicate="false" indicate_requirement="optional" notify="false" notify_requirement="excluded" read="true" read_requirement="mandatory" reliable_write="false" reliable_write_requirement="excluded" write="false" write_no_response="false" write_no_response_requirement="excluded" write_requirement="optional"/>
       
       <!--Client Characteristic Configuration-->
-      <descriptor id="client_characteristic_configuration_3" name="Client Characteristic Configuration" sourceId="org.bluetooth.descriptor.gatt.client_characteristic_configuration" uuid="2902">
+      <descriptor id="client_characteristic_configuration_3_2" name="Client Characteristic Configuration" sourceId="org.bluetooth.descriptor.gatt.client_characteristic_configuration" uuid="2902">
         <properties read="true" read_requirement="mandatory" write="true" write_requirement="mandatory"/>
         <value length="2" type="hex" variable_length="false"/>
       </descriptor>
       
       <!--Valid Range-->
-      <descriptor id="valid_range" name="Valid Range" sourceId="org.bluetooth.descriptor.valid_range" uuid="2906">
+      <descriptor id="valid_range_21" name="Valid Range" sourceId="org.bluetooth.descriptor.valid_range" uuid="2906">
         <properties read="true" read_requirement="mandatory" write="false" write_requirement="excluded"/>
         <value length="4" type="hex" variable_length="false"/>
+      </descriptor>
+    </characteristic>
+  </service>
+  
+  <!--LED State-->
+  <service advertise="false" id="generic_attribute" name="LED State" requirement="mandatory" sourceId="org.bluetooth.service.generic_attribute" type="primary" uuid="1801">
+    <informativeText/>
+    
+    <!--LED State-->
+    <characteristic id="led_state" name="LED State" sourceId="org.bluetooth.characteristic.gatt.service_changed" uuid="2A05">
+      <informativeText/>
+      <value length="1" type="hex" variable_length="false"/>
+      <properties indicate="true" indicate_requirement="mandatory" notify="false" notify_requirement="excluded" read="true" read_requirement="excluded" reliable_write="false" reliable_write_requirement="excluded" write="true" write_no_response="false" write_no_response_requirement="excluded" write_requirement="excluded"/>
+      
+      <!--Client Characteristic Configuration-->
+      <descriptor id="client_characteristic_configuration_5" name="Client Characteristic Configuration" sourceId="org.bluetooth.descriptor.gatt.client_characteristic_configuration" uuid="2902">
+        <properties read="true" read_requirement="mandatory" write="true" write_requirement="mandatory"/>
+        <value length="2" type="hex" variable_length="false"/>
       </descriptor>
     </characteristic>
   </service>

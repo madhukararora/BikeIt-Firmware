@@ -1,4 +1,4 @@
-// Copyright 2020 Silicon Laboratories, Inc.
+// Copyright 2021 Silicon Laboratories, Inc.
 //
 //
 
@@ -23,13 +23,26 @@ GATT_DATA(const uint16_t bg_gattdb_data_uuidtable_16_map [])=
     0x2a29,
     0x2a24,
     0x2a23,
+    0x1819,
+    0x2a6a,
+    0x2a67,
+    0x2902,
+    0x2a69,
+    0x2a6b,
+    0x2a68,
+    0x181a,
+    0x2a7d,
+    0x2a6d,
+    0x290c,
+    0x290d,
+    0x290b,
+    0x2901,
+    0x2906,
     0x1809,
     0x2a1c,
-    0x2902,
     0x2a1d,
     0x2a1e,
     0x2a21,
-    0x2906,
     0x1804,
     0x2a07,
     0x1801,
@@ -47,81 +60,216 @@ GATT_DATA(const uint8_t bg_gattdb_data_uuidtable_128_map [])=
 
 
 
-uint8_t bg_gattdb_data_attribute_field_38_data[1]={0x00,};
-GATT_DATA(const struct bg_gattdb_attribute_chrvalue	bg_gattdb_data_attribute_field_38 ) = {
+uint8_t bg_gattdb_data_attribute_field_63_data[1]={0x00,};
+GATT_DATA(const struct bg_gattdb_attribute_chrvalue	bg_gattdb_data_attribute_field_63 ) = {
 	.properties=0x02,
-	.index=10,
+	.index=22,
 	.max_len=1,
-	.data=bg_gattdb_data_attribute_field_38_data,
+	.data=bg_gattdb_data_attribute_field_63_data,
 };
 
-GATT_DATA(const struct bg_gattdb_buffer_with_len	bg_gattdb_data_attribute_field_37 ) = {
+GATT_DATA(const struct bg_gattdb_buffer_with_len	bg_gattdb_data_attribute_field_62 ) = {
 	.len=5,
-	.data={0x02,0x27,0x00,0x07,0x2a,}
+	.data={0x02,0x40,0x00,0x07,0x2a,}
 };
-GATT_DATA(const struct bg_gattdb_buffer_with_len	bg_gattdb_data_attribute_field_36 ) = {
+GATT_DATA(const struct bg_gattdb_buffer_with_len	bg_gattdb_data_attribute_field_61 ) = {
 	.len=2,
 	.data={0x04,0x18,}
 };
-uint8_t bg_gattdb_data_attribute_field_35_data[4]={0x00,0x00,0x00,0x00,};
-GATT_DATA(const struct bg_gattdb_attribute_chrvalue	bg_gattdb_data_attribute_field_35 ) = {
+uint8_t bg_gattdb_data_attribute_field_60_data[4]={0x00,0x00,0x00,0x00,};
+GATT_DATA(const struct bg_gattdb_attribute_chrvalue	bg_gattdb_data_attribute_field_60 ) = {
 	.properties=0x02,
-	.index=9,
+	.index=21,
 	.max_len=4,
+	.data=bg_gattdb_data_attribute_field_60_data,
+};
+
+uint8_t bg_gattdb_data_attribute_field_58_data[2]={0x00,0x00,};
+GATT_DATA(const struct bg_gattdb_attribute_chrvalue	bg_gattdb_data_attribute_field_58 ) = {
+	.properties=0x02,
+	.index=20,
+	.max_len=2,
+	.data=bg_gattdb_data_attribute_field_58_data,
+};
+
+GATT_DATA(const struct bg_gattdb_buffer_with_len	bg_gattdb_data_attribute_field_57 ) = {
+	.len=5,
+	.data={0x02,0x3b,0x00,0x21,0x2a,}
+};
+uint8_t bg_gattdb_data_attribute_field_55_data[17]={0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,};
+GATT_DATA(const struct bg_gattdb_attribute_chrvalue	bg_gattdb_data_attribute_field_55 ) = {
+	.properties=0x10,
+	.index=19,
+	.max_len=17,
+	.data=bg_gattdb_data_attribute_field_55_data,
+};
+
+GATT_DATA(const struct bg_gattdb_buffer_with_len	bg_gattdb_data_attribute_field_54 ) = {
+	.len=5,
+	.data={0x10,0x38,0x00,0x1e,0x2a,}
+};
+uint8_t bg_gattdb_data_attribute_field_53_data[1]={0x00,};
+GATT_DATA(const struct bg_gattdb_attribute_chrvalue	bg_gattdb_data_attribute_field_53 ) = {
+	.properties=0x02,
+	.index=18,
+	.max_len=1,
+	.data=bg_gattdb_data_attribute_field_53_data,
+};
+
+GATT_DATA(const struct bg_gattdb_buffer_with_len	bg_gattdb_data_attribute_field_52 ) = {
+	.len=5,
+	.data={0x02,0x36,0x00,0x1d,0x2a,}
+};
+uint8_t bg_gattdb_data_attribute_field_50_data[17]={0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,};
+GATT_DATA(const struct bg_gattdb_attribute_chrvalue	bg_gattdb_data_attribute_field_50 ) = {
+	.properties=0x20,
+	.index=17,
+	.max_len=17,
+	.data=bg_gattdb_data_attribute_field_50_data,
+};
+
+GATT_DATA(const struct bg_gattdb_buffer_with_len	bg_gattdb_data_attribute_field_49 ) = {
+	.len=5,
+	.data={0x20,0x33,0x00,0x1c,0x2a,}
+};
+GATT_DATA(const struct bg_gattdb_buffer_with_len	bg_gattdb_data_attribute_field_48 ) = {
+	.len=2,
+	.data={0x09,0x18,}
+};
+uint8_t bg_gattdb_data_attribute_field_47_data[8]={0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,};
+GATT_DATA(const struct bg_gattdb_attribute_chrvalue	bg_gattdb_data_attribute_field_47 ) = {
+	.properties=0x02,
+	.index=16,
+	.max_len=8,
+	.data=bg_gattdb_data_attribute_field_47_data,
+};
+
+uint8_t bg_gattdb_data_attribute_field_46_data[1]={0x00,};
+GATT_DATA(const struct bg_gattdb_attribute_chrvalue	bg_gattdb_data_attribute_field_46 ) = {
+	.properties=0x02,
+	.index=15,
+	.max_len=1,
+	.data=bg_gattdb_data_attribute_field_46_data,
+};
+
+uint8_t bg_gattdb_data_attribute_field_45_data[1]={0x00,};
+GATT_DATA(const struct bg_gattdb_attribute_chrvalue	bg_gattdb_data_attribute_field_45 ) = {
+	.properties=0x02,
+	.index=14,
+	.max_len=1,
+	.data=bg_gattdb_data_attribute_field_45_data,
+};
+
+uint8_t bg_gattdb_data_attribute_field_44_data[1]={0x00,};
+GATT_DATA(const struct bg_gattdb_attribute_chrvalue	bg_gattdb_data_attribute_field_44 ) = {
+	.properties=0x02,
+	.index=13,
+	.max_len=1,
+	.data=bg_gattdb_data_attribute_field_44_data,
+};
+
+uint8_t bg_gattdb_data_attribute_field_43_data[1]={0x00,};
+GATT_DATA(const struct bg_gattdb_attribute_chrvalue	bg_gattdb_data_attribute_field_43 ) = {
+	.properties=0x02,
+	.index=12,
+	.max_len=1,
+	.data=bg_gattdb_data_attribute_field_43_data,
+};
+
+uint8_t bg_gattdb_data_attribute_field_42_data[4]={0x00,0x00,0x00,0x00,};
+GATT_DATA(const struct bg_gattdb_attribute_chrvalue	bg_gattdb_data_attribute_field_42 ) = {
+	.properties=0x02,
+	.index=11,
+	.max_len=4,
+	.data=bg_gattdb_data_attribute_field_42_data,
+};
+
+GATT_DATA(const struct bg_gattdb_buffer_with_len	bg_gattdb_data_attribute_field_41 ) = {
+	.len=5,
+	.data={0x02,0x2b,0x00,0x6d,0x2a,}
+};
+uint8_t bg_gattdb_data_attribute_field_39_data[1]={0x00,};
+GATT_DATA(const struct bg_gattdb_attribute_chrvalue	bg_gattdb_data_attribute_field_39 ) = {
+	.properties=0x20,
+	.index=10,
+	.max_len=1,
+	.data=bg_gattdb_data_attribute_field_39_data,
+};
+
+GATT_DATA(const struct bg_gattdb_buffer_with_len	bg_gattdb_data_attribute_field_38 ) = {
+	.len=5,
+	.data={0x20,0x28,0x00,0x7d,0x2a,}
+};
+GATT_DATA(const struct bg_gattdb_buffer_with_len	bg_gattdb_data_attribute_field_37 ) = {
+	.len=2,
+	.data={0x1a,0x18,}
+};
+uint8_t bg_gattdb_data_attribute_field_35_data[19]={0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,};
+GATT_DATA(const struct bg_gattdb_attribute_chrvalue	bg_gattdb_data_attribute_field_35 ) = {
+	.properties=0x10,
+	.index=9,
+	.max_len=19,
 	.data=bg_gattdb_data_attribute_field_35_data,
 };
 
-uint8_t bg_gattdb_data_attribute_field_33_data[2]={0x00,0x00,};
-GATT_DATA(const struct bg_gattdb_attribute_chrvalue	bg_gattdb_data_attribute_field_33 ) = {
-	.properties=0x02,
+GATT_DATA(const struct bg_gattdb_buffer_with_len	bg_gattdb_data_attribute_field_34 ) = {
+	.len=5,
+	.data={0x10,0x24,0x00,0x68,0x2a,}
+};
+struct bg_gattdb_buffer_with_len	bg_gattdb_data_attribute_field_32_data = {
+	.len=0,
+	.data={0x00,0x00,0x00,}
+};
+GATT_DATA(const struct bg_gattdb_attribute_chrvalue	bg_gattdb_data_attribute_field_32 ) = {
+	.properties=0x28,
 	.index=8,
-	.max_len=2,
-	.data=bg_gattdb_data_attribute_field_33_data,
+	.max_len=3,
+	.data_varlen=&bg_gattdb_data_attribute_field_32_data,
 };
 
-GATT_DATA(const struct bg_gattdb_buffer_with_len	bg_gattdb_data_attribute_field_32 ) = {
+GATT_DATA(const struct bg_gattdb_buffer_with_len	bg_gattdb_data_attribute_field_31 ) = {
 	.len=5,
-	.data={0x02,0x22,0x00,0x21,0x2a,}
+	.data={0x28,0x21,0x00,0x6b,0x2a,}
 };
-uint8_t bg_gattdb_data_attribute_field_30_data[17]={0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,};
+uint8_t bg_gattdb_data_attribute_field_30_data[16]={0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,};
 GATT_DATA(const struct bg_gattdb_attribute_chrvalue	bg_gattdb_data_attribute_field_30 ) = {
-	.properties=0x10,
+	.properties=0x02,
 	.index=7,
-	.max_len=17,
+	.max_len=16,
 	.data=bg_gattdb_data_attribute_field_30_data,
 };
 
 GATT_DATA(const struct bg_gattdb_buffer_with_len	bg_gattdb_data_attribute_field_29 ) = {
 	.len=5,
-	.data={0x10,0x1f,0x00,0x1e,0x2a,}
+	.data={0x02,0x1f,0x00,0x69,0x2a,}
 };
-uint8_t bg_gattdb_data_attribute_field_28_data[1]={0x00,};
-GATT_DATA(const struct bg_gattdb_attribute_chrvalue	bg_gattdb_data_attribute_field_28 ) = {
-	.properties=0x02,
+uint8_t bg_gattdb_data_attribute_field_27_data[28]={0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,};
+GATT_DATA(const struct bg_gattdb_attribute_chrvalue	bg_gattdb_data_attribute_field_27 ) = {
+	.properties=0x10,
 	.index=6,
-	.max_len=1,
-	.data=bg_gattdb_data_attribute_field_28_data,
+	.max_len=28,
+	.data=bg_gattdb_data_attribute_field_27_data,
 };
 
-GATT_DATA(const struct bg_gattdb_buffer_with_len	bg_gattdb_data_attribute_field_27 ) = {
+GATT_DATA(const struct bg_gattdb_buffer_with_len	bg_gattdb_data_attribute_field_26 ) = {
 	.len=5,
-	.data={0x02,0x1d,0x00,0x1d,0x2a,}
+	.data={0x10,0x1c,0x00,0x67,0x2a,}
 };
-uint8_t bg_gattdb_data_attribute_field_25_data[17]={0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,};
+uint8_t bg_gattdb_data_attribute_field_25_data[4]={0x00,0x00,0x00,0x00,};
 GATT_DATA(const struct bg_gattdb_attribute_chrvalue	bg_gattdb_data_attribute_field_25 ) = {
-	.properties=0x20,
+	.properties=0x02,
 	.index=5,
-	.max_len=17,
+	.max_len=4,
 	.data=bg_gattdb_data_attribute_field_25_data,
 };
 
 GATT_DATA(const struct bg_gattdb_buffer_with_len	bg_gattdb_data_attribute_field_24 ) = {
 	.len=5,
-	.data={0x20,0x1a,0x00,0x1c,0x2a,}
+	.data={0x02,0x1a,0x00,0x6a,0x2a,}
 };
 GATT_DATA(const struct bg_gattdb_buffer_with_len	bg_gattdb_data_attribute_field_23 ) = {
 	.len=2,
-	.data={0x09,0x18,}
+	.data={0x19,0x18,}
 };
 GATT_DATA(const struct bg_gattdb_attribute_chrvalue	bg_gattdb_data_attribute_field_22 ) = {
 	.properties=0x08,
@@ -233,12 +381,12 @@ GATT_DATA(const struct bg_gattdb_buffer_with_len	bg_gattdb_data_attribute_field_
 GATT_DATA(const struct bg_gattdb_attribute bg_gattdb_data_attributes_map[])={
     {.uuid=0x0000,.permissions=0x801,.caps=0xffff,.datatype=0x00,.constdata=&bg_gattdb_data_attribute_field_0},
     {.uuid=0x0002,.permissions=0x801,.caps=0xffff,.datatype=0x00,.constdata=&bg_gattdb_data_attribute_field_1},
-    {.uuid=0x0014,.permissions=0x800,.caps=0xffff,.datatype=0x01,.dynamicdata=&bg_gattdb_data_attribute_field_2},
-    {.uuid=0x000c,.permissions=0x807,.caps=0xffff,.datatype=0x03,.configdata={.flags=0x02,.index=0x00,.clientconfig_index=0x00}},
+    {.uuid=0x0021,.permissions=0x800,.caps=0xffff,.datatype=0x01,.dynamicdata=&bg_gattdb_data_attribute_field_2},
+    {.uuid=0x000d,.permissions=0x807,.caps=0xffff,.datatype=0x03,.configdata={.flags=0x02,.index=0x00,.clientconfig_index=0x00}},
     {.uuid=0x0002,.permissions=0x801,.caps=0xffff,.datatype=0x00,.constdata=&bg_gattdb_data_attribute_field_4},
-    {.uuid=0x0015,.permissions=0x801,.caps=0xffff,.datatype=0x01,.dynamicdata=&bg_gattdb_data_attribute_field_5},
+    {.uuid=0x0022,.permissions=0x801,.caps=0xffff,.datatype=0x01,.dynamicdata=&bg_gattdb_data_attribute_field_5},
     {.uuid=0x0002,.permissions=0x801,.caps=0xffff,.datatype=0x00,.constdata=&bg_gattdb_data_attribute_field_6},
-    {.uuid=0x0016,.permissions=0x803,.caps=0xffff,.datatype=0x01,.dynamicdata=&bg_gattdb_data_attribute_field_7},
+    {.uuid=0x0023,.permissions=0x803,.caps=0xffff,.datatype=0x01,.dynamicdata=&bg_gattdb_data_attribute_field_7},
     {.uuid=0x0000,.permissions=0x801,.caps=0xffff,.datatype=0x00,.constdata=&bg_gattdb_data_attribute_field_8},
     {.uuid=0x0002,.permissions=0x801,.caps=0xffff,.datatype=0x00,.constdata=&bg_gattdb_data_attribute_field_9},
     {.uuid=0x0004,.permissions=0x803,.caps=0xffff,.datatype=0x01,.dynamicdata=&bg_gattdb_data_attribute_field_10},
@@ -256,20 +404,45 @@ GATT_DATA(const struct bg_gattdb_attribute bg_gattdb_data_attributes_map[])={
     {.uuid=0x8001,.permissions=0x802,.caps=0xffff,.datatype=0x07,.dynamicdata=&bg_gattdb_data_attribute_field_22},
     {.uuid=0x0000,.permissions=0x801,.caps=0xffff,.datatype=0x00,.constdata=&bg_gattdb_data_attribute_field_23},
     {.uuid=0x0002,.permissions=0x801,.caps=0xffff,.datatype=0x00,.constdata=&bg_gattdb_data_attribute_field_24},
-    {.uuid=0x000b,.permissions=0x800,.caps=0xffff,.datatype=0x01,.dynamicdata=&bg_gattdb_data_attribute_field_25},
-    {.uuid=0x000c,.permissions=0x803,.caps=0xffff,.datatype=0x03,.configdata={.flags=0x02,.index=0x05,.clientconfig_index=0x01}},
-    {.uuid=0x0002,.permissions=0x801,.caps=0xffff,.datatype=0x00,.constdata=&bg_gattdb_data_attribute_field_27},
-    {.uuid=0x000d,.permissions=0x801,.caps=0xffff,.datatype=0x01,.dynamicdata=&bg_gattdb_data_attribute_field_28},
+    {.uuid=0x000b,.permissions=0x801,.caps=0xffff,.datatype=0x01,.dynamicdata=&bg_gattdb_data_attribute_field_25},
+    {.uuid=0x0002,.permissions=0x801,.caps=0xffff,.datatype=0x00,.constdata=&bg_gattdb_data_attribute_field_26},
+    {.uuid=0x000c,.permissions=0x800,.caps=0xffff,.datatype=0x01,.dynamicdata=&bg_gattdb_data_attribute_field_27},
+    {.uuid=0x000d,.permissions=0x803,.caps=0xffff,.datatype=0x03,.configdata={.flags=0x01,.index=0x06,.clientconfig_index=0x01}},
     {.uuid=0x0002,.permissions=0x801,.caps=0xffff,.datatype=0x00,.constdata=&bg_gattdb_data_attribute_field_29},
-    {.uuid=0x000e,.permissions=0x800,.caps=0xffff,.datatype=0x01,.dynamicdata=&bg_gattdb_data_attribute_field_30},
-    {.uuid=0x000c,.permissions=0x803,.caps=0xffff,.datatype=0x03,.configdata={.flags=0x01,.index=0x07,.clientconfig_index=0x02}},
-    {.uuid=0x0002,.permissions=0x801,.caps=0xffff,.datatype=0x00,.constdata=&bg_gattdb_data_attribute_field_32},
-    {.uuid=0x000f,.permissions=0x801,.caps=0xffff,.datatype=0x01,.dynamicdata=&bg_gattdb_data_attribute_field_33},
-    {.uuid=0x000c,.permissions=0x803,.caps=0xffff,.datatype=0x03,.configdata={.flags=0x01,.index=0x08,.clientconfig_index=0x03}},
-    {.uuid=0x0010,.permissions=0x801,.caps=0xffff,.datatype=0x01,.dynamicdata=&bg_gattdb_data_attribute_field_35},
-    {.uuid=0x0000,.permissions=0x801,.caps=0xffff,.datatype=0x00,.constdata=&bg_gattdb_data_attribute_field_36},
-    {.uuid=0x0002,.permissions=0x801,.caps=0xffff,.datatype=0x00,.constdata=&bg_gattdb_data_attribute_field_37},
-    {.uuid=0x0012,.permissions=0x801,.caps=0xffff,.datatype=0x01,.dynamicdata=&bg_gattdb_data_attribute_field_38},
+    {.uuid=0x000e,.permissions=0x801,.caps=0xffff,.datatype=0x01,.dynamicdata=&bg_gattdb_data_attribute_field_30},
+    {.uuid=0x0002,.permissions=0x801,.caps=0xffff,.datatype=0x00,.constdata=&bg_gattdb_data_attribute_field_31},
+    {.uuid=0x000f,.permissions=0x802,.caps=0xffff,.datatype=0x02,.dynamicdata=&bg_gattdb_data_attribute_field_32},
+    {.uuid=0x000d,.permissions=0x803,.caps=0xffff,.datatype=0x03,.configdata={.flags=0x02,.index=0x08,.clientconfig_index=0x02}},
+    {.uuid=0x0002,.permissions=0x801,.caps=0xffff,.datatype=0x00,.constdata=&bg_gattdb_data_attribute_field_34},
+    {.uuid=0x0010,.permissions=0x800,.caps=0xffff,.datatype=0x01,.dynamicdata=&bg_gattdb_data_attribute_field_35},
+    {.uuid=0x000d,.permissions=0x803,.caps=0xffff,.datatype=0x03,.configdata={.flags=0x01,.index=0x09,.clientconfig_index=0x03}},
+    {.uuid=0x0000,.permissions=0x801,.caps=0xffff,.datatype=0x00,.constdata=&bg_gattdb_data_attribute_field_37},
+    {.uuid=0x0002,.permissions=0x801,.caps=0xffff,.datatype=0x00,.constdata=&bg_gattdb_data_attribute_field_38},
+    {.uuid=0x0012,.permissions=0x800,.caps=0xffff,.datatype=0x01,.dynamicdata=&bg_gattdb_data_attribute_field_39},
+    {.uuid=0x000d,.permissions=0x807,.caps=0xffff,.datatype=0x03,.configdata={.flags=0x02,.index=0x0a,.clientconfig_index=0x04}},
+    {.uuid=0x0002,.permissions=0x801,.caps=0xffff,.datatype=0x00,.constdata=&bg_gattdb_data_attribute_field_41},
+    {.uuid=0x0013,.permissions=0x801,.caps=0xffff,.datatype=0x01,.dynamicdata=&bg_gattdb_data_attribute_field_42},
+    {.uuid=0x0014,.permissions=0x801,.caps=0xffff,.datatype=0x01,.dynamicdata=&bg_gattdb_data_attribute_field_43},
+    {.uuid=0x0015,.permissions=0x801,.caps=0xffff,.datatype=0x01,.dynamicdata=&bg_gattdb_data_attribute_field_44},
+    {.uuid=0x0016,.permissions=0x801,.caps=0xffff,.datatype=0x01,.dynamicdata=&bg_gattdb_data_attribute_field_45},
+    {.uuid=0x0017,.permissions=0x801,.caps=0xffff,.datatype=0x01,.dynamicdata=&bg_gattdb_data_attribute_field_46},
+    {.uuid=0x0018,.permissions=0x801,.caps=0xffff,.datatype=0x01,.dynamicdata=&bg_gattdb_data_attribute_field_47},
+    {.uuid=0x0000,.permissions=0x801,.caps=0xffff,.datatype=0x00,.constdata=&bg_gattdb_data_attribute_field_48},
+    {.uuid=0x0002,.permissions=0x801,.caps=0xffff,.datatype=0x00,.constdata=&bg_gattdb_data_attribute_field_49},
+    {.uuid=0x001a,.permissions=0x800,.caps=0xffff,.datatype=0x01,.dynamicdata=&bg_gattdb_data_attribute_field_50},
+    {.uuid=0x000d,.permissions=0x803,.caps=0xffff,.datatype=0x03,.configdata={.flags=0x02,.index=0x11,.clientconfig_index=0x05}},
+    {.uuid=0x0002,.permissions=0x801,.caps=0xffff,.datatype=0x00,.constdata=&bg_gattdb_data_attribute_field_52},
+    {.uuid=0x001b,.permissions=0x801,.caps=0xffff,.datatype=0x01,.dynamicdata=&bg_gattdb_data_attribute_field_53},
+    {.uuid=0x0002,.permissions=0x801,.caps=0xffff,.datatype=0x00,.constdata=&bg_gattdb_data_attribute_field_54},
+    {.uuid=0x001c,.permissions=0x800,.caps=0xffff,.datatype=0x01,.dynamicdata=&bg_gattdb_data_attribute_field_55},
+    {.uuid=0x000d,.permissions=0x803,.caps=0xffff,.datatype=0x03,.configdata={.flags=0x01,.index=0x13,.clientconfig_index=0x06}},
+    {.uuid=0x0002,.permissions=0x801,.caps=0xffff,.datatype=0x00,.constdata=&bg_gattdb_data_attribute_field_57},
+    {.uuid=0x001d,.permissions=0x801,.caps=0xffff,.datatype=0x01,.dynamicdata=&bg_gattdb_data_attribute_field_58},
+    {.uuid=0x000d,.permissions=0x803,.caps=0xffff,.datatype=0x03,.configdata={.flags=0x01,.index=0x14,.clientconfig_index=0x07}},
+    {.uuid=0x0018,.permissions=0x801,.caps=0xffff,.datatype=0x01,.dynamicdata=&bg_gattdb_data_attribute_field_60},
+    {.uuid=0x0000,.permissions=0x801,.caps=0xffff,.datatype=0x00,.constdata=&bg_gattdb_data_attribute_field_61},
+    {.uuid=0x0002,.permissions=0x801,.caps=0xffff,.datatype=0x00,.constdata=&bg_gattdb_data_attribute_field_62},
+    {.uuid=0x001f,.permissions=0x801,.caps=0xffff,.datatype=0x01,.dynamicdata=&bg_gattdb_data_attribute_field_63},
 };
 
 GATT_DATA(const uint16_t bg_gattdb_data_attributes_dynamic_mapping_map[])={
@@ -279,23 +452,35 @@ GATT_DATA(const uint16_t bg_gattdb_data_attributes_dynamic_mapping_map[])={
 	0x000b,
 	0x0017,
 	0x001a,
-	0x001d,
+	0x001c,
 	0x001f,
-	0x0022,
+	0x0021,
 	0x0024,
-	0x0027,
+	0x0028,
+	0x002b,
+	0x002c,
+	0x002d,
+	0x002e,
+	0x002f,
+	0x0030,
+	0x0033,
+	0x0036,
+	0x0038,
+	0x003b,
+	0x003d,
+	0x0040,
 };
 
 GATT_DATA(const uint8_t bg_gattdb_data_adv_uuid16_map[])={0x0};
 GATT_DATA(const uint8_t bg_gattdb_data_adv_uuid128_map[])={0x0};
 GATT_HEADER(const struct bg_gattdb_def bg_gattdb_data)={
     .attributes=bg_gattdb_data_attributes_map,
-    .attributes_max=39,
-    .uuidtable_16_size=23,
+    .attributes_max=64,
+    .uuidtable_16_size=36,
     .uuidtable_16=bg_gattdb_data_uuidtable_16_map,
     .uuidtable_128_size=2,
     .uuidtable_128=bg_gattdb_data_uuidtable_128_map,
-    .attributes_dynamic_max=11,
+    .attributes_dynamic_max=23,
     .attributes_dynamic_mapping=bg_gattdb_data_attributes_dynamic_mapping_map,
     .adv_uuid16=bg_gattdb_data_adv_uuid16_map,
     .adv_uuid16_num=0,

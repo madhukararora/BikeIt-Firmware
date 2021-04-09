@@ -1,4 +1,4 @@
-// Copyright 2020 Silicon Laboratories, Inc.
+// Copyright 2021 Silicon Laboratories, Inc.
 //
 //
 
@@ -18,11 +18,23 @@ extern const struct bg_gattdb_def bg_gattdb_data;
 #define gattdb_client_support_features          8
 #define gattdb_device_name                     11
 #define gattdb_ota_control                     23
-#define gattdb_temperature_measurement         26
-#define gattdb_temperature_type                29
-#define gattdb_intermediate_temperature         31
-#define gattdb_measurement_interval            34
-#define gattdb_valid_range                     36
-#define gattdb_tx_power_level                  39
+#define gattdb_ln_feature                      26
+#define gattdb_location_and_speed              28
+#define gattdb_position_quality                31
+#define gattdb_ln_control_point                33
+#define gattdb_navigation                      36
+#define gattdb_descriptor_value_changed         40
+#define gattdb_pressure                        43
+#define gattdb_es_measurement_11               44
+#define gattdb_es_trigger_setting_11           45
+#define gattdb_es_configuration_11             46
+#define gattdb_characteristic_user_description_11         47
+#define gattdb_valid_range_11                  48
+#define gattdb_temperature_measurement         51
+#define gattdb_temperature_type                54
+#define gattdb_intermediate_temperature         56
+#define gattdb_measurement_interval            59
+#define gattdb_valid_range_21                  61
+#define gattdb_tx_power_level                  64
 
 #endif
