@@ -44,6 +44,12 @@
 
 
 
+#define Display_Port  (gpioPortD)
+#define Display_Pin   (15)
+
+#define Extcomin_Port (gpioPortD)
+#define Extcomin_Pin  (13)
+
 void gpioInit()
 {
 	/*
@@ -150,4 +156,21 @@ void sda_disable()
  */
 void scl_disable(){
 	GPIO_PinOutClear(SCL_port,SCL_pin);
+}
+
+
+
+/*Enable the display on the Dev Board*/
+void gpioEnableDisplay(void){
+	GPIO_PinOutSet(Display_Port,Display_Pin);
+}
+
+/*COM Inversion Line. Must be pulsed periodically to prevent static build up in the display*/
+void gpioSetDisplayExtcomin(bool high){
+	if(high){
+		GPIO_PinOutSet(Extcomin_Port,Extcomin_Pin);
+	}
+	else{
+		GPIO_PinOutClear(Extcomin_Port,Extcomin_Pin);
+	}
 }

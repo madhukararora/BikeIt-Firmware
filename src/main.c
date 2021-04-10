@@ -28,26 +28,30 @@
 #include "i2c.h"
 #include "scheduler.h"
 #include "ble.h"
-
+#include "display.h"
 
 int appMain(gecko_configuration_t *config)
 {
 	struct gecko_cmd_packet* evt;
-	//Sleep Functionality
+
+	/* Sleep Functionality */
 	SLEEP_Init_t sleepConfig = {0};
 	SLEEP_InitEx(&sleepConfig);
 
 
-	// Initialize stack
+	/* Initialize stack */
 	gecko_init(config);
-	logInit(); //logging
 
+	/*Enable Loggining, scheduler, GPIO and Oscillator */
+	logInit();
 	scheduler_Init();
-
-	//Modification : Adding the function call gpioInit()
 	gpioInit();
 	oscillatorInit();
-	//letimer0_Init();
+
+	/*Initialize Display*/
+	displayInit();
+	displayPrintf(DISPLAY_ROW_CONNECTION,"BikeIt On");
+	scheduler_Init();
 
 	SLEEP_SleepBlockBegin(sleepEM3);
 	while(1){

@@ -256,7 +256,7 @@
 // [SERIAL]$
 
 // $[SPIDISPLAY]
-
+/*
 #define BSP_SPIDISPLAY_ENABLE_PIN                     (15U)
 #define BSP_SPIDISPLAY_ENABLE_PORT                    (gpioPortD)
 
@@ -282,6 +282,31 @@
 #define BSP_SPIDISPLAY_MOSI_PORT                      (gpioPortC)
 #define BSP_SPIDISPLAY_MOSI_LOC                       (11U)
 
+*/
+#define BSP_SPIDISPLAY_ENABLE_PIN                     (11U)
+#define BSP_SPIDISPLAY_ENABLE_PORT                    (gpioPortD)
+
+#define BSP_SPIDISPLAY_CS_PIN                         (9U)
+#define BSP_SPIDISPLAY_CS_PORT                        (gpioPortC)
+
+#define BSP_SPIDISPLAY_EXTCOMIN_PIN                   (13U)
+#define BSP_SPIDISPLAY_EXTCOMIN_PORT                  (gpioPortF)
+#define BSP_SPIDISPLAY_EXTCOMIN_LOC                   (4U)
+
+#define BSP_SPIDISPLAY_USART                          (HAL_SPI_PORT_USART1)
+#define BSP_SPIDISPLAY_DISPLAY                        (HAL_DISPLAY_SHARP_LS013B7DH03)
+#define BSP_SPIDISPLAY_EXTCOMIN_CHANNEL               (4)
+#define BSP_SPIDISPLAY_CLK_PIN                        (8U)
+#define BSP_SPIDISPLAY_CLK_PORT                       (gpioPortC)
+#define BSP_SPIDISPLAY_CLK_LOC                        (11U)
+
+#define BSP_SPIDISPLAY_MISO_PIN                       (7U)
+#define BSP_SPIDISPLAY_MISO_PORT                      (gpioPortC)
+#define BSP_SPIDISPLAY_MISO_LOC                       (11U)
+
+#define BSP_SPIDISPLAY_MOSI_PIN                       (6U)
+#define BSP_SPIDISPLAY_MOSI_PORT                      (gpioPortC)
+#define BSP_SPIDISPLAY_MOSI_LOC                       (11U)
 // [SPIDISPLAY]$
 
 // $[SPINCP]
