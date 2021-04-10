@@ -24,8 +24,10 @@
 //#define LED0_STRONG
 #define LED1_WEAK
 //#define LED1_STRONG
+#if BOARD
 #define LEDDBG_WEAK
 //#define LEDDBG_STRONG
+#endif
 
 /*
  * MODIFICATION : Modifications made here to include the port and pins of the LED
@@ -43,8 +45,10 @@
 #define SDA_port      (gpioPortC)
 #define SDA_pin       (11)
 
+#if BOARD
 #define LEDDBG_port	(gpioPortB)	// board
-#define LEDDBG_pin	(11)
+#define LEDDBG_pin	(11)	// board
+#endif
 
 #define Display_Port  (gpioPortD)
 #define Display_Pin   (15)
@@ -79,6 +83,7 @@ void gpioInit()
 #endif
 	GPIO_PinModeSet(LED1_port, LED1_pin, gpioModePushPull, false);
 
+#if BOARD
 	/*
 	 * LED DEBUG (board)
 	 */
@@ -90,6 +95,7 @@ void gpioInit()
 	GPIO_DriveStrengthSet(LEDDBG_port, gpioDriveStrengthWeakAlternateWeak);
 #endif
 	GPIO_PinModeSet(LEDDBG_port, LEDDBG_pin, gpioModePushPull, false);
+#endif
 }
 
 /**
@@ -99,8 +105,12 @@ void gpioInit()
  */
 uint8_t get_leds(void)
 {
-//	return ((GPIO_PinOutGet(LED1_port, LED1_pin) << 1 ) | GPIO_PinOutGet(LED0_port, LED0_pin));	// devkit
+#if DEVKIT
+	return ((GPIO_PinOutGet(LED1_port, LED1_pin) << 1 ) | GPIO_PinOutGet(LED0_port, LED0_pin));	// devkit
+#endif
+#if BOARD
 	return GPIO_PinOutGet(LED0_port, LED0_pin);	// board
+#endif
 }
 
 /**
@@ -111,7 +121,7 @@ uint8_t get_leds(void)
  */
 void set_leds(uint8_t control_byte)
 {
-
+#if DEVKIT
   /* LED 0 control */
   if ((control_byte & 0x01) == 1) {
     GPIO_PinOutSet(LED0_port, LED0_pin);
@@ -119,12 +129,21 @@ void set_leds(uint8_t control_byte)
     GPIO_PinOutClear(LED0_port, LED0_pin);
   }
 
-//  /* LED 1 control */
-//  if (((control_byte >> 1) & 0x01) == 1) {
-//    GPIO_PinOutSet(LED1_port, LED1_pin);
-//  } else {
-//    GPIO_PinOutClear(LED1_port, LED1_pin);
-//  }
+  /* LED 1 control */
+  if (((control_byte >> 1) & 0x01) == 1) {
+    GPIO_PinOutSet(LED1_port, LED1_pin);
+  } else {
+    GPIO_PinOutClear(LED1_port, LED1_pin);
+  }
+#endif
+#if BOARD
+  /* LED DEBUG control */
+  if ((control_byte & 0x01) == 1) {
+    GPIO_PinOutSet(LEDDBG_port, LEDDBG_pin);
+  } else {
+    GPIO_PinOutClear(LEDDBG_port, LEDDBG_pin);
+  }
+#endif
 }
 
 void gpioLed0SetOn()
@@ -143,6 +162,7 @@ void gpioLed1SetOff()
 {
 	GPIO_PinOutClear(LED1_port,LED1_pin);
 }
+#if BOARD
 void gpioLedDbgSetOn()
 {
 	GPIO_PinOutSet(LEDDBG_port,LEDDBG_pin);
@@ -151,7 +171,7 @@ void gpioLedDbgSetOff()
 {
 	GPIO_PinOutClear(LEDDBG_port,LEDDBG_pin);
 }
-
+#endif
 /*
  * sets the enable pin to the temperature sensor
  */
