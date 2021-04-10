@@ -35,6 +35,13 @@ extern const struct bg_gattdb_def bg_gattdb_data;
 #define gattdb_intermediate_temperature         57
 #define gattdb_measurement_interval            60
 #define gattdb_valid_range_21                  62
-#define gattdb_tx_power_level                  65
+#define gattdb_digital_out                     65
+#define gattdb_characteristic_presentation_format         67
+#define gattdb_characteristic_user_description         68
+#define gattdb_characteristic_extended_properties         69
+#define gattdb_value_trigger_setting           70
+#define gattdb_time_trigger_setting            71
+#define gattdb_number_of_digitals              72
+#define gattdb_tx_power_level                  75
 
 #endif

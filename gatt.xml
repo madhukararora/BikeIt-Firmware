@@ -77,7 +77,7 @@
       <properties indicate="false" indicate_requirement="excluded" notify="true" notify_requirement="mandatory" read="false" read_requirement="excluded" reliable_write="false" reliable_write_requirement="excluded" write="false" write_no_response="false" write_no_response_requirement="excluded" write_requirement="excluded"/>
       
       <!--Client Characteristic Configuration-->
-      <descriptor id="client_characteristic_configuration" name="Client Characteristic Configuration" sourceId="org.bluetooth.descriptor.gatt.client_characteristic_configuration" uuid="2902">
+      <descriptor id="client_characteristic_configuration_3" name="Client Characteristic Configuration" sourceId="org.bluetooth.descriptor.gatt.client_characteristic_configuration" uuid="2902">
         <properties read="true" read_requirement="mandatory" write="true" write_requirement="mandatory"/>
         <value length="2" type="hex" variable_length="false"/>
       </descriptor>
@@ -97,7 +97,7 @@
       <properties indicate="true" indicate_requirement="mandatory" notify="false" notify_requirement="excluded" read="false" read_requirement="excluded" reliable_write="false" reliable_write_requirement="excluded" write="true" write_no_response="false" write_no_response_requirement="excluded" write_requirement="mandatory"/>
       
       <!--Client Characteristic Configuration-->
-      <descriptor id="client_characteristic_configuration_2" name="Client Characteristic Configuration" sourceId="org.bluetooth.descriptor.gatt.client_characteristic_configuration" uuid="2902">
+      <descriptor id="client_characteristic_configuration_2_2" name="Client Characteristic Configuration" sourceId="org.bluetooth.descriptor.gatt.client_characteristic_configuration" uuid="2902">
         <properties read="true" read_requirement="mandatory" write="true" write_requirement="mandatory"/>
         <value length="2" type="hex" variable_length="false"/>
       </descriptor>
@@ -110,7 +110,7 @@
       <properties indicate="false" indicate_requirement="excluded" notify="true" notify_requirement="mandatory" read="false" read_requirement="excluded" reliable_write="false" reliable_write_requirement="excluded" write="false" write_no_response="false" write_no_response_requirement="excluded" write_requirement="excluded"/>
       
       <!--Client Characteristic Configuration-->
-      <descriptor id="client_characteristic_configuration_3" name="Client Characteristic Configuration" sourceId="org.bluetooth.descriptor.gatt.client_characteristic_configuration" uuid="2902">
+      <descriptor id="client_characteristic_configuration_3_2" name="Client Characteristic Configuration" sourceId="org.bluetooth.descriptor.gatt.client_characteristic_configuration" uuid="2902">
         <properties read="true" read_requirement="mandatory" write="true" write_requirement="mandatory"/>
         <value length="2" type="hex" variable_length="false"/>
       </descriptor>
@@ -197,7 +197,7 @@
       <properties indicate="false" indicate_requirement="excluded" notify="true" notify_requirement="mandatory" read="false" read_requirement="excluded" reliable_write="false" reliable_write_requirement="excluded" write="false" write_no_response="false" write_no_response_requirement="excluded" write_requirement="excluded"/>
       
       <!--Client Characteristic Configuration-->
-      <descriptor id="client_characteristic_configuration_2_2" name="Client Characteristic Configuration" sourceId="org.bluetooth.descriptor.gatt.client_characteristic_configuration" uuid="2902">
+      <descriptor id="client_characteristic_configuration_2_2_2" name="Client Characteristic Configuration" sourceId="org.bluetooth.descriptor.gatt.client_characteristic_configuration" uuid="2902">
         <properties read="true" read_requirement="mandatory" write="true" write_requirement="mandatory"/>
         <value length="2" type="hex" variable_length="false"/>
       </descriptor>
@@ -210,7 +210,7 @@
       <properties indicate="false" indicate_requirement="optional" notify="false" notify_requirement="excluded" read="true" read_requirement="mandatory" reliable_write="false" reliable_write_requirement="excluded" write="false" write_no_response="false" write_no_response_requirement="excluded" write_requirement="optional"/>
       
       <!--Client Characteristic Configuration-->
-      <descriptor id="client_characteristic_configuration_3_2" name="Client Characteristic Configuration" sourceId="org.bluetooth.descriptor.gatt.client_characteristic_configuration" uuid="2902">
+      <descriptor id="client_characteristic_configuration_3_2_2" name="Client Characteristic Configuration" sourceId="org.bluetooth.descriptor.gatt.client_characteristic_configuration" uuid="2902">
         <properties read="true" read_requirement="mandatory" write="true" write_requirement="mandatory"/>
         <value length="2" type="hex" variable_length="false"/>
       </descriptor>
@@ -223,20 +223,56 @@
     </characteristic>
   </service>
   
-  <!--LED State-->
-  <service advertise="false" id="generic_attribute" name="LED State" requirement="mandatory" sourceId="org.bluetooth.service.generic_attribute" type="primary" uuid="1801">
-    <informativeText/>
+  <!--Automation IO-->
+  <service advertise="false" id="automation_io" name="Automation IO" requirement="mandatory" sourceId="org.bluetooth.service.automation_io" type="primary" uuid="1815">
+    <informativeText>Abstract:  The Automation IO service is used to expose the analog inputs/outputs and digital input/outputs of a generic IO module (IOM).  </informativeText>
     
-    <!--LED State-->
-    <characteristic id="led_state" name="LED State" sourceId="org.bluetooth.characteristic.gatt.service_changed" uuid="2A05">
-      <informativeText/>
-      <value length="1" type="hex" variable_length="false"/>
-      <properties indicate="true" indicate_requirement="mandatory" notify="false" notify_requirement="excluded" read="true" read_requirement="excluded" reliable_write="false" reliable_write_requirement="excluded" write="true" write_no_response="false" write_no_response_requirement="excluded" write_requirement="excluded"/>
+    <!--Digital-->
+    <characteristic id="digital_out" name="Digital" sourceId="org.bluetooth.characteristic.digital" uuid="2A56">
+      <informativeText>Summary:  The Digital characteristic is used to expose and change the state of an IO Module's digital signals.  </informativeText>
+      <value length="1" type="user" variable_length="false">00</value>
+      <properties indicate="false" indicate_requirement="optional" notify="false" notify_requirement="optional" read="true" read_requirement="optional" reliable_write="false" reliable_write_requirement="excluded" write="true" write_no_response="true" write_no_response_requirement="optional" write_requirement="optional"/>
       
       <!--Client Characteristic Configuration-->
-      <descriptor id="client_characteristic_configuration_5" name="Client Characteristic Configuration" sourceId="org.bluetooth.descriptor.gatt.client_characteristic_configuration" uuid="2902">
+      <descriptor id="client_characteristic_configuration" name="Client Characteristic Configuration" sourceId="org.bluetooth.descriptor.gatt.client_characteristic_configuration" uuid="2902">
         <properties read="true" read_requirement="mandatory" write="true" write_requirement="mandatory"/>
         <value length="2" type="hex" variable_length="false"/>
+      </descriptor>
+      
+      <!--Characteristic Presentation Format-->
+      <descriptor id="characteristic_presentation_format" name="Characteristic Presentation Format" sourceId="org.bluetooth.descriptor.gatt.characteristic_presentation_format" uuid="2904">
+        <properties read="true" read_requirement="mandatory" write="false" write_requirement="excluded"/>
+        <value length="7" type="hex" variable_length="false"/>
+      </descriptor>
+      
+      <!--Characteristic User Description-->
+      <descriptor id="characteristic_user_description" name="Characteristic User Description" sourceId="org.bluetooth.descriptor.gatt.characteristic_user_description" uuid="2901">
+        <properties read="true" read_requirement="mandatory" write="false" write_requirement="c2"/>
+        <value length="1" type="utf-8" variable_length="false"/>
+      </descriptor>
+      
+      <!--Characteristic Extended Properties-->
+      <descriptor id="characteristic_extended_properties" name="Characteristic Extended Properties" sourceId="org.bluetooth.descriptor.gatt.characteristic_extended_properties" uuid="2900">
+        <properties read="true" read_requirement="mandatory" write="false" write_requirement="excluded"/>
+        <value length="2" type="hex" variable_length="false"/>
+      </descriptor>
+      
+      <!--Value Trigger Setting-->
+      <descriptor id="value_trigger_setting" name="Value Trigger Setting" sourceId="org.bluetooth.descriptor.value_trigger_setting" uuid="290A">
+        <properties read="true" read_requirement="mandatory" write="true" write_requirement="mandatory"/>
+        <value length="8" type="hex" variable_length="false"/>
+      </descriptor>
+      
+      <!--Time Trigger Setting-->
+      <descriptor id="time_trigger_setting" name="Time Trigger Setting" sourceId="org.bluetooth.descriptor.time_trigger_setting" uuid="290E">
+        <properties read="true" read_requirement="mandatory" write="true" write_requirement="mandatory"/>
+        <value length="7" type="hex" variable_length="false"/>
+      </descriptor>
+      
+      <!--Number of Digitals-->
+      <descriptor id="number_of_digitals" name="Number of Digitals" sourceId="org.bluetooth.descriptor.number_of_digitals" uuid="2909">
+        <properties read="true" read_requirement="mandatory" write="false" write_requirement="excluded"/>
+        <value length="1" type="hex" variable_length="false"/>
       </descriptor>
     </characteristic>
   </service>

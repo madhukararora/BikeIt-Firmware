@@ -198,6 +198,19 @@ void ble_EventHandler(struct gecko_cmd_packet* evt){
 		}
 		break;
 
+	case gecko_evt_gatt_server_user_write_request_id:
+		if (evt->data.evt_gatt_server_user_write_request.characteristic == gattdb_digital_out) {
+			// write user supplied value to LEDs
+			set_leds(evt->data.evt_gatt_server_attribute_value.value.data[0]);
+			gecko_cmd_gatt_server_send_user_write_response(evt->data.evt_gatt_server_user_write_request.connection, gattdb_digital_out, bg_err_success);
+		}
+		break;
+	case gecko_evt_gatt_server_user_read_request_id:
+	  {
+	    uint8_t status_byte = get_leds();
+	    gecko_cmd_gatt_server_send_user_read_response(evt->data.evt_gatt_server_user_read_request.connection, gattdb_digital_out, bg_err_success, 1, &status_byte);
+	  }
+	  break;
 	default:
 		break;
 	}

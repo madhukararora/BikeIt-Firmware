@@ -72,6 +72,40 @@ void gpioInit()
 	GPIO_PinModeSet(LED1_port, LED1_pin, gpioModePushPull, false);
 }
 
+/**
+ * @brief get_leds
+ * Get LED statuses as two least significant bits of a return byte.
+ * @return uint8_t LED status byte.
+ */
+uint8_t get_leds(void)
+{
+	return ((GPIO_PinOutGet(LED1_port, LED1_pin) << 1 ) | GPIO_PinOutGet(LED0_port, LED0_pin));
+}
+
+/**
+ * @brief LED control function
+ * bit 0 = LED0
+ * bit 1 = LED1
+ * bits 2-7 = don't care
+ */
+void set_leds(uint8_t control_byte)
+{
+
+  /* LED 0 control */
+  if ((control_byte & 0x01) == 1) {
+    GPIO_PinOutSet(LED0_port, LED0_pin);
+  } else {
+    GPIO_PinOutClear(LED0_port, LED0_pin);
+  }
+
+  /* LED 1 control */
+  if (((control_byte >> 1) & 0x01) == 1) {
+    GPIO_PinOutSet(LED1_port, LED1_pin);
+  } else {
+    GPIO_PinOutClear(LED1_port, LED1_pin);
+  }
+}
+
 void gpioLed0SetOn()
 {
 	GPIO_PinOutSet(LED0_port,LED0_pin);

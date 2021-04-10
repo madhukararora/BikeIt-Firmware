@@ -20,6 +20,7 @@
 #include "em_emu.h"
 #include "em_cmu.h"
 #include "timers.h"
+#include "gpio.h"
 #include "log.h"
 
 /*
