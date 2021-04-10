@@ -24,7 +24,8 @@
 //#define LED0_STRONG
 #define LED1_WEAK
 //#define LED1_STRONG
-
+#define LEDDBG_WEAK
+//#define LEDDBG_STRONG
 
 /*
  * MODIFICATION : Modifications made here to include the port and pins of the LED
@@ -42,7 +43,8 @@
 #define SDA_port      (gpioPortC)
 #define SDA_pin       (11)
 
-
+#define LEDDBG_port	(gpioPortB)	// board
+#define LEDDBG_pin	(11)
 
 #define Display_Port  (gpioPortD)
 #define Display_Pin   (15)
@@ -76,6 +78,18 @@ void gpioInit()
 	GPIO_DriveStrengthSet(LED1_port, gpioDriveStrengthWeakAlternateWeak);
 #endif
 	GPIO_PinModeSet(LED1_port, LED1_pin, gpioModePushPull, false);
+
+	/*
+	 * LED DEBUG (board)
+	 */
+#ifdef LEDDBG_STRONG
+	GPIO_DriveStrengthSet(LED1_port, gpioDriveStrengthStrongAlternateStrong);
+#endif
+
+#ifdef LEDDBG_WEAK
+	GPIO_DriveStrengthSet(LEDDBG_port, gpioDriveStrengthWeakAlternateWeak);
+#endif
+	GPIO_PinModeSet(LEDDBG_port, LEDDBG_pin, gpioModePushPull, false);
 }
 
 /**
@@ -85,7 +99,8 @@ void gpioInit()
  */
 uint8_t get_leds(void)
 {
-	return ((GPIO_PinOutGet(LED1_port, LED1_pin) << 1 ) | GPIO_PinOutGet(LED0_port, LED0_pin));
+//	return ((GPIO_PinOutGet(LED1_port, LED1_pin) << 1 ) | GPIO_PinOutGet(LED0_port, LED0_pin));	// devkit
+	return GPIO_PinOutGet(LED0_port, LED0_pin);	// board
 }
 
 /**
@@ -104,12 +119,12 @@ void set_leds(uint8_t control_byte)
     GPIO_PinOutClear(LED0_port, LED0_pin);
   }
 
-  /* LED 1 control */
-  if (((control_byte >> 1) & 0x01) == 1) {
-    GPIO_PinOutSet(LED1_port, LED1_pin);
-  } else {
-    GPIO_PinOutClear(LED1_port, LED1_pin);
-  }
+//  /* LED 1 control */
+//  if (((control_byte >> 1) & 0x01) == 1) {
+//    GPIO_PinOutSet(LED1_port, LED1_pin);
+//  } else {
+//    GPIO_PinOutClear(LED1_port, LED1_pin);
+//  }
 }
 
 void gpioLed0SetOn()
@@ -127,6 +142,14 @@ void gpioLed1SetOn()
 void gpioLed1SetOff()
 {
 	GPIO_PinOutClear(LED1_port,LED1_pin);
+}
+void gpioLedDbgSetOn()
+{
+	GPIO_PinOutSet(LEDDBG_port,LEDDBG_pin);
+}
+void gpioLedDbgSetOff()
+{
+	GPIO_PinOutClear(LEDDBG_port,LEDDBG_pin);
 }
 
 /*
