@@ -20,25 +20,37 @@
 void gpioInit(void);
 uint8_t get_leds(void);
 void set_leds(uint8_t control_byte);
+#if DEVKIT
 void gpioLed0SetOn(void);
 void gpioLed0SetOff(void);
 void gpioLed1SetOn(void);
 void gpioLed1SetOff(void);
+
+void si7021_enable(void);
+void si7021_disable(void);
+void sda_disable(void);
+void scl_disable(void);
+#endif
 #if BOARD
 void gpioLedDbgSetOn(void);
 void gpioLedDbgSetOff(void);
+void gpioPmuxD1SetOn(void);
+void gpioPmuxD1SetOff(void);
 void gpioGpsToggleSetOn(void);
 void gpioGpsToggleSetOff(void);
 void gpioGpsResetSetOn(void);
 void gpioGpsResetSetOff(void);
 void gpioGpsExtIntSetOn(void);
 void gpioGpsExtIntSetOff(void);
+void gpioImuResetSetOn(void);
+void gpioImuResetSetOff(void);
+void gpioGpsExtIntRead(void);
 void gpioSetDisplayExtmode(bool high);
+void bmeSDADisable(void);
+void bmeSCLDisable(void);
+void bnoSDADisable(void);
+void bnoSCLDisable(void);
 #endif
-void si7021_enable(void);
-void si7021_disable(void);
-void sda_disable(void);
-void scl_disable(void);
 
 void gpioEnableDisplay(void);
 void gpioSetDisplayExtcomin(bool high);
