@@ -25,8 +25,14 @@ void gpioLed0SetOff(void);
 void gpioLed1SetOn(void);
 void gpioLed1SetOff(void);
 #if BOARD
-void gpioLedDbgSetOn(void);	// board
-void gpioLedDbgSetOff(void);	// board
+void gpioLedDbgSetOn(void);
+void gpioLedDbgSetOff(void);
+void gpioGpsToggleSetOn(void);
+void gpioGpsToggleSetOff(void);
+void gpioGpsResetSetOn(void);
+void gpioGpsResetSetOff(void);
+void gpioGpsExtIntSetOn(void);
+void gpioGpsExtIntSetOff(void);
 #endif
 void si7021_enable(void);
 void si7021_disable(void);

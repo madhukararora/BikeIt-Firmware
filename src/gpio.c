@@ -27,6 +27,12 @@
 #if BOARD
 #define LEDDBG_WEAK
 //#define LEDDBG_STRONG
+#define GPSTOGGLE_WEAK
+//#define GPSTOGGLE_STRONG
+#define GPSRESET_WEAK
+//#define GPSRESET_STRONG
+#define GPSEXTINT_WEAK
+//#define GPSEXTINT_STRONG
 #endif
 
 /*
@@ -48,6 +54,15 @@
 #if BOARD
 #define LEDDBG_port	(gpioPortB)	// board
 #define LEDDBG_pin	(11)	// board
+
+#define GPSTOGGLE_port	(gpioPortF)
+#define GPSTOGGLE_pin	(5)
+
+#define GPSRESET_port	(gpioPortF)
+#define GPSRESET_pin	(6)
+
+#define GPSEXTINT_port	(gpioPortF)
+#define GPSEXTINT_pin	(7)
 #endif
 
 #define Display_Port  (gpioPortD)
@@ -95,6 +110,42 @@ void gpioInit()
 	GPIO_DriveStrengthSet(LEDDBG_port, gpioDriveStrengthWeakAlternateWeak);
 #endif
 	GPIO_PinModeSet(LEDDBG_port, LEDDBG_pin, gpioModePushPull, false);
+
+	/*
+	 * GPS TOGGLE (board)
+	 */
+#ifdef GPSTOGGLE_STRONG
+	GPIO_DriveStrengthSet(LED1_port, gpioDriveStrengthStrongAlternateStrong);
+#endif
+
+#ifdef GPSTOGGLE_WEAK
+	GPIO_DriveStrengthSet(GPSTOGGLE_port, gpioDriveStrengthWeakAlternateWeak);
+#endif
+	GPIO_PinModeSet(GPSTOGGLE_port, GPSTOGGLE_pin, gpioModePushPull, false);
+
+	/*
+	 * GPS RESET_N (board) GPS RESET_N pin is pulled up internally
+	 */
+#ifdef GPSRESET_STRONG
+	GPIO_DriveStrengthSet(GPSRESET_port, gpioDriveStrengthStrongAlternateStrong);
+#endif
+
+#ifdef GPSRESET_WEAK
+	GPIO_DriveStrengthSet(GPSRESET_port, gpioDriveStrengthWeakAlternateWeak);
+#endif
+	GPIO_PinModeSet(GPSRESET_port, GPSRESET_pin, gpioModePushPull, false);	// may need different mode than gpioModePushPull
+
+	/*
+	 * GPS EXTINT (board) leave open if unused
+	 */
+#ifdef GPSEXTINT_STRONG
+	GPIO_DriveStrengthSet(GPSEXTINT_port, gpioDriveStrengthStrongAlternateStrong);
+#endif
+
+#ifdef GPSEXTINT_WEAK
+	GPIO_DriveStrengthSet(GPSEXTINT_port, gpioDriveStrengthWeakAlternateWeak);
+#endif
+	GPIO_PinModeSet(GPSEXTINT_port, GPSEXTINT_pin, gpioModePushPull, false);
 #endif
 }
 
@@ -170,6 +221,33 @@ void gpioLedDbgSetOn()
 void gpioLedDbgSetOff()
 {
 	GPIO_PinOutClear(LEDDBG_port,LEDDBG_pin);
+}
+
+void gpioGpsToggleSetOn()
+{
+	GPIO_PinOutSet(GPSTOGGLE_port,GPSTOGGLE_pin);
+}
+void gpioGpsToggleSetOff()
+{
+	GPIO_PinOutClear(GPSTOGGLE_port,GPSTOGGLE_pin);
+}
+// RESET_N pin is internally pulled up so MCU pin output should be pulled down
+void gpioGpsResetSetOn()
+{
+	GPIO_PinOutSet(GPSRESET_port,GPSRESET_pin);
+}
+void gpioGpsResetSetOff()
+{
+	GPIO_PinOutClear(GPSRESET_port,GPSRESET_port);
+}
+// RESET_N pin should be left open if unused
+void gpioGpsExtIntSetOn()
+{
+	GPIO_PinOutSet(GPSEXTINT_port,GPSEXTINT_pin);
+}
+void gpioGpsExtIntSetOff()
+{
+	GPIO_PinOutClear(GPSEXTINT_port,GPSEXTINT_port);
 }
 #endif
 /*
