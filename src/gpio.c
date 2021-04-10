@@ -63,13 +63,23 @@
 
 #define GPSEXTINT_port	(gpioPortF)
 #define GPSEXTINT_pin	(7)
+
+#define DISP_port  (gpioPortC)
+#define DISP_pin   (7)
+
+#define EXTCOMIN_port (gpioPortC)
+#define EXTCOMIN_pin  (8)
+
+#define EXTMODE_port (gpioPortC)
+#define EXTMODE_pin  (6)
 #endif
+#if DEVKIT
+#define DISP_port  (gpioPortD)
+#define DISP_pin   (15)
 
-#define Display_Port  (gpioPortD)
-#define Display_Pin   (15)
-
-#define Extcomin_Port (gpioPortD)
-#define Extcomin_Pin  (13)
+#define EXTCOMIN_port (gpioPortD)
+#define EXTCOMIN_pin  (13)
+#endif
 
 void gpioInit()
 {
@@ -281,17 +291,29 @@ void scl_disable(){
 
 
 
-/*Enable the display on the Dev Board*/
+/*Enable the display on the Devkit or Board*/
 void gpioEnableDisplay(void){
-	GPIO_PinOutSet(Display_Port,Display_Pin);
+	GPIO_PinOutSet(DISP_port,DISP_pin);
 }
 
 /*COM Inversion Line. Must be pulsed periodically to prevent static build up in the display*/
 void gpioSetDisplayExtcomin(bool high){
 	if(high){
-		GPIO_PinOutSet(Extcomin_Port,Extcomin_Pin);
+		GPIO_PinOutSet(EXTCOMIN_port,EXTCOMIN_pin);
 	}
 	else{
-		GPIO_PinOutClear(Extcomin_Port,Extcomin_Pin);
+		GPIO_PinOutClear(EXTCOMIN_port,EXTCOMIN_pin);
 	}
 }
+
+#if BOARD
+/*COM Inversion Line Mode Switch. Default: Set High to enable SW COM Inversion. Set Low for SPI HW COM Inversion*/
+void gpioSetDisplayExtmode(bool high){
+	if(high){
+		GPIO_PinOutSet(EXTMODE_port,EXTMODE_pin);
+	}
+	else{
+		GPIO_PinOutClear(EXTMODE_port,EXTMODE_pin);
+	}
+}
+#endif

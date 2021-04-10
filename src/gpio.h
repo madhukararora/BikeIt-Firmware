@@ -33,6 +33,7 @@ void gpioGpsResetSetOn(void);
 void gpioGpsResetSetOff(void);
 void gpioGpsExtIntSetOn(void);
 void gpioGpsExtIntSetOff(void);
+void gpioSetDisplayExtmode(bool high);
 #endif
 void si7021_enable(void);
 void si7021_disable(void);
