@@ -52,11 +52,11 @@ void scheduler_Init(void)
 	temp_Si7021.temp_code = 0;
 	temp_Si7021.tempC = 0;
 
-	ublox.lat = 400024;
-	ublox.lon = 1051537;
-	ublox.fLat = 400024.0;
-	ublox.fLon = 1051537.0;
-	ublox.gSpeed = 15;
+	ublox.lat = 3999334;
+	ublox.lon = -10525409;
+	ublox.fLat = 3999334.0;
+	ublox.fLon = -10525409.0;
+	ublox.gSpeed = 16;
 }
 
 

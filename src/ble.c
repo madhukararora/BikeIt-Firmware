@@ -17,7 +17,7 @@ void measure_navigation(struct gnss_data* dat)
 //	uint16_t flags = 0x04;   /* LN Flag set to bit 2 for location present*/
 	uint16_t flags = 0x05;   /* LN Flag set to bit 1 for instantaneous speed and bit 2 for location present*/
 
-	uint16_t groundspeed = (uint16_t)(dat->gSpeed * 100);	// units is 1/100 of a m/s
+	uint16_t groundspeed = (uint16_t)(dat->gSpeed);	// units is 1/100 of a m/s
 	int32_t longitude = dat->lon;   // Stores the longitude data read from the sensor in the correct format
 	int32_t latitude = dat->lat;   // Stores the latitude data read from the sensor in the correct format
 	uint8_t *p = ln_buffer; /* Pointer to LN buffer needed for converting values to bitstream. */
@@ -45,7 +45,7 @@ void measure_pressure(float pressPa)
 	uint8_t *p = es_pressure_buffer; /* Pointer to ES pressure buffer needed for converting values to bitstream. */
 
 	/* Convert sensor data to correct pressure format (resolution of 0.1 Pa) */
-	pressure = FLT_TO_UINT32(pressPa * 10, -1);
+	pressure = FLT_TO_UINT32(pressPa * 10, 0);
 	/* Convert temperature to bitstream and place it in the ES Pressure data buffer (es_pressure_buffer) */
 	UINT32_TO_BITSTREAM(p, pressure);
 

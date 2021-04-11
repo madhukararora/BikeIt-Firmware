@@ -256,7 +256,7 @@
 // [SERIAL]$
 
 // $[SPIDISPLAY]
-/*
+
 #define BSP_SPIDISPLAY_ENABLE_PIN                     (15U)
 #define BSP_SPIDISPLAY_ENABLE_PORT                    (gpioPortD)
 
@@ -282,7 +282,7 @@
 #define BSP_SPIDISPLAY_MOSI_PORT                      (gpioPortC)
 #define BSP_SPIDISPLAY_MOSI_LOC                       (11U)
 
-*/
+/*
 #define BSP_SPIDISPLAY_ENABLE_PIN                     (11U)
 #define BSP_SPIDISPLAY_ENABLE_PORT                    (gpioPortD)
 
@@ -308,7 +308,7 @@
 #define BSP_SPIDISPLAY_MOSI_PORT                      (gpioPortC)
 #define BSP_SPIDISPLAY_MOSI_LOC                       (11U)
 // [SPIDISPLAY]$
-
+*/
 // $[SPINCP]
 #define BSP_SPINCP_NWAKE_PIN                          (7U)
 #define BSP_SPINCP_NWAKE_PORT                         (gpioPortF)
