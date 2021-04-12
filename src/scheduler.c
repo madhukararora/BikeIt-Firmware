@@ -39,6 +39,21 @@ static bool scheduler_ExternalSignalPresent(struct gecko_cmd_packet* evt,schedul
 	}
 }
 
+/***************************************************************************//**
+ *  Handling of external signal events.
+ *
+ *  @param[in] signal  External signal handle that is serviced by this function.
+ ******************************************************************************/
+void handle_external_signal_event(uint8_t signal){
+//	printf("Signal is %x\r\n", signal);
+	if (signal & EXT_SIGNAL_IMU_WAKEUP) {
+		CORE_DECLARE_IRQ_STATE;
+		CORE_ENTER_CRITICAL();
+//		printf("IMU wakeup\r\n");
+		CORE_EXIT_CRITICAL();
+	}
+}
+
 /*
  * function sets the default value of the eventFlag
  * and the default event state
@@ -119,7 +134,9 @@ void process_event(struct gecko_cmd_packet* evt){
 		if((evt->data.evt_system_external_signal.extsignals) == TIMER_UF){
 			CMU_ClockEnable(cmuClock_I2C0,true);
 			i2cInit();
+#if DEVKIT
 			si7021_enable();
+#endif
 			nextState = WRITE_BEGIN;
 			timerWaitUs(80000);
 		}
@@ -160,13 +177,16 @@ void process_event(struct gecko_cmd_packet* evt){
 			LOG_INFO("Temperature (degC) : %f C\n",temp_Si7021.tempC);
 			LOG_INFO("buffer : %x C\n",temp_Si7021.temp_code);
 			measure_temperature(temp_Si7021.tempC);
+#if DEVKIT
 			si7021_disable();
+#endif
 			I2C_Reset(I2C0);
 			I2C_Enable(I2C0,false);
 			CMU_ClockEnable(cmuClock_I2C0,false);
+#if DEVKIT
 			scl_disable();
 			sda_disable();
-
+#endif
 			nextState = POWER_ON;
 		}
 		break;

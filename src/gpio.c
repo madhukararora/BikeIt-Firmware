@@ -12,6 +12,8 @@
  *      NOTE : All modifications made to the starter code are commented with the Modification label and a description.
  */
 #include "gpio.h"
+#include <gpiointerrupt.h>
+#include "native_gecko.h"
 #include "em_gpio.h"
 #include <string.h>
 
@@ -130,6 +132,7 @@
 
 void gpioInit()
 {
+#if DEVKIT
 	/*
 	 * LED 0
 	 */
@@ -154,7 +157,7 @@ void gpioInit()
 	GPIO_DriveStrengthSet(LED1_port, gpioDriveStrengthWeakAlternateWeak);
 #endif
 	GPIO_PinModeSet(LED1_port, LED1_pin, gpioModePushPull, false);
-
+#endif
 #if BOARD
 	/*
 	 * PMUX D1 (board)
@@ -225,7 +228,7 @@ void gpioInit()
 #ifdef IMURESET_WEAK
 	GPIO_DriveStrengthSet(IMURESET_port, gpioDriveStrengthWeakAlternateWeak);
 #endif
-	GPIO_PinModeSet(IMURESET_port, IMURESET_pin, gpioModePushPull, false);	// may need different mode than gpioModePushPull
+	GPIO_PinModeSet(IMURESET_port, IMURESET_pin, gpioModePushPull, true);	// may need different mode than gpioModePushPull and high idle
 
 	/*
 	 * IMU EXTINT (not actually EXT) (board) is output to MCU
@@ -235,8 +238,8 @@ void gpioInit()
 	/*
 	 * PB[0:1] are pushbutton inputs
 	 */
-	GPIO_PinModeSet(PB0_port, PB0_pin, gpioModeInput, false);
-	GPIO_PinModeSet(PB1_port, PB1_pin, gpioModeInput, false);
+	GPIO_PinModeSet(PB0_port, PB0_pin, gpioModeInputPull, true);
+	GPIO_PinModeSet(PB1_port, PB1_pin, gpioModeInputPull, true);
 #endif
 
 }
@@ -252,7 +255,7 @@ uint8_t get_leds(void)
 	return ((GPIO_PinOutGet(LED1_port, LED1_pin) << 1 ) | GPIO_PinOutGet(LED0_port, LED0_pin));	// devkit
 #endif
 #if BOARD
-	return GPIO_PinOutGet(LED0_port, LED0_pin);	// board
+	return GPIO_PinOutGet(LEDDBG_port, LEDDBG_pin);	// board
 #endif
 }
 
@@ -426,6 +429,34 @@ void bnoSCLDisable()
 {
 	GPIO_PinOutClear(SCLBNO_port,SCLBNO_pin);
 }
+
+/***************************************************************************//**
+ * This is a callback function that is invoked each time a GPIO interrupt
+ * in the IMU occurs. Pin number is passed as parameter.
+ *
+ * @param[in] pin  Pin number where interrupt occurs
+ *
+ * @note This function is called from ISR context and therefore it is
+ *       not possible to call any BGAPI functions directly. The button state
+ *       change is signaled to the application using gecko_external_signal()
+ *       that will generate an event gecko_evt_system_external_signal_id
+ *       which is then handled in the main loop.
+ ******************************************************************************/
+void bnoInterrupt(uint8_t pin)
+{
+	if (GPIO_PinInGet(IMUEXTINT_port, IMUEXTINT_pin) == 1) {
+		gecko_external_signal(EXT_SIGNAL_IMU_WAKEUP);
+	}
+}
+
+void bnoEnableInterrupts()
+{
+	GPIOINT_Init();
+
+	GPIO_ExtIntConfig(IMUEXTINT_port, IMUEXTINT_pin, IMUEXTINT_pin, true, false, true);
+
+	GPIOINT_CallbackRegister(IMUEXTINT_pin, bnoInterrupt);
+}
 #endif
 
 /*Enable the display on the Devkit or Board*/
@@ -453,6 +484,7 @@ void gpioSetDisplayExtmode(bool high){
 		GPIO_PinOutClear(EXTMODE_port,EXTMODE_pin);
 	}
 }
+
 
 //GPIO_DbgLocationSet();	// Sets the pin location of the debug pins (Serial Wire interface). Should be 0 (PF2). References DBG_SWOEnable() in em_dbg.c
 //GPIO_DbgSWDClkEnable();	// Enable/disable serial wire clock pin.

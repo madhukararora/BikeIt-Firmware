@@ -165,7 +165,8 @@ void ble_EventHandler(struct gecko_cmd_packet* evt){
 		break;
 
 	case gecko_evt_system_external_signal_id:/*indicates external signal has been received*/
-
+		// handle external event from IMU
+		handle_external_signal_event(evt->data.evt_system_external_signal.extsignals);
 		break;
 
 

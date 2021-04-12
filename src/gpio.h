@@ -17,6 +17,8 @@
 #define BOARD 0
 #define DEVKIT 1
 
+#define EXT_SIGNAL_IMU_WAKEUP 0x01
+
 void gpioInit(void);
 uint8_t get_leds(void);
 void set_leds(uint8_t control_byte);
@@ -50,6 +52,8 @@ void bmeSDADisable(void);
 void bmeSCLDisable(void);
 void bnoSDADisable(void);
 void bnoSCLDisable(void);
+void bnoInterrupt(uint8_t pin);
+void bnoEnableInterrupts(void);
 #endif
 
 void gpioEnableDisplay(void);

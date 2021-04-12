@@ -83,4 +83,10 @@ void measure_navigation(struct gnss_data* dat);
  */
 void ble_EventHandler(struct gecko_cmd_packet* evt);
 
+/***************************************************************************//**
+ *  Handling of external signal events.
+ *
+ *  @param[in] signal  External signal handle that is serviced by this function.
+ ******************************************************************************/
+void handle_external_signal_event(uint8_t signal);
 #endif /* SRC_BLE_H_ */

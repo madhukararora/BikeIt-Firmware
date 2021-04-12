@@ -90,5 +90,11 @@ void scheduler_SetEvent(uint32_t event);
  */
 void process_event(struct gecko_cmd_packet* evt);
 
+/***************************************************************************//**
+ *  Handling of external signal events.
+ *
+ *  @param[in] signal  External signal handle that is serviced by this function.
+ ******************************************************************************/
+void handle_external_signal_event(uint8_t signal);
 
 #endif /* SRC_SCHEDULER_H_ */
