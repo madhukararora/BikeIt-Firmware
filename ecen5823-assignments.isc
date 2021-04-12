@@ -73,7 +73,7 @@ appPlugin: stack_bridge=false
     <informativeText>Abstract:  This service exposes location and navigation-related data from a Location and Navigation sensor intended for outdoor activity applications.  Summary:  The Location and Navigation Service (LN Service) exposes location and navigation-related data from a Location and Navigation sensor (Server) intended for outdoor activity applications.  </informativeText>
     <characteristic id="ln_feature" name="LN Feature" sourceId="org.bluetooth.characteristic.ln_feature" uuid="2A6A">
       <informativeText>Summary:  The LN Feature characteristic is used to report a list of features supported by the device.  </informativeText>
-      <value length="4" type="hex" variable_length="false"/>
+      <value length="4" type="hex" variable_length="false">0x05</value>
       <properties indicate="false" indicate_requirement="excluded" notify="false" notify_requirement="excluded" read="true" read_requirement="mandatory" reliable_write="false" reliable_write_requirement="excluded" write="false" write_no_response="false" write_no_response_requirement="excluded" write_requirement="excluded"/>
     </characteristic>
     <characteristic id="location_and_speed" name="Location and Speed Characteristic" sourceId="org.bluetooth.characteristic.location_and_speed" uuid="2A67">
