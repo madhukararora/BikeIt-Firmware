@@ -124,10 +124,10 @@
 #endif
 #if DEVKIT
 #define DISP_port  (gpioPortD)
-#define DISP_pin   (15)
+#define DISP_pin   (11)
 
-#define EXTCOMIN_port (gpioPortD)
-#define EXTCOMIN_pin  (13)
+#define EXTCOMIN_port (gpioPortF)
+#define EXTCOMIN_pin  (3)
 #endif
 
 void gpioInit()
