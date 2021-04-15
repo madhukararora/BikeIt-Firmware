@@ -15,6 +15,7 @@
 #include "i2c.h"
 #include "sleep.h"
 #include "ble.h"
+#include "leuart.h"
 
 
 

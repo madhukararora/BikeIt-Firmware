@@ -29,6 +29,7 @@
 #include "scheduler.h"
 #include "ble.h"
 #include "display.h"
+#include "leuart.h"
 
 int appMain(gecko_configuration_t *config)
 {
@@ -37,7 +38,6 @@ int appMain(gecko_configuration_t *config)
 	/* Sleep Functionality */
 	SLEEP_Init_t sleepConfig = {0};
 	SLEEP_InitEx(&sleepConfig);
-
 
 	/* Initialize stack */
 	gecko_init(config);
@@ -48,12 +48,14 @@ int appMain(gecko_configuration_t *config)
 	gpioInit();
 	oscillatorInit();
 
+//	initDMA();
+
 	/*Initialize Display*/
 	displayInit();
 	displayPrintf(DISPLAY_ROW_CONNECTION,"BikeIt On");
 	scheduler_Init();
 
-	SLEEP_SleepBlockBegin(sleepEM3);
+//	SLEEP_SleepBlockBegin(sleepEM3);
 	while(1){
 		if(!gecko_event_pending()){
 			logFlush();
