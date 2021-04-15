@@ -8,7 +8,6 @@
 
 #include "scheduler.h"
 
-gnss_data ublox;
 
 static void sleep_block_on(SLEEP_EnergyMode_t sleep_mode){
 	CORE_DECLARE_IRQ_STATE;
@@ -60,12 +59,6 @@ void scheduler_Init(void)
 	temp_Si7021.data_16 = 0;
 	temp_Si7021.temp_code = 0;
 	temp_Si7021.tempC = 0;
-
-	ublox.lat = 3999334;
-	ublox.lon = -10525409;
-	ublox.fLat = 3999334.0;
-	ublox.fLon = -10525409.0;
-	ublox.gSpeed = 16;
 }
 
 
@@ -113,7 +106,7 @@ bool scheduler_EventsPresent(void){
 		return false;
 }
 
-extern UARTDRV_Handle_t  testHandle0;
+extern UARTDRV_Handle_t  gnssHandle0;
 
 void process_event(struct gecko_cmd_packet* evt){
 
@@ -133,7 +126,7 @@ void process_event(struct gecko_cmd_packet* evt){
 			i2cInit();
 			initLEUART();
 #if DEVKIT
-			si7021_enable();
+//			si7021_enable();
 #endif
 			nextState = WRITE_BEGIN;
 			timerWaitUs(80000);
@@ -158,27 +151,26 @@ void process_event(struct gecko_cmd_packet* evt){
 	case READ_BEGIN:
 		if((evt->data.evt_system_external_signal.extsignals) == DELAY_GENERATED){
 			sleep_block_on(sleepEM2);
-			temp_Si7021.data_8 = 0XE3;
-			i2cReadDataBlock(0x40,temp_Si7021.data_8,&temp_Si7021.data_16,sizeof(uint16_t));
+//			temp_Si7021.data_8 = 0XE3;
+//			i2cReadDataBlock(0x40,temp_Si7021.data_8,&temp_Si7021.data_16,sizeof(uint16_t));
 			nextState = POWER_OFF;
 		}
 		break;
 	case POWER_OFF:
-		LOG_INFO("Getting measurements");
-		UARTDRV_Receive(testHandle0, uartbuffer, 66, UART_rx_callback);
+//		LOG_INFO("Getting measurements");
+		UARTDRV_Receive(gnssHandle0, leuartbuffer, 66, UART_rx_callback);	// start non blocking (LDMA) Rx
 		measure_pressure((float)1.2);
 		measure_temperature((float)1.234);
-		measure_navigation(&ublox);
 		if((evt->data.evt_system_external_signal.extsignals) == I2C_TRANSFER_DONE){
 			sleep_block_off(sleepEM2);
 			NVIC_DisableIRQ(I2C0_IRQn);
-			temp_Si7021.temp_code = ((temp_Si7021.data_16 & 0xFF00)>>8) | ((temp_Si7021.data_16 & 0x00FF)<<8);
+//			temp_Si7021.temp_code = ((temp_Si7021.data_16 & 0xFF00)>>8) | ((temp_Si7021.data_16 & 0x00FF)<<8);
 			//convert_celcius(&temp_Si7021.tempC,(uint16_t)temp_Si7021.temp_code);
-			LOG_INFO("Temperature (degC) : %f C\n",temp_Si7021.tempC);
-			LOG_INFO("buffer : %x C\n",temp_Si7021.temp_code);
-			measure_temperature(temp_Si7021.tempC);
+//			LOG_INFO("Temperature (degC) : %f C\n",temp_Si7021.tempC);
+//			LOG_INFO("buffer : %x C\n",temp_Si7021.temp_code);
+//			measure_temperature(temp_Si7021.tempC);
 #if DEVKIT
-			si7021_disable();
+//			si7021_disable();
 #endif
 			I2C_Reset(I2C0);
 			I2C_Enable(I2C0,false);

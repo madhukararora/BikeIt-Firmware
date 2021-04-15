@@ -24,18 +24,6 @@
 #include "gpio.h"
 #include "log.h"
 
-/*
- * Temporary GNSS packet data struct
- */
-typedef struct gnss_data
-{
-	int32_t lon;
-	int32_t lat;
-	float fLon;
-	float fLat;
-	int32_t gSpeed;
-} gnss_data;
-
 uint8_t rxUARTBuffer[100];
 
 /*  Macro Definitions for RSSI*/
@@ -77,7 +65,7 @@ void measure_pressure(float pressPa);
  * @param : gnss_data* dat is the temporary struct containing GNSS packet data (TBD)
  * @return : void
  */
-void measure_navigation(struct gnss_data* dat);
+void measure_navigation(char gpsarr[]);
 
 /**
  * @brief  : ble_EventHandler function to handle the BLE Events

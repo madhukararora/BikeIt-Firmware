@@ -162,8 +162,6 @@ void gpioInit()
 #endif
 	GPIO_PinModeSet(LED1_port, LED1_pin, gpioModePushPull, false);
 #endif
-//	GPIO_PinModeSet(LEUART0_port, LEUART0_RX_pin, gpioModeInputPull, 0);
-//	GPIO_PinModeSet(LEUART0_port, LEUART0_TX_pin, gpioModePushPull, 1);
 #if BOARD
 	/*
 	 * PMUX D1 (board)
