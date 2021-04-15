@@ -176,45 +176,45 @@ void ble_EventHandler(struct gecko_cmd_packet* evt){
 		// handle external event from IMU
 //		handle_external_signal_event(evt->data.evt_system_external_signal.extsignals);
 		//	printf("Signal is %x\r\n", signal);
-		switch (evt->data.evt_system_external_signal.extsignals){
-		case EXT_SIGNAL_IMU_WAKEUP:
-//			CORE_DECLARE_IRQ_STATE;
-//			CORE_ENTER_CRITICAL();
-//			printf("IMU wakeup\r\n");
-//			CORE_EXIT_CRITICAL();
-			break;
-		case LEUART_START_FRAME_EXT_SIGNAL:
-			LOG_INFO("In START FRAME");
-			LEUART_Rx(LEUART0);
-
-			DMADRV_PeripheralMemory(dma_rx_channel,
-					dmadrvPeripheralSignal_LEUART0_RXDATAV,
-					(void*) rxUARTBuffer,
-					(void*) &(LEUART0->RXDATA),
-					true,
-					sizeof(rxUARTBuffer),
-					dmadrvDataSize1,
-					DMARxCallback,
-					NULL);
-
-			do {
-				DMADRV_TransferActive(dma_tx_channel, &transfer_active);
-			} while(transfer_active);
-
-			LEUART_TxDMAEnable(true);
-
-			 //do something
-			break;
-		case LEUART_SIGNAL_FRAME_EXT_SIGNAL:
-			LOG_INFO("In SIGNAL FRAME");
-
-			DMADRV_StopTransfer(dma_rx_channel);
-			LEUART_RxBlock();
-//			signal_frame_ptr = memchr(rxBuffer, '\r', sizeof(rxBuffer));
-
-			LOG_INFO("%s", &rxUARTBuffer);
-			break;
-		}
+//		switch (evt->data.evt_system_external_signal.extsignals){
+//		case EXT_SIGNAL_IMU_WAKEUP:
+////			CORE_DECLARE_IRQ_STATE;
+////			CORE_ENTER_CRITICAL();
+////			printf("IMU wakeup\r\n");
+////			CORE_EXIT_CRITICAL();
+//			break;
+//		case LEUART_START_FRAME_EXT_SIGNAL:
+//			LOG_INFO("In START FRAME");
+//			LEUART_Rx(LEUART0);
+//
+//			DMADRV_PeripheralMemory(dma_rx_channel,
+//					dmadrvPeripheralSignal_LEUART0_RXDATAV,
+//					(void*) rxUARTBuffer,
+//					(void*) &(LEUART0->RXDATA),
+//					true,
+//					sizeof(rxUARTBuffer),
+//					dmadrvDataSize1,
+//					DMARxCallback,
+//					NULL);
+//
+//			do {
+//				DMADRV_TransferActive(dma_tx_channel, &transfer_active);
+//			} while(transfer_active);
+//
+//			LEUART_TxDMAEnable(true);
+//
+//			 //do something
+//			break;
+//		case LEUART_SIGNAL_FRAME_EXT_SIGNAL:
+//			LOG_INFO("In SIGNAL FRAME");
+//
+//			DMADRV_StopTransfer(dma_rx_channel);
+//			LEUART_RxBlock();
+////			signal_frame_ptr = memchr(rxBuffer, '\r', sizeof(rxBuffer));
+//
+//			LOG_INFO("%s", &rxUARTBuffer);
+//			break;
+//		}
 		break;
 
 

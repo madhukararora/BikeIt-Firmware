@@ -131,7 +131,6 @@ void process_event(struct gecko_cmd_packet* evt){
 			CMU_ClockEnable(cmuClock_LEUART0, true);
 			CMU_ClockDivSet(cmuClock_LEUART0, cmuClkDiv_1); // Don't prescale LEUART clock
 			i2cInit();
-			LEUART0_enter_DefaultMode_from_RESET();
 			initLEUART();
 #if DEVKIT
 			si7021_enable();
