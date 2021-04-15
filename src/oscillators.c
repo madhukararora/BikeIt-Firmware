@@ -31,7 +31,8 @@ void oscillatorInit(void){
 
 #if (LOW_ENERGY_MODE == 0 | LOW_ENERGY_MODE == 1 | LOW_ENERGY_MODE == 2)
 	CMU_OscillatorEnable(cmuOsc_LFXO,true,true);
-
+	CMU_ClockEnable(cmuClock_HFLE, true);
+	CMU_ClockSelectSet(cmuClock_LFB, cmuSelect_LFXO); // Set a reference clock
 	////Select LFXO as clock source for LFA
 
 	CMU_LFXOInit_TypeDef lfxoInit = CMU_LFXOINIT_DEFAULT;
@@ -49,6 +50,8 @@ void oscillatorInit(void){
 	//Enabling required clocks
 	CMU_ClockEnable(cmuClock_GPIO,true); //GPIO  clock
 	CMU_ClockEnable(cmuClock_LETIMER0,true); //LETIMER CLOCK
+
+
 
 
 }

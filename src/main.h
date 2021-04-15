@@ -11,7 +11,7 @@
 
 #include "log.h"
 #define ENABLE_SLEEPING (1)
-#define LOW_ENERGY_MODE (3)
+#define LOW_ENERGY_MODE (1)
 #define LETIMER_TOTAL_PERIOD  (3000) //NOTE : ms value only
 
 #endif /* SRC_MAIN_H_ */

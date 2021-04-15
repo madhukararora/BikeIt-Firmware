@@ -18,6 +18,7 @@
 
 /* Libraries containing default Gecko configuration values */
 #include "em_emu.h"
+#include "em_core.h"
 #include "em_cmu.h"
 #include "timers.h"
 #include "gpio.h"
@@ -34,6 +35,8 @@ typedef struct gnss_data
 	float fLat;
 	int32_t gSpeed;
 } gnss_data;
+
+uint8_t rxUARTBuffer[100];
 
 /*  Macro Definitions for RSSI*/
 #define RSSI_NEG35DB		(-35)

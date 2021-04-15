@@ -51,6 +51,9 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/platform/bootloader/api}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/app/bluetooth/common/util}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/platform/emdrv/uartdrv/inc}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/platform/emdrv/uartdrv/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/platform/emdrv/dmadrv/inc}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/platform/emdrv/dmadrv/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/hardware/kit/common/drivers}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/hardware/kit/common/halconfig}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/hardware/kit/EFR32BG13_BRD4104A/config}&quot;"/>
@@ -92,6 +95,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/platform/bootloader/api}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/app/bluetooth/common/util}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/platform/emdrv/uartdrv/inc}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/platform/emdrv/dmadrv/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/hardware/kit/common/drivers}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/hardware/kit/common/halconfig}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/hardware/kit/EFR32BG13_BRD4104A/config}&quot;"/>
@@ -134,6 +138,7 @@
 								</option>
 								<option id="com.silabs.ide.si32.gcc.cdt.managedbuild.tool.gnu.c.linker.printffloat.59340879" name="Printf float" superClass="com.silabs.ide.si32.gcc.cdt.managedbuild.tool.gnu.c.linker.printffloat" value="true" valueType="boolean"/>
 								<option id="com.silabs.ide.si32.gcc.cdt.managedbuild.tool.gnu.c.linker.scanffloat.607410272" name="Scanf float" superClass="com.silabs.ide.si32.gcc.cdt.managedbuild.tool.gnu.c.linker.scanffloat" value="true" valueType="boolean"/>
+								<option id="com.silabs.ide.si32.gcc.cdt.managedbuild.tool.gnu.c.linker.category.ordering.selection.1759226202" name="Linker input ordering" superClass="com.silabs.ide.si32.gcc.cdt.managedbuild.tool.gnu.c.linker.category.ordering.selection" value="./src/GNSS.o;./src/ble.o;./src/display.o;./src/gecko_ble_errors.o;./src/gpio.o;./src/i2c.o;./src/irq.o;./src/leuart.o;./src/log.o;./src/main.o;./src/oscillators.o;./src/scheduler.o;./src/timers.o;./platform/middleware/glib/glib/bmp.o;./platform/middleware/glib/glib/glib.o;./platform/middleware/glib/glib/glib_bitmap.o;./platform/middleware/glib/glib/glib_circle.o;./platform/middleware/glib/glib/glib_font_narrow_6x8.o;./platform/middleware/glib/glib/glib_font_normal_8x8.o;./platform/middleware/glib/glib/glib_font_number_16x20.o;./platform/middleware/glib/glib/glib_line.o;./platform/middleware/glib/glib/glib_polygon.o;./platform/middleware/glib/glib/glib_rectangle.o;./platform/middleware/glib/glib/glib_string.o;./platform/middleware/glib/dmd/display/dmd_display.o;./platform/emlib/src/em_assert.o;./platform/emlib/src/em_burtc.o;./platform/emlib/src/em_cmu.o;./platform/emlib/src/em_core.o;./platform/emlib/src/em_cryotimer.o;./platform/emlib/src/em_crypto.o;./platform/emlib/src/em_dbg.o;./platform/emlib/src/em_dma.o;./platform/emlib/src/em_emu.o;./platform/emlib/src/em_gpio.o;./platform/emlib/src/em_i2c.o;./platform/emlib/src/em_ldma.o;./platform/emlib/src/em_letimer.o;./platform/emlib/src/em_leuart.o;./platform/emlib/src/em_msc.o;./platform/emlib/src/em_rmu.o;./platform/emlib/src/em_rtc.o;./platform/emlib/src/em_rtcc.o;./platform/emlib/src/em_se.o;./platform/emlib/src/em_system.o;./platform/emlib/src/em_timer.o;./platform/emlib/src/em_usart.o;./platform/emdrv/sleep/src/sleep.o;./platform/emdrv/dmadrv/src/dmadrv.o;./platform/Device/SiliconLabs/EFR32BG13P/Source/GCC/startup_efr32bg13p.o;./platform/Device/SiliconLabs/EFR32BG13P/Source/system_efr32bg13p.o;./hardware/kit/common/drivers/display.o;./hardware/kit/common/drivers/displayls013b7dh03.o;./hardware/kit/common/drivers/displaypalemlib.o;./hardware/kit/common/drivers/i2cspm.o;./hardware/kit/common/drivers/mx25flash_spi.o;./hardware/kit/common/drivers/retargetio.o;./hardware/kit/common/drivers/retargetserial.o;./hardware/kit/common/drivers/udelay.o;./hardware/kit/common/bsp/bsp_stk.o;./app/bluetooth/common/util/infrastructure.o;./application_properties.o;./gatt_db.o;./gecko_main.o;./graphics.o;./init_app.o;./init_board_efr32xg1.o;./init_mcu_efr32xg1.o;./pti.o;${workspace_loc:/${ProjName}/protocol/bluetooth/lib/EFR32BG13P/GCC/libpsstore.a};${workspace_loc:/${ProjName}/protocol/bluetooth/lib/EFR32BG13P/GCC/libbluetooth.a};${workspace_loc:/${ProjName}/protocol/bluetooth/lib/EFR32BG13P/GCC/binapploader.o};${workspace_loc:/${ProjName}/protocol/bluetooth/lib/EFR32BG13P/GCC/libmbedtls.a};${workspace_loc:/${ProjName}/platform/radio/rail_lib/autogen/librail_release/librail_efr32xg13_gcc_release.a};-lm" valueType="string"/>
 								<inputType id="cdt.managedbuild.tool.gnu.c.linker.input.775371632" superClass="cdt.managedbuild.tool.gnu.c.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
@@ -416,6 +421,7 @@
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
 	<storageModule moduleId="refreshScope" versionNumber="2">
+		<configuration configurationName="GNU ARM v7.2.1 - Logging"/>
 		<configuration configurationName="GNU ARM v7.2.1 - Default">
 			<resource resourceType="PROJECT" workspacePath="/ecen5823-assignments-madhukararora"/>
 		</configuration>
@@ -425,10 +431,10 @@
 		<scannerConfigBuildInfo instanceId="com.silabs.ss.tool.ide.arm.toolchain.gnu.cdt.debug#com.silabs.ss.tool.ide.arm.toolchain.gnu.cdt:7.2.1.20170904;com.silabs.ss.tool.ide.arm.toolchain.gnu.cdt.debug#com.silabs.ss.tool.ide.arm.toolchain.gnu.cdt:7.2.1.20170904.;com.silabs.ide.si32.gcc.cdt.managedbuild.tool.gnu.c.compiler.base.1830597434;com.silabs.ide.si32.gcc.cdt.managedbuild.tool.gnu.c.compiler.input.1989680056">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
-		<scannerConfigBuildInfo instanceId="com.silabs.ss.framework.project.toolchain.core.default#com.silabs.ss.tool.ide.arm.toolchain.gnu.cdt:7.2.1.20170904;com.silabs.ss.framework.project.toolchain.core.default#com.silabs.ss.tool.ide.arm.toolchain.gnu.cdt:7.2.1.20170904.;com.silabs.ide.si32.gcc.cdt.managedbuild.tool.gnu.c.compiler.base.2091367761;com.silabs.ide.si32.gcc.cdt.managedbuild.tool.gnu.c.compiler.input.958260628">
+		<scannerConfigBuildInfo instanceId="com.silabs.ss.framework.project.toolchain.core.default#com.silabs.ss.tool.ide.arm.toolchain.gnu.cdt:7.2.1.20170904@0;com.silabs.ss.framework.project.toolchain.core.default#com.silabs.ss.tool.ide.arm.toolchain.gnu.cdt:7.2.1.20170904@0.;com.silabs.ide.si32.gcc.cdt.managedbuild.tool.gnu.c.compiler.base.1837842875;com.silabs.ide.si32.gcc.cdt.managedbuild.tool.gnu.c.compiler.input.1542622172">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
-		<scannerConfigBuildInfo instanceId="com.silabs.ss.framework.project.toolchain.core.default#com.silabs.ss.tool.ide.arm.toolchain.gnu.cdt:7.2.1.20170904@0;com.silabs.ss.framework.project.toolchain.core.default#com.silabs.ss.tool.ide.arm.toolchain.gnu.cdt:7.2.1.20170904@0.;com.silabs.ide.si32.gcc.cdt.managedbuild.tool.gnu.c.compiler.base.1837842875;com.silabs.ide.si32.gcc.cdt.managedbuild.tool.gnu.c.compiler.input.1542622172">
+		<scannerConfigBuildInfo instanceId="com.silabs.ss.framework.project.toolchain.core.default#com.silabs.ss.tool.ide.arm.toolchain.gnu.cdt:7.2.1.20170904;com.silabs.ss.framework.project.toolchain.core.default#com.silabs.ss.tool.ide.arm.toolchain.gnu.cdt:7.2.1.20170904.;com.silabs.ide.si32.gcc.cdt.managedbuild.tool.gnu.c.compiler.base.2091367761;com.silabs.ide.si32.gcc.cdt.managedbuild.tool.gnu.c.compiler.input.958260628">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
 	</storageModule>
