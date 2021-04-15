@@ -21,11 +21,20 @@ void UART_rx_callback(UARTDRV_Handle_t handle, Ecode_t transferStatus, uint8_t *
   {
 	  gpioLed0SetOff();
 	  memcpy(array, data, 66);
-	  if(strstr(array, "$GNRMC")){
+	  if(strncmp(array, "$GNRMC", 6) == 0){
 		  gpioLed0SetOn();
-//		  displayPrintf(DISPLAY_ROW_ACTION,":%s", array);
+		  char header[7], utctime[10], latitude[11], longitude[12], gspeed[5] = {'\0'};
+		  strncpy(header, array, 6);
+		  strncpy(utctime, &array[7], 9);
+		  strncpy(latitude, &array[19], 10);
+		  strncpy(longitude, &array[32], 11);
+		  strncpy(gspeed, &array[46], 4);
+		  displayPrintf(DISPLAY_ROW_BTADDR,"Header:%s", header);
+		  displayPrintf(DISPLAY_ROW_BTADDR2,"UTC:%s", utctime);
+		  displayPrintf(DISPLAY_ROW_CONNECTION,"Lat:%s", latitude);
+		  displayPrintf(DISPLAY_ROW_PASSKEY,"Lon:%s", longitude);
+		  displayPrintf(DISPLAY_ROW_ACTION,"Spd:%s", gspeed);
 	  }
-//	  displayPrintf(DISPLAY_ROW_ACTION,":%s", array);
 	  memset(array, '\0', 100);
 	  rxCnt++;
   }

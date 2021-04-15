@@ -52,7 +52,7 @@ int appMain(gecko_configuration_t *config)
 
 	/*Initialize Display*/
 	displayInit();
-	displayPrintf(DISPLAY_ROW_CONNECTION,"BikeIt On");
+	displayPrintf(DISPLAY_ROW_NAME,"BikeIt On");
 	scheduler_Init();
 
 //	SLEEP_SleepBlockBegin(sleepEM3);
