@@ -245,32 +245,3 @@ void GNSS_ParsePOSLLHData(GNSS_StateHandle *GNSS) {
 	}
 	GNSS->vAcc = uLong.uLong;
 }
-
-/*!
- *  Sends the basic configuration: Activation of the UBX standard, change of NMEA version to 4.10 and turn on of the Galileo system.
- * @param GNSS Pointer to main GNSS structure.
- */
-void GNSS_LoadConfig(GNSS_StateHandle *GNSS) {
-//	HAL_UART_Transmit_DMA(GNSS->huart, configUBX,
-//			sizeof(configUBX) / sizeof(uint8_t));
-//	HAL_Delay(250); timerWaitUs(250000);
-//	HAL_UART_Transmit_DMA(GNSS->huart, setNMEA410,
-//			sizeof(setNMEA410) / sizeof(uint8_t));
-//	HAL_Delay(250); timerWaitUs(250000);
-//	HAL_UART_Transmit_DMA(GNSS->huart, setGNSS,
-//			sizeof(setGNSS) / sizeof(uint8_t));
-//	HAL_Delay(250); timerWaitUs(250000);
-}
-
-/*!
- *  Creates a checksum based on UBX standard.
- * @param class Class value from UBX doc.
- * @param messageID MessageID value from UBX doc.
- * @param dataLength Data length value from UBX doc.
- * @param payload Just payload.
- * @return  Returns checksum.
- */
-uint8_t GNSS_Checksum(uint8_t class, uint8_t messageID, uint8_t dataLength,uint8_t *payload) {
-//todo: Look at 32.4 UBX Checksum
-	return 0;
-}

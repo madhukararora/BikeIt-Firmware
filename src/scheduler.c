@@ -113,7 +113,7 @@ bool scheduler_EventsPresent(void){
 		return false;
 }
 
-
+extern UARTDRV_Handle_t  testHandle0;
 
 void process_event(struct gecko_cmd_packet* evt){
 
@@ -165,6 +165,7 @@ void process_event(struct gecko_cmd_packet* evt){
 		break;
 	case POWER_OFF:
 		LOG_INFO("Getting measurements");
+		UARTDRV_Receive(testHandle0, uartbuffer, 66, UART_rx_callback);
 		measure_pressure((float)1.2);
 		measure_temperature((float)1.234);
 		measure_navigation(&ublox);

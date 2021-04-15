@@ -7,42 +7,28 @@
 
 #include "leuart.h"
 
+char array[100];
+#define packetLength 66
+UARTDRV_HandleData_t uartHandle0; /* UART driver handle */
+UARTDRV_Handle_t  testHandle0 = &uartHandle0;
 
-LEUART_Init_TypeDef leuart0Init =
-{
-		.baudrate = 9600,
-		.databits = leuartDatabits8,
-		.enable = leuartDisable,
-		.parity = leuartNoParity,
-		.refFreq = 0,
-		.stopbits = leuartStopbits1,
-};
-
-static UARTDRV_HandleData_t uartHandle0; /* UART driver handle */
-static UARTDRV_Handle_t  testHandle0 = &uartHandle0;
-static uint8_t rxByte;
-uint8_t array[20];
-int16_t packetLength;
-
-static void UART_rx_callback(UARTDRV_Handle_t handle, Ecode_t transferStatus, uint8_t *data,
-                             UARTDRV_Count_t transferCount);
-
-
-static void UART_rx_callback(UARTDRV_Handle_t handle, Ecode_t transferStatus, uint8_t *data,
+void UART_rx_callback(UARTDRV_Handle_t handle, Ecode_t transferStatus, uint8_t *data,
                              UARTDRV_Count_t transferCount)
 {
   static  uint8_t rxCnt = 0;
 
   if(transferStatus == ECODE_EMDRV_UARTDRV_OK)
   {
-	  memcpy(array, data, 10);
-	  packetLength = 10;
-	  displayPrintf(DISPLAY_ROW_ACTION,"U: %s", array);
+	  gpioLed0SetOff();
+	  memcpy(array, data, 66);
+	  if(strstr(array, "$GNRMC")){
+		  gpioLed0SetOn();
+//		  displayPrintf(DISPLAY_ROW_ACTION,":%s", array);
+	  }
+//	  displayPrintf(DISPLAY_ROW_ACTION,":%s", array);
+	  memset(array, '\0', 100);
 	  rxCnt++;
   }
-
-  /* RX the next byte */
-//  UARTDRV_Receive(testHandle0, uartbuffer, 1, UART_rx_callback);
 }
 
 void initLEUART(void){
@@ -65,8 +51,6 @@ void initLEUART(void){
 	initData.txQueue              = (UARTDRV_Buffer_FifoQueue_t *)&txBufferQueueI0;
 
 	UARTDRV_InitLeuart(testHandle0, &initData);
-	UARTDRV_Receive(testHandle0, uartbuffer, 10, UART_rx_callback);
-
 }
 
 

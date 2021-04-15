@@ -21,12 +21,8 @@
 #include "em_cmu.h"
 #include "em_int.h"
 #include "em_emu.h"
-#include "em_dma.h"
-//#include "em_rtc.h"
+//#include "em_dma.h"
 #include "em_gpio.h"
-//#include "em_leuart.h"
-
-//#include "dmadrv.h"
 #include "uartdrv.h"
 
 uint8_t uartbuffer[100];
@@ -36,5 +32,7 @@ uint8_t uartbuffer[100];
 #define LEUART_SIGNAL_FRAME_EXT_SIGNAL  8 /* Bit flag for external signal */
 
 void initLEUART(void);
+void UART_rx_callback(UARTDRV_Handle_t handle, Ecode_t transferStatus, uint8_t *data,
+                             UARTDRV_Count_t transferCount);
 
 #endif /* SRC_LEUART_H_ */
