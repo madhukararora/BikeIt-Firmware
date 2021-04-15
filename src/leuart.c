@@ -142,6 +142,7 @@ int DMARxCallback(unsigned int channel, unsigned int sequenceNo, void *userParam
   /* We can receive at most 20 bytes and if that happens then it's functionality the same
    * as receiving the signal frame '#' so we can go and process the data
    */
+	LOG_INFO("DMARxCallback");
   gecko_external_signal(LEUART_SIGNAL_FRAME_EXT_SIGNAL);
   return 0;
 }

@@ -70,7 +70,7 @@ uint8_t bluetooth_stack_heap[DEFAULT_BLUETOOTH_HEAP(MAX_CONNECTIONS)];
 static gecko_configuration_t config = {
   .config_flags = 0,                                   /* Check flag options from UG136 */
 #if defined(FEATURE_LFXO)
-  .sleep.flags = 0,//SLEEP_FLAGS_DEEP_SLEEP_ENABLE,        /* Sleep is enabled */
+  .sleep.flags = SLEEP_FLAGS_DEEP_SLEEP_ENABLE,        /* Sleep is enabled */
 #else
   .sleep.flags = 0,
 #endif // LFXO

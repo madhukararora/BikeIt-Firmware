@@ -165,7 +165,7 @@ void process_event(struct gecko_cmd_packet* evt){
 		}
 		break;
 	case POWER_OFF:
-//		LOG_INFO("Getting measurements");
+		LOG_INFO("Getting measurements");
 		measure_pressure((float)1.2);
 		measure_temperature((float)1.234);
 		measure_navigation(&ublox);
