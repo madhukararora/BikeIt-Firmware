@@ -8,26 +8,36 @@
 
 
 #include "ble.h"
+#include "display.h"
 #include "log.h"
-#include "leuart.h"
 
 #define TICKS_PER_SECOND    (32768)
 
-static uint8_t *signal_frame_ptr;                                                                               /* Pointer to get the position of the signal frame '#' */
-static bool transfer_active;                                                                                    /* Flag to check if DMA TX transfer is still active */
-int32_t rxBufferSize = 100;
-uint8_t rxUARTBuffer[100];
-
-
-void measure_navigation(struct gnss_data* dat)
+void measure_navigation(char gpsarr[])
 {
 	uint8_t ln_buffer[28]; /* Stores the location and navigation data in the Location and Navigation (LN) format. */
-//	uint16_t flags = 0x04;   /* LN Flag set to bit 2 for location present*/
 	uint16_t flags = 0x05;   /* LN Flag set to bit 1 for instantaneous speed and bit 2 for location present*/
 
-	uint16_t groundspeed = (uint16_t)(dat->gSpeed);	// units is 1/100 of a m/s
-	int32_t longitude = dat->lon;   // Stores the longitude data read from the sensor in the correct format
-	int32_t latitude = dat->lat;   // Stores the latitude data read from the sensor in the correct format
+	char cheader[7], cutctime[10], clatitude[11], clongitude[12], cgspeed[5] = {'\0'};
+//	strncpy(cheader, gpsarr, 6);
+//	strncpy(cutctime, &gpsarr[7], 9);
+	strncpy(clatitude, &gpsarr[19], 10);
+	strncpy(clongitude, &gpsarr[32], 11);
+	strncpy(cgspeed, &gpsarr[46], 4);
+//	displayPrintf(DISPLAY_ROW_BTADDR,"Header:%s", cheader);
+//	displayPrintf(DISPLAY_ROW_BTADDR2,"UTC:%s", cutctime);
+//	displayPrintf(DISPLAY_ROW_CONNECTION,"Lat:%s", clatitude);
+//	displayPrintf(DISPLAY_ROW_PASSKEY,"Lon:%s", clongitude);
+//	displayPrintf(DISPLAY_ROW_ACTION,"Spd:%s", cgspeed);
+
+	// convert strings to floats
+	float flon = strtof(clongitude, NULL) * 1000;
+	float flat = strtof(clatitude, NULL) * 1000;
+	float fgspeed = strtof(cgspeed, NULL) * 100;
+
+	uint16_t groundspeed = (uint16_t)(FLT_TO_UINT32(fgspeed, 0) >> 1);	// convert speed in knots to m/s. units is 1/100 of a m/s
+	int32_t longitude = FLT_TO_UINT32(flon, 0);   // Stores the longitude data read from the sensor in the correct format
+	int32_t latitude = FLT_TO_UINT32(flat, 0);  // Stores the latitude data read from the sensor in the correct format
 	uint8_t *p = ln_buffer; /* Pointer to LN buffer needed for converting values to bitstream. */
 
 	/* Convert flags to bitstream and append them in the LN data buffer (ln_buffer) */
@@ -196,9 +206,9 @@ void ble_EventHandler(struct gecko_cmd_packet* evt){
 		 * in gatt.xml as "temperature_measurement". Also check that status_flags = 1, meaning that
 		 * the characteristic client configuration was changed (notifications or indications
 		 * enabled or disabled). */
-		if ((evt->data.evt_gatt_server_characteristic_status.characteristic == gattdb_temperature_measurement)
+		if ((evt->data.evt_gatt_server_characteristic_status.characteristic == (gattdb_temperature_measurement || gattdb_pressure || gattdb_location_and_speed))
 				&& (evt->data.evt_gatt_server_characteristic_status.status_flags == gatt_server_client_config)) {
-			if (evt->data.evt_gatt_server_characteristic_status.client_config_flags == gatt_indication) {
+			if (evt->data.evt_gatt_server_characteristic_status.client_config_flags == (gatt_indication || gatt_notification)) {
 				/* Indications have been turned ON - start the repeating timer. The 1st parameter '32768'
 				 * tells the timer to run for 1 second (32.768 kHz oscillator), the 2nd parameter is
 				 * the timer handle and the 3rd parameter '0' tells the timer to repeat continuously until

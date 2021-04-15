@@ -19,13 +19,13 @@
 #include "em_device.h"
 
 #include "em_cmu.h"
-#include "em_int.h"
+#include "em_core.h"
+//#include "em_int.h"
 #include "em_emu.h"
-//#include "em_dma.h"
 #include "em_gpio.h"
 #include "uartdrv.h"
 
-uint8_t uartbuffer[100];
+uint8_t leuartbuffer[100];
 #define NUM_TX_BUFFERS          8
 
 #define LEUART_START_FRAME_EXT_SIGNAL 9   /* Bit flag for external signal */
