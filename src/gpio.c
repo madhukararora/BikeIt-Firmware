@@ -146,9 +146,9 @@ void gpioInit()
 #endif
 
 #ifdef LED0_WEAK
-	GPIO_DriveStrengthSet(LED0_port, gpioDriveStrengthWeakAlternateWeak);
+//	GPIO_DriveStrengthSet(LED0_port, gpioDriveStrengthWeakAlternateWeak);
 #endif
-	GPIO_PinModeSet(LED0_port, LED0_pin, gpioModePushPull, false);
+//	GPIO_PinModeSet(LED0_port, LED0_pin, gpioModePushPull, false);
 
 	/*
 	 * LED 1
@@ -162,6 +162,7 @@ void gpioInit()
 #endif
 	GPIO_PinModeSet(LED1_port, LED1_pin, gpioModePushPull, false);
 #endif
+	GPIO_PinModeSet(BSP_VCOM_ENABLE_PORT, BSP_VCOM_ENABLE_PIN, gpioModeDisabled, 0);
 #if BOARD
 	/*
 	 * PMUX D1 (board)

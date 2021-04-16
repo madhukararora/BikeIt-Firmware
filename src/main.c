@@ -43,7 +43,7 @@ int appMain(gecko_configuration_t *config)
 	gecko_init(config);
 
 	/*Enable Loggining, scheduler, GPIO and Oscillator */
-	logInit();
+//	logInit();
 	scheduler_Init();
 	gpioInit();
 	oscillatorInit();

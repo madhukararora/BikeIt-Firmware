@@ -9,7 +9,7 @@
 #define SRC_LOG_H_
 #include "stdio.h"
 #include <inttypes.h>
-#define INCLUDE_LOGGING 1
+#define INCLUDE_LOGGING 0
 /**
  * Instructions for using this module:
  * 1) #include "log.h" in the C file where you'd like to add logging

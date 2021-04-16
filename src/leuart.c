@@ -18,12 +18,12 @@ void UART_rx_callback(UARTDRV_Handle_t handle, Ecode_t transferStatus, uint8_t *
   static  uint8_t rxCnt = 0;
   if(transferStatus == ECODE_EMDRV_UARTDRV_OK)
   {
-	  gpioLed0SetOff();
+	  gpioLed1SetOff();
 	  // copy leuart rx data into gnss buffer array
 	  memcpy(gnssarray, data, packetLength);
 	  // check if gnss packet starts with the GNRMC (Recommended Minimum Specific GNSS Data) and UTC time stamp is populated
 	  if((strncmp(gnssarray, "$GNRMC", 6) == 0) && !(strncmp(gnssarray, "$GNRMC,,", 8) == 0)){
-		  gpioLed0SetOn();
+		  gpioLed1SetOn();
 		  // split gnssarray into data we want
 		  char header[7], utctime[10], latitude[11], longitude[12], gspeed[5] = {'\0'};
 		  strncpy(header, gnssarray, 6);
@@ -45,9 +45,6 @@ void UART_rx_callback(UARTDRV_Handle_t handle, Ecode_t transferStatus, uint8_t *
 }
 
 void initLEUART(void){
-	GPIO_PinModeSet(BSP_VCOM_ENABLE_PORT, BSP_VCOM_ENABLE_PIN, gpioModePushPull, 1);
-	GPIO_PinOutSet(BSP_VCOM_ENABLE_PORT, BSP_VCOM_ENABLE_PIN);
-
 	UARTDRV_InitLeuart_t initData;
 
 	DEFINE_BUF_QUEUE(EMDRV_UARTDRV_MAX_CONCURRENT_RX_BUFS, rxBufferQueueI0);
@@ -55,8 +52,8 @@ void initLEUART(void){
 
 	initData.port                 = LEUART0;
 	initData.baudRate             = 9600;
-	initData.portLocationTx       = LEUART_ROUTELOC0_TXLOC_LOC2;
-	initData.portLocationRx       = LEUART_ROUTELOC0_RXLOC_LOC2;
+	initData.portLocationTx       = LEUART_ROUTELOC0_TXLOC_LOC27;	// GPS RX <-> PF3 (P10) TX LOC27
+	initData.portLocationRx       = LEUART_ROUTELOC0_RXLOC_LOC27;	// GPS TX <-> PF4 (P30) RX LOC27
 	initData.stopBits             = (LEUART_Stopbits_TypeDef) LEUART_CTRL_STOPBITS_ONE;
 	initData.parity               = (LEUART_Parity_TypeDef) LEUART_CTRL_PARITY_NONE;
 	initData.fcType               = uartdrvFlowControlNone;
