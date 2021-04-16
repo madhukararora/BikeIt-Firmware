@@ -14,18 +14,33 @@
 #include "i2cspm.h"
 #include "gpio.h"
 #include "em_core.h"
-
+#include "bme280.h"
 
 
 /* Function Prototypes */
 
-/*
- * @function : i2cInit
- * @brief    : initialize the I2C peripheral on the blue gecko
- * @param    : void
- * @return   : void
- */
-void i2cInit(void);
+void I2C0_init(void);
+void I2C0_WriteRegister(uint8_t regAddr, uint8_t data);
+void I2C0_ReadRegister(uint8_t regAddr, uint8_t *data);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /*

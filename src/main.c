@@ -13,9 +13,6 @@
  */
 
 
-
-
-
 #include "gecko_configuration.h"
 #include "gpio.h"
 #include "native_gecko.h"
@@ -52,8 +49,14 @@ int appMain(gecko_configuration_t *config)
 
 	/*Initialize Display*/
 	displayInit();
-	displayPrintf(DISPLAY_ROW_NAME,"BikeIt On");
+	displayPrintf(DISPLAY_ROW_NAME+1,"BikeIt On");
+
+
 	scheduler_Init();
+	gpioLed0SetOn();
+	I2C0_init();
+	bmeInit();
+
 
 //	SLEEP_SleepBlockBegin(sleepEM3);
 	while(1){
@@ -62,6 +65,6 @@ int appMain(gecko_configuration_t *config)
 		}
 		evt = gecko_wait_event();
 		ble_EventHandler(evt);
-		process_event(evt);
+		//process_event(evt);
 	}
 }

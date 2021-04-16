@@ -54,10 +54,11 @@ void I2C0_IRQHandler(void){
 		CORE_EXIT_CRITICAL();
 	}
 	else if((i2c_status != i2cTransferDone) && (i2c_status != i2cTransferInProgress)){
-		LOG_ERROR("I2C0 Error : %d\n",i2c_status);
+
 	}
 
 
 }
+
 
 
