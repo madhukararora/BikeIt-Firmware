@@ -43,7 +43,7 @@ void measure_navigation(GNSS_data_t *dat)
 			0xFF, gattdb_location_and_speed, 12, ln_buffer);
 }
 
-void measure_pressure(float pressPa)
+void measure_pressure(BME_data_t *dat)
 {
 	uint8_t es_pressure_buffer[4]; /* Stores the pressure data in the Environmental Sensing (ES) format. */
 
@@ -51,7 +51,7 @@ void measure_pressure(float pressPa)
 	uint8_t *p = es_pressure_buffer; /* Pointer to ES pressure buffer needed for converting values to bitstream. */
 
 	/* Convert sensor data to correct pressure format (resolution of 0.1 Pa) */
-	pressure = FLT_TO_UINT32(pressPa * 10, 0);
+	pressure = FLT_TO_UINT32(dat->pressure * 10, 0);
 	/* Convert temperature to bitstream and place it in the ES Pressure data buffer (es_pressure_buffer) */
 	UINT32_TO_BITSTREAM(p, pressure);
 
@@ -62,7 +62,7 @@ void measure_pressure(float pressPa)
 			0xFF, gattdb_pressure, 4, es_pressure_buffer);
 }
 
-void measure_temperature(float tempC)
+void measure_temperature(BME_data_t *dat)
 {
 	uint8_t htm_temperature_buffer[5]; /* Stores the temperature data in the Health Thermometer (HTM) format. */
 	uint8_t flags = 0x00;   /* HTM flags set as 0 for Celsius, no time stamp and no temperature type. */
@@ -74,7 +74,7 @@ void measure_temperature(float tempC)
 	UINT8_TO_BITSTREAM(p, flags);
 
 	/* Convert sensor data to correct temperature format */
-	temperature = FLT_TO_UINT32(tempC * 1000, -3);
+	temperature = FLT_TO_UINT32(dat->temperature * 1000, -3);
 	/* Convert temperature to bitstream and place it in the HTM temperature data buffer (htm_temperature_buffer) */
 	UINT32_TO_BITSTREAM(p, temperature);
 

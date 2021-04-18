@@ -14,6 +14,7 @@
 #include "gpio.h"
 #include "irq.h"
 #include "ble.h"
+#include "menu.h"
 
 #include "em_chip.h"
 #include "em_device.h"
@@ -31,7 +32,6 @@ uint8_t leuartbuffer[100];
 #define LEUART_START_FRAME_EXT_SIGNAL 9   /* Bit flag for external signal */
 #define LEUART_SIGNAL_FRAME_EXT_SIGNAL  8 /* Bit flag for external signal */
 
-void displayGNSS(GNSS_data_t *data);
 void initLEUART(void);
 void UART_rx_callback(UARTDRV_Handle_t handle, Ecode_t transferStatus, uint8_t *data,
                              UARTDRV_Count_t transferCount);

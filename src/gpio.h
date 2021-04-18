@@ -9,6 +9,7 @@
 #define SRC_GPIO_H_
 #include <stdbool.h>
 #include <stdint.h>
+#include "scheduler.h"
 
 /*Display enabled Macros*/
 #define GPIO_SET_DISPLAY_EXT_COMIN_IMPLEMENTED 	1

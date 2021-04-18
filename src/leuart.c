@@ -14,14 +14,6 @@ UARTDRV_HandleData_t leuartHandle0; /* UART driver handle */
 UARTDRV_Handle_t  gnssHandle0 = &leuartHandle0;
 GNSS_data_t GNRMC_data;
 
-void displayGNSS(GNSS_data_t *data){
-	displayPrintf(DISPLAY_ROW_BTADDR,"Header:%s", GNRMC_data.header);
-	displayPrintf(DISPLAY_ROW_BTADDR2,"UTC:%s", GNRMC_data.utctime);
-	displayPrintf(DISPLAY_ROW_CONNECTION,"Lat:%s", GNRMC_data.latitude);
-	displayPrintf(DISPLAY_ROW_PASSKEY,"Lon:%s", GNRMC_data.longitude);
-	displayPrintf(DISPLAY_ROW_ACTION,"Spd:%s", GNRMC_data.gspeed);
-}
-
 void UART_rx_callback(UARTDRV_Handle_t handle, Ecode_t transferStatus, uint8_t *data, UARTDRV_Count_t transferCount)
 {
   static  uint8_t rxCnt = 0;
@@ -41,7 +33,6 @@ void UART_rx_callback(UARTDRV_Handle_t handle, Ecode_t transferStatus, uint8_t *
 		  strncpy(GNRMC_data.longitude, &gnssarray[32], 11);
 		  strncpy(GNRMC_data.gspeed, &gnssarray[46], 4);
 
-		  displayGNSS(&GNRMC_data);
 		  measure_navigation(&GNRMC_data);	// send gnsarray for parsing and sendoff
 	  }
 	  memset(gnssarray, '\0', 100);	// reset gnss array
