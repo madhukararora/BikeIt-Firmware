@@ -120,9 +120,6 @@ void process_event(struct gecko_cmd_packet* evt){
 	case POWER_ON:
 		if((evt->data.evt_system_external_signal.extsignals) == TIMER_UF){
 			CMU_ClockEnable(cmuClock_I2C0,true);
-			// Enable clocks for LEUART0
-			CMU_ClockEnable(cmuClock_LEUART0, true);
-			CMU_ClockDivSet(cmuClock_LEUART0, cmuClkDiv_1); // Don't prescale LEUART clock
 			i2cInit();
 			initLEUART();
 #if DEVKIT

@@ -20,6 +20,8 @@
 #define EXT_SIGNAL_IMU_WAKEUP 0x01
 
 void gpioInit(void);
+void enable_button_interrupts(void);
+void button_interrupt(uint8_t pin);
 uint8_t get_leds(void);
 void set_leds(uint8_t control_byte);
 #if DEVKIT
