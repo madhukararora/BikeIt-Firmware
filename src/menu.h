@@ -13,6 +13,12 @@
 #include "gpio.h"
 #include "ble.h"
 
+typedef enum{
+	PAGE1,
+	PAGE2,
+	PAGE_MAX,
+}menu_states_t;
+
 void displayMenu(uint8_t menupage);
 
 void displayGNSS(GNSS_data_t *data);

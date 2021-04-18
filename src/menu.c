@@ -6,14 +6,14 @@
  */
 #include "menu.h"
 
-#define PAGE1 1
-#define PAGE2 2
+#define PAGE1 0
+#define PAGE2 1
 
 extern GNSS_data_t GNRMC_data;
 extern BME_data_t BME_data;
 
 void displayMenu(uint8_t menupage){
-	displayPrintf(DISPLAY_ROW_TEMPVALUE,"<- PB0 | PB1 ->");
+	displayPrintf(DISPLAY_ROW_TEMPVALUE,"LOC PB0|PB1 COND");
 	switch(menupage){
 	case PAGE1:
 		displayGNSS(&GNRMC_data);

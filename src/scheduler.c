@@ -14,6 +14,8 @@ BME_data_t BME_data = {
 		1.2
 };
 
+extern UARTDRV_Handle_t  gnssHandle0;
+
 static void sleep_block_on(SLEEP_EnergyMode_t sleep_mode){
 	CORE_DECLARE_IRQ_STATE;
 	CORE_ENTER_CRITICAL();
@@ -106,13 +108,12 @@ bool scheduler_EventsPresent(void){
 		return false;
 }
 
-extern UARTDRV_Handle_t  gnssHandle0;
 
 void process_event(struct gecko_cmd_packet* evt){
 
 	scheduler_states_t currentState;
 	static scheduler_states_t nextState = POWER_ON;
-	static uint8_t menustate;
+	static menu_states_t menustate;
 
 	currentState = nextState;
 	//LOG_INFO("INSIDE process_event %ld",evt->data.evt_system_external_signal.extsignals);
@@ -161,10 +162,10 @@ void process_event(struct gecko_cmd_packet* evt){
 		measure_temperature(&BME_data);
 		switch(evt->data.evt_system_external_signal.extsignals){
 		case PB_PAGE1:
-			menustate = 1;
+			menustate = PAGE1;
 			break;
 		case PB_PAGE2:	// BUG: cannot switch menus when health thermometer service is being indicated
-			menustate = 2;
+			menustate = PAGE2;
 			break;
 		default:
 			break;
