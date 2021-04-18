@@ -12,6 +12,15 @@
 char gnssarray[100];
 UARTDRV_HandleData_t leuartHandle0; /* UART driver handle */
 UARTDRV_Handle_t  gnssHandle0 = &leuartHandle0;
+GNSS_data_t GNRMC_data;
+
+void displayGNSS(GNSS_data_t *data){
+	displayPrintf(DISPLAY_ROW_BTADDR,"Header:%s", GNRMC_data.header);
+	displayPrintf(DISPLAY_ROW_BTADDR2,"UTC:%s", GNRMC_data.utctime);
+	displayPrintf(DISPLAY_ROW_CONNECTION,"Lat:%s", GNRMC_data.latitude);
+	displayPrintf(DISPLAY_ROW_PASSKEY,"Lon:%s", GNRMC_data.longitude);
+	displayPrintf(DISPLAY_ROW_ACTION,"Spd:%s", GNRMC_data.gspeed);
+}
 
 void UART_rx_callback(UARTDRV_Handle_t handle, Ecode_t transferStatus, uint8_t *data, UARTDRV_Count_t transferCount)
 {
@@ -25,19 +34,15 @@ void UART_rx_callback(UARTDRV_Handle_t handle, Ecode_t transferStatus, uint8_t *
 	  if((strncmp(gnssarray, "$GNRMC", 6) == 0) && !(strncmp(gnssarray, "$GNRMC,,", 8) == 0)){
 		  gpioLed1SetOn();
 		  // split gnssarray into data we want
-		  char header[7], utctime[10], latitude[11], longitude[12], gspeed[5] = {'\0'};
-		  strncpy(header, gnssarray, 6);
-		  strncpy(utctime, &gnssarray[7], 9);
-		  strncpy(latitude, &gnssarray[19], 10);
-		  if(strchr(latitude, ',') != NULL) return;	// check if gps lock is full (in case of empty values during warmup)
-		  strncpy(longitude, &gnssarray[32], 11);
-		  strncpy(gspeed, &gnssarray[46], 4);
-		  displayPrintf(DISPLAY_ROW_BTADDR,"Header:%s", header);
-		  displayPrintf(DISPLAY_ROW_BTADDR2,"UTC:%s", utctime);
-		  displayPrintf(DISPLAY_ROW_CONNECTION,"Lat:%s", latitude);
-		  displayPrintf(DISPLAY_ROW_PASSKEY,"Lon:%s", longitude);
-		  displayPrintf(DISPLAY_ROW_ACTION,"Spd:%s", gspeed);
-		  measure_navigation(gnssarray);	// send gnsarray for parsing and sendoff
+		  strncpy(GNRMC_data.header, gnssarray, 6);
+		  strncpy(GNRMC_data.utctime, &gnssarray[7], 9);
+		  strncpy(GNRMC_data.latitude, &gnssarray[19], 10);
+		  if(strchr(GNRMC_data.latitude, ',') != NULL) return;	// check if gps lock is full (in case of empty values during warmup)
+		  strncpy(GNRMC_data.longitude, &gnssarray[32], 11);
+		  strncpy(GNRMC_data.gspeed, &gnssarray[46], 4);
+
+		  displayGNSS(&GNRMC_data);
+		  measure_navigation(&GNRMC_data);	// send gnsarray for parsing and sendoff
 	  }
 	  memset(gnssarray, '\0', 100);	// reset gnss array
 	  rxCnt++;

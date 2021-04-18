@@ -26,6 +26,16 @@
 
 uint8_t rxUARTBuffer[100];
 
+typedef struct GNSS_data_t{
+	char header[7];
+	char utctime[10];
+	char latitude[11];
+	char longitude[12];
+	char gspeed[5];
+} GNSS_data_t;
+
+#include "leuart.h"
+
 /*  Macro Definitions for RSSI*/
 #define RSSI_NEG35DB		(-35)
 #define RSSI_NEG45DB		(-45)
@@ -62,10 +72,10 @@ void measure_pressure(float pressPa);
 
 /**
  * @brief : Function for getting GNSS location and speed measurements with uBlox MAX-M8-Q module.
- * @param : gnss_data* dat is the temporary struct containing GNSS packet data (TBD)
+ * @param : GNSS_data_t* dat is the struct containing GNSS packet data
  * @return : void
  */
-void measure_navigation(char gpsarr[]);
+void measure_navigation(GNSS_data_t *dat);
 
 /**
  * @brief  : ble_EventHandler function to handle the BLE Events

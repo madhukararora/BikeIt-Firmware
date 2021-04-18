@@ -13,27 +13,15 @@
 
 #define TICKS_PER_SECOND    (32768)
 
-void measure_navigation(char gpsarr[])
+void measure_navigation(GNSS_data_t *dat)
 {
 	uint8_t ln_buffer[28]; /* Stores the location and navigation data in the Location and Navigation (LN) format. */
 	uint16_t flags = 0x05;   /* LN Flag set to bit 1 for instantaneous speed and bit 2 for location present*/
 
-	char cheader[7], cutctime[10], clatitude[11], clongitude[12], cgspeed[5] = {'\0'};
-//	strncpy(cheader, gpsarr, 6);
-//	strncpy(cutctime, &gpsarr[7], 9);
-	strncpy(clatitude, &gpsarr[19], 10);
-	strncpy(clongitude, &gpsarr[32], 11);
-	strncpy(cgspeed, &gpsarr[46], 4);
-//	displayPrintf(DISPLAY_ROW_BTADDR,"Header:%s", cheader);
-//	displayPrintf(DISPLAY_ROW_BTADDR2,"UTC:%s", cutctime);
-//	displayPrintf(DISPLAY_ROW_CONNECTION,"Lat:%s", clatitude);
-//	displayPrintf(DISPLAY_ROW_PASSKEY,"Lon:%s", clongitude);
-//	displayPrintf(DISPLAY_ROW_ACTION,"Spd:%s", cgspeed);
-
 	// convert strings to floats
-	float flon = strtof(clongitude, NULL) * 1000;
-	float flat = strtof(clatitude, NULL) * 1000;
-	float fgspeed = strtof(cgspeed, NULL) * 100;
+	float flon = strtof(dat->longitude, NULL) * 1000;
+	float flat = strtof(dat->latitude, NULL) * 1000;
+	float fgspeed = strtof(dat->gspeed, NULL) * 100;
 
 	uint16_t groundspeed = (uint16_t)(FLT_TO_UINT32(fgspeed, 0) >> 1);	// convert speed in knots to m/s. units is 1/100 of a m/s
 	int32_t longitude = FLT_TO_UINT32(flon, 0);   // Stores the longitude data read from the sensor in the correct format
