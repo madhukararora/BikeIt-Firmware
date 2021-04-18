@@ -23,20 +23,7 @@ static void sleep_block_off(SLEEP_EnergyMode_t sleep_mode){
 	SLEEP_SleepBlockEnd(sleep_mode);
 	CORE_EXIT_CRITICAL();
 }
-/**
- * @brief :  function to check if a particular event is set in the external signal
- * @param :  gecko command structure
- *           event to be checked if set
- * @return : true if present, else false.
- */
-static bool scheduler_ExternalSignalPresent(struct gecko_cmd_packet* evt,scheduler_events_t event){
-	if((evt->data.evt_system_external_signal.extsignals) == event){
-		return true;
-	}
-	else{
-		return false;
-	}
-}
+
 
 /***************************************************************************//**
  *  Handling of external signal events.

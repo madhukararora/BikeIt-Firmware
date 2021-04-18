@@ -54,9 +54,8 @@ int appMain(gecko_configuration_t *config)
 
 	scheduler_Init();
 	gpioLed0SetOn();
-	I2C0_init();
-	bmeInit();
 
+	BME280_Init();
 
 //	SLEEP_SleepBlockBegin(sleepEM3);
 	while(1){

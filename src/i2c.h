@@ -19,9 +19,9 @@
 
 /* Function Prototypes */
 
-void I2C0_init(void);
-void I2C0_WriteRegister(uint8_t regAddr, uint8_t data);
-void I2C0_ReadRegister(uint8_t regAddr, uint8_t *data);
+void I2C0_Init(void);
+void I2C0_Write(uint8_t slaveAddr,uint8_t *data, uint16_t len);
+void I2C0_Read(uint8_t slaveAddr,uint8_t *data,uint16_t len);
 
 
 
