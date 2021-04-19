@@ -125,9 +125,6 @@ void ble_EventHandler(struct gecko_cmd_packet* evt){
 
 		/*disable timer when connection closed*/
 		LETIMER_IntDisable(LETIMER0,LETIMER_IEN_UF);
-		// disable leuart
-//		UARTDRV_Abort(gnssHandle0, uartdrvAbortReceive);
-//		UARTDRV_DeInit(gnssHandle0);
 
 		connection_handle = 0;
 

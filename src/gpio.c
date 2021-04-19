@@ -31,8 +31,8 @@
 //#define PMUXD1_STRONG
 #define LEDDBG_WEAK
 //#define LEDDBG_STRONG
-#define GPSTOGGLE_WEAK
-//#define GPSTOGGLE_STRONG
+//#define GPSTOGGLE_WEAK
+#define GPSTOGGLE_STRONG
 #define GPSRESET_WEAK
 //#define GPSRESET_STRONG
 #define GPSEXTINT_WEAK
@@ -198,7 +198,7 @@ void gpioInit()
 	 * GPS TOGGLE (board)
 	 */
 #ifdef GPSTOGGLE_STRONG
-	GPIO_DriveStrengthSet(LED1_port, gpioDriveStrengthStrongAlternateStrong);
+	GPIO_DriveStrengthSet(GPSTOGGLE_port, gpioDriveStrengthStrongAlternateStrong);
 #endif
 
 #ifdef GPSTOGGLE_WEAK

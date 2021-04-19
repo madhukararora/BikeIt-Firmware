@@ -123,6 +123,7 @@ void process_event(struct gecko_cmd_packet* evt){
 		if((evt->data.evt_system_external_signal.extsignals) == TIMER_UF){
 			CMU_ClockEnable(cmuClock_I2C0,true);
 			i2cInit();
+//			gpioGpsToggleSetOn();
 			initLEUART();
 #if DEVKIT
 //			si7021_enable();
@@ -157,9 +158,11 @@ void process_event(struct gecko_cmd_packet* evt){
 		break;
 	case POWER_OFF:
 //		LOG_INFO("Getting measurements");
+		sleep_block_on(sleepEM2);
 		UARTDRV_Receive(gnssHandle0, leuartbuffer, 66, LEUART_rx_callback);	// start non blocking (LDMA) Rx
 		measure_pressure(&BME_data);
 		measure_temperature(&BME_data);
+		sleep_block_off(sleepEM2);
 		// switch between menu pages
 		switch(evt->data.evt_system_external_signal.extsignals){
 		case PB_PAGE1:
@@ -172,6 +175,7 @@ void process_event(struct gecko_cmd_packet* evt){
 			break;
 		}
 		displayMenu(menustate);
+
 		if((evt->data.evt_system_external_signal.extsignals) == I2C_TRANSFER_DONE){
 			sleep_block_off(sleepEM2);
 			NVIC_DisableIRQ(I2C0_IRQn);
@@ -182,6 +186,8 @@ void process_event(struct gecko_cmd_packet* evt){
 			I2C_Reset(I2C0);
 			I2C_Enable(I2C0,false);
 			CMU_ClockEnable(cmuClock_I2C0,false);
+			// disable leuart
+			UARTDRV_DeInit(gnssHandle0);
 #if DEVKIT
 			scl_disable();
 			sda_disable();
