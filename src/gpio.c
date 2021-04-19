@@ -58,6 +58,7 @@
 #define SDA_port      (gpioPortC)
 #define SDA_pin       (11)
 
+// switch to board
 #define PB0_port	(gpioPortF)
 #define PB0_pin		(6)
 

@@ -13,7 +13,7 @@
 
 #define TICKS_PER_SECOND    (32768)
 
-extern UARTDRV_Handle_t  gnssHandle0;
+//extern UARTDRV_Handle_t  gnssHandle0;
 
 void measure_navigation(GNSS_data_t *dat)
 {
