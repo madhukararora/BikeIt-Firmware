@@ -48,8 +48,6 @@ int appMain(gecko_configuration_t *config)
 	gpioInit();
 	oscillatorInit();
 
-//	initDMA();
-
 	/*Initialize Display*/
 	displayInit();
 	displayPrintf(DISPLAY_ROW_NAME,"BikeIt On");

@@ -31,8 +31,8 @@
 //#define PMUXD1_STRONG
 #define LEDDBG_WEAK
 //#define LEDDBG_STRONG
-#define GPSTOGGLE_WEAK
-//#define GPSTOGGLE_STRONG
+//#define GPSTOGGLE_WEAK
+#define GPSTOGGLE_STRONG
 #define GPSRESET_WEAK
 //#define GPSRESET_STRONG
 #define GPSEXTINT_WEAK
@@ -57,6 +57,13 @@
 #define SCL_pin       (10)
 #define SDA_port      (gpioPortC)
 #define SDA_pin       (11)
+
+// switch to board
+#define PB0_port	(gpioPortF)
+#define PB0_pin		(6)
+
+#define PB1_port	(gpioPortF)
+#define PB1_pin		(7)
 #endif
 #if BOARD
 #define PMUXD1_port	(gpioPortA)
@@ -191,7 +198,7 @@ void gpioInit()
 	 * GPS TOGGLE (board)
 	 */
 #ifdef GPSTOGGLE_STRONG
-	GPIO_DriveStrengthSet(LED1_port, gpioDriveStrengthStrongAlternateStrong);
+	GPIO_DriveStrengthSet(GPSTOGGLE_port, gpioDriveStrengthStrongAlternateStrong);
 #endif
 
 #ifdef GPSTOGGLE_WEAK
@@ -239,14 +246,13 @@ void gpioInit()
 	 * IMU EXTINT (not actually EXT) (board) is output to MCU
 	 */
 	GPIO_PinModeSet(IMUEXTINT_port, IMUEXTINT_pin, gpioModeInput, false);
-
+#endif
 	/*
 	 * PB[0:1] are pushbutton inputs
 	 */
 	GPIO_PinModeSet(PB0_port, PB0_pin, gpioModeInputPull, true);
 	GPIO_PinModeSet(PB1_port, PB1_pin, gpioModeInputPull, true);
-#endif
-
+	enable_button_interrupts();
 }
 
 /**
@@ -463,6 +469,40 @@ void bnoEnableInterrupts()
 	GPIOINT_CallbackRegister(IMUEXTINT_pin, bnoInterrupt);
 }
 #endif
+
+void button_interrupt(uint8_t pin){
+	switch(pin){
+		case BSP_BUTTON0_PIN:
+			if (GPIO_PinInGet(PB0_port, PB0_pin) == 1) {
+			    gecko_external_signal(PB_PAGE2);
+			}
+		break;
+		case BSP_BUTTON1_PIN:
+			if (GPIO_PinInGet(PB1_port, PB1_pin) == 1) {
+			    gecko_external_signal(PB_PAGE1);
+			}
+		break;
+	}
+}
+/*******************************************************************************
+ * Enable button interrupts for PB0, PB1. Both GPIOs are configured to trigger
+ * an interrupt on the rising edge (button released).
+ ******************************************************************************/
+void enable_button_interrupts(void){
+  GPIOINT_Init();
+
+  /* configure interrupt for PB0 and PB1, rising edges */
+  GPIO_ExtIntConfig(PB0_port, PB0_pin, PB0_pin,
+                    true, false, true);
+  GPIO_ExtIntConfig(PB1_port, PB1_pin, PB1_pin,
+                    true, false, true);
+
+
+  /* register the callback function that is invoked when interrupt occurs */
+  GPIOINT_CallbackRegister(PB0_pin, button_interrupt);
+  GPIOINT_CallbackRegister(PB1_pin, button_interrupt);
+
+}
 
 /*Enable the display on the Devkit or Board*/
 void gpioEnableDisplay(void){

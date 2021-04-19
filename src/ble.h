@@ -7,6 +7,20 @@
 #ifndef SRC_BLE_H_
 #define SRC_BLE_H_
 
+typedef struct GNSS_data_t{
+	char header[7];
+	char utctime[10];
+	char latitude[11];
+	char longitude[12];
+	char gspeed[5];
+} GNSS_data_t;
+
+// move to BME280 source/header files
+typedef struct BME_data_t{
+	float temperature;
+	float pressure;
+} BME_data_t;
+
 /* Bluetooth stack headers */
 #include "bg_types.h"
 #include "native_gecko.h"
@@ -25,6 +39,7 @@
 #include "log.h"
 
 uint8_t rxUARTBuffer[100];
+
 
 /*  Macro Definitions for RSSI*/
 #define RSSI_NEG35DB		(-35)
@@ -52,20 +67,20 @@ uint8_t rxUARTBuffer[100];
  * @return : void
  * Credits : Used Silicon Labs Example Provided in Class Lecture as reference.
  */
-void measure_temperature(float tempC);
+void measure_temperature(BME_data_t *dat);
 /**
  * @brief : Function for taking a single pressure measurement with BME280 sensor.
  * @param : pressPa is the pressure measured using I2C
  * @return : void
  */
-void measure_pressure(float pressPa);
+void measure_pressure(BME_data_t *dat);
 
 /**
  * @brief : Function for getting GNSS location and speed measurements with uBlox MAX-M8-Q module.
- * @param : gnss_data* dat is the temporary struct containing GNSS packet data (TBD)
+ * @param : GNSS_data_t* dat is the struct containing GNSS packet data
  * @return : void
  */
-void measure_navigation(char gpsarr[]);
+void measure_navigation(GNSS_data_t *dat);
 
 /**
  * @brief  : ble_EventHandler function to handle the BLE Events
