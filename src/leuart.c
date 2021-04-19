@@ -14,17 +14,17 @@ UARTDRV_HandleData_t leuartHandle0; /* UART driver handle */
 UARTDRV_Handle_t  gnssHandle0 = &leuartHandle0;
 GNSS_data_t GNRMC_data;
 
-void UART_rx_callback(UARTDRV_Handle_t handle, Ecode_t transferStatus, uint8_t *data, UARTDRV_Count_t transferCount)
+void LEUART_rx_callback(UARTDRV_Handle_t handle, Ecode_t transferStatus, uint8_t *data, UARTDRV_Count_t transferCount)
 {
   static  uint8_t rxCnt = 0;
   if(transferStatus == ECODE_EMDRV_UARTDRV_OK)
   {
-	  gpioLed1SetOff();
+//	  gpioLed1SetOff();
 	  // copy leuart rx data into gnss buffer array
 	  memcpy(gnssarray, data, packetLength);
 	  // check if gnss packet starts with the GNRMC (Recommended Minimum Specific GNSS Data) and UTC time stamp is populated
 	  if((strncmp(gnssarray, "$GNRMC", 6) == 0) && !(strncmp(gnssarray, "$GNRMC,,", 8) == 0)){
-		  gpioLed1SetOn();
+//		  gpioLed1SetOn();
 		  // split gnssarray into data we want
 		  strncpy(GNRMC_data.header, gnssarray, 6);
 		  strncpy(GNRMC_data.utctime, &gnssarray[7], 9);

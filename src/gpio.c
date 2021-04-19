@@ -474,13 +474,11 @@ void button_interrupt(uint8_t pin){
 		case BSP_BUTTON0_PIN:
 			if (GPIO_PinInGet(PB0_port, PB0_pin) == 1) {
 			    gecko_external_signal(PB_PAGE2);
-				GPIO_PinOutSet(LED1_port,LED1_pin);
 			}
 		break;
 		case BSP_BUTTON1_PIN:
 			if (GPIO_PinInGet(PB1_port, PB1_pin) == 1) {
 			    gecko_external_signal(PB_PAGE1);
-				GPIO_PinOutClear(LED1_port,LED1_pin);
 			}
 		break;
 	}

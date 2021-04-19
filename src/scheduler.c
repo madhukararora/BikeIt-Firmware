@@ -8,7 +8,7 @@
 
 #include "scheduler.h"
 
-// set BME sensor data wherever
+// set BME sensor data wherever it should be set
 BME_data_t BME_data = {
 		1.234,
 		1.2
@@ -157,9 +157,10 @@ void process_event(struct gecko_cmd_packet* evt){
 		break;
 	case POWER_OFF:
 //		LOG_INFO("Getting measurements");
-		UARTDRV_Receive(gnssHandle0, leuartbuffer, 66, UART_rx_callback);	// start non blocking (LDMA) Rx
+		UARTDRV_Receive(gnssHandle0, leuartbuffer, 66, LEUART_rx_callback);	// start non blocking (LDMA) Rx
 		measure_pressure(&BME_data);
 		measure_temperature(&BME_data);
+		// switch between menu pages
 		switch(evt->data.evt_system_external_signal.extsignals){
 		case PB_PAGE1:
 			menustate = PAGE1;

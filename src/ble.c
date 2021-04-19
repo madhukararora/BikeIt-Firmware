@@ -13,6 +13,8 @@
 
 #define TICKS_PER_SECOND    (32768)
 
+extern UARTDRV_Handle_t  gnssHandle0;
+
 void measure_navigation(GNSS_data_t *dat)
 {
 	uint8_t ln_buffer[28]; /* Stores the location and navigation data in the Location and Navigation (LN) format. */
@@ -31,7 +33,7 @@ void measure_navigation(GNSS_data_t *dat)
 	/* Convert flags to bitstream and append them in the LN data buffer (ln_buffer) */
 	UINT16_TO_BITSTREAM(p, flags);
 
-	/* Convert temperature to bitstream and place it in the ES Pressure data buffer (es_pressure_buffer) */
+	/* Convert GNSS values to bitstream and place it in the LN data buffer (ln_buffer) */
 	UINT16_TO_BITSTREAM(p, groundspeed);
 	UINT32_TO_BITSTREAM(p, latitude);	// issue with sign conversion
 	UINT32_TO_BITSTREAM(p, longitude);	// issue with sign conversion
@@ -52,7 +54,7 @@ void measure_pressure(BME_data_t *dat)
 
 	/* Convert sensor data to correct pressure format (resolution of 0.1 Pa) */
 	pressure = FLT_TO_UINT32(dat->pressure * 10, 0);
-	/* Convert temperature to bitstream and place it in the ES Pressure data buffer (es_pressure_buffer) */
+	/* Convert pressure to bitstream and place it in the ES Pressure data buffer (es_pressure_buffer) */
 	UINT32_TO_BITSTREAM(p, pressure);
 
 	/* Send indication of the temperature in es_pressure_buffer to all "listening" clients.
@@ -86,18 +88,13 @@ void measure_temperature(BME_data_t *dat)
 }
 
 
-
-
 void ble_EventHandler(struct gecko_cmd_packet* evt){
 
 	static uint8_t connection_handle = 0;
 	int rssi = 0;
 
-
 	/* Handle events */
 	switch (BGLIB_MSG_ID(evt->header)) {
-
-
 	case gecko_evt_system_boot_id: /*indicates device has started and radio is ready*/
 
 		/* Set advertising parameters.
@@ -128,6 +125,9 @@ void ble_EventHandler(struct gecko_cmd_packet* evt){
 
 		/*disable timer when connection closed*/
 		LETIMER_IntDisable(LETIMER0,LETIMER_IEN_UF);
+		// disable leuart
+//		UARTDRV_Abort(gnssHandle0, uartdrvAbortReceive);
+//		UARTDRV_DeInit(gnssHandle0);
 
 		connection_handle = 0;
 
@@ -162,10 +162,10 @@ void ble_EventHandler(struct gecko_cmd_packet* evt){
 			gecko_cmd_system_set_tx_power(TX_PWR_0DB);
 		}
 		else if(rssi > RSSI_NEG85DB && rssi <= RSSI_NEG75DB){
-			gecko_cmd_system_set_tx_power(TX_PWR_5DB);
+//			gecko_cmd_system_set_tx_power(TX_PWR_5DB);
 		}
 		else{
-			gecko_cmd_system_set_tx_power(TX_PWR_MAX);
+//			gecko_cmd_system_set_tx_power(TX_PWR_MAX);
 		}
 
 		break;
