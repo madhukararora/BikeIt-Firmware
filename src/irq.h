@@ -14,7 +14,7 @@
 #include "gpio.h"
 #include "scheduler.h"
 #include "log.h"
-
+#include "bme280.h"
 
 //FUNCTION PROTOTYPES
 void LETIMER0_IRQHandler(void);

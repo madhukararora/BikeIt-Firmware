@@ -7,7 +7,7 @@
 
 #include "irq.h"
 
-
+extern volatile bool BME_TRANSFER_DONE;
 /*
  * Interrupt Handler for the LETIMER0
  * @param : void
@@ -50,14 +50,11 @@ void I2C0_IRQHandler(void){
 	i2c_status = I2C_Transfer(I2C0);
 	if(i2c_status == i2cTransferDone){
 		CORE_ENTER_CRITICAL();
+		BME_TRANSFER_DONE = true;
 		gecko_external_signal(I2C_TRANSFER_DONE);
 		CORE_EXIT_CRITICAL();
 	}
-	else if((i2c_status != i2cTransferDone) && (i2c_status != i2cTransferInProgress)){
-		LOG_ERROR("I2C0 Error : %d\n",i2c_status);
-	}
-
-
 }
+
 
 
