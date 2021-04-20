@@ -24,7 +24,7 @@
 #include "src/hal-config-ecen5823.h"
 
 #ifndef HAL_VCOM_ENABLE
-#define HAL_VCOM_ENABLE                   (1)
+#define HAL_VCOM_ENABLE                   (0)
 #endif
 #ifndef HAL_I2CSENSOR_ENABLE
 #define HAL_I2CSENSOR_ENABLE              (0)

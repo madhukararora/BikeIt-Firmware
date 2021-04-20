@@ -8,6 +8,13 @@
 
 #include "scheduler.h"
 
+// set BME sensor data wherever it should be set
+BME_data_t BME_data = {
+		1.234,
+		1.2
+};
+
+extern UARTDRV_Handle_t  gnssHandle0;
 
 static void sleep_block_on(SLEEP_EnergyMode_t sleep_mode){
 	CORE_DECLARE_IRQ_STATE;
@@ -48,8 +55,6 @@ void scheduler_Init(void)
 	temp_Si7021.tempC = 0;
 }
 
-
-
 /*
  * function to return event to the main
  */
@@ -68,9 +73,6 @@ bool scheduler_GetEvent(uint32_t event){
 		return false;
 	}
 }
-
-
-
 
 /*
  * function will set a flag corresponding to an event
@@ -93,12 +95,12 @@ bool scheduler_EventsPresent(void){
 		return false;
 }
 
-extern UARTDRV_Handle_t  gnssHandle0;
 
 void process_event(struct gecko_cmd_packet* evt){
 
 	scheduler_states_t currentState;
 	static scheduler_states_t nextState = POWER_ON;
+	static menu_states_t menustate;
 
 	currentState = nextState;
 	//LOG_INFO("INSIDE process_event %ld",evt->data.evt_system_external_signal.extsignals);
@@ -107,10 +109,8 @@ void process_event(struct gecko_cmd_packet* evt){
 	case POWER_ON:
 		if((evt->data.evt_system_external_signal.extsignals) == TIMER_UF){
 			CMU_ClockEnable(cmuClock_I2C0,true);
-			// Enable clocks for LEUART0
-			CMU_ClockEnable(cmuClock_LEUART0, true);
-			CMU_ClockDivSet(cmuClock_LEUART0, cmuClkDiv_1); // Don't prescale LEUART clock
 			//i2cInit();
+//			gpioGpsToggleSetOn();
 			initLEUART();
 #if DEVKIT
 //			si7021_enable();
@@ -145,23 +145,36 @@ void process_event(struct gecko_cmd_packet* evt){
 		break;
 	case POWER_OFF:
 //		LOG_INFO("Getting measurements");
-		UARTDRV_Receive(gnssHandle0, leuartbuffer, 66, UART_rx_callback);	// start non blocking (LDMA) Rx
-		measure_pressure((float)1.2);
-		measure_temperature((float)1.234);
+		sleep_block_on(sleepEM2);
+		UARTDRV_Receive(gnssHandle0, leuartbuffer, 66, LEUART_rx_callback);	// start non blocking (LDMA) Rx
+		measure_pressure(&BME_data);
+		measure_temperature(&BME_data);
+		sleep_block_off(sleepEM2);
+		// switch between menu pages
+		switch(evt->data.evt_system_external_signal.extsignals){
+		case PB_PAGE1:
+			menustate = PAGE1;
+			break;
+		case PB_PAGE2:	// BUG: cannot switch menus when health thermometer service is being indicated
+			menustate = PAGE2;
+			break;
+		default:
+			break;
+		}
+		displayMenu(menustate);
+
 		if((evt->data.evt_system_external_signal.extsignals) == I2C_TRANSFER_DONE){
 			sleep_block_off(sleepEM2);
 			NVIC_DisableIRQ(I2C0_IRQn);
-//			temp_Si7021.temp_code = ((temp_Si7021.data_16 & 0xFF00)>>8) | ((temp_Si7021.data_16 & 0x00FF)<<8);
-			//convert_celcius(&temp_Si7021.tempC,(uint16_t)temp_Si7021.temp_code);
-//			LOG_INFO("Temperature (degC) : %f C\n",temp_Si7021.tempC);
-//			LOG_INFO("buffer : %x C\n",temp_Si7021.temp_code);
-//			measure_temperature(temp_Si7021.tempC);
+
 #if DEVKIT
 //			si7021_disable();
 #endif
 			I2C_Reset(I2C0);
 			I2C_Enable(I2C0,false);
 			CMU_ClockEnable(cmuClock_I2C0,false);
+			// disable leuart
+			UARTDRV_DeInit(gnssHandle0);
 #if DEVKIT
 			scl_disable();
 			sda_disable();

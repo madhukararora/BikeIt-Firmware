@@ -16,6 +16,7 @@
 #include "sleep.h"
 #include "ble.h"
 #include "leuart.h"
+#include "menu.h"
 
 
 
@@ -35,6 +36,8 @@ typedef enum uint32_t{
 	DELAY_GENERATED = (0x1UL << 0),
 	TIMER_UF = (0x1UL << 1),
 	I2C_TRANSFER_DONE = (0x1UL << 2),
+	PB_PAGE1 = (0x1UL << 3),
+	PB_PAGE2 = (0x1UL << 4)
 }scheduler_events_t;
 
 
