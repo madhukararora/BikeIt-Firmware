@@ -7,6 +7,15 @@
 #ifndef SRC_BLE_H_
 #define SRC_BLE_H_
 
+/* Bluetooth stack headers */
+#include "bg_types.h"
+#include "native_gecko.h"
+#include "gatt_db.h"
+#include "infrastructure.h"
+
+/* EM library (EMlib) */
+#include "em_system.h"
+
 typedef struct GNSS_data_t{
 	char header[7];
 	char utctime[10];
@@ -18,17 +27,8 @@ typedef struct GNSS_data_t{
 // move to BME280 source/header files
 typedef struct BME_data_t{
 	float temperature;
-	float pressure;
+	uint32_t pressure;
 } BME_data_t;
-
-/* Bluetooth stack headers */
-#include "bg_types.h"
-#include "native_gecko.h"
-#include "gatt_db.h"
-#include "infrastructure.h"
-
-/* EM library (EMlib) */
-#include "em_system.h"
 
 /* Libraries containing default Gecko configuration values */
 #include "em_emu.h"

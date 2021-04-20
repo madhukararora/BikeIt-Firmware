@@ -18,8 +18,6 @@
 #define BOARD 0
 #define DEVKIT 1
 
-#define EXT_SIGNAL_IMU_WAKEUP 0x01
-
 void gpioInit(void);
 void enable_button_interrupts(void);
 void button_interrupt(uint8_t pin);

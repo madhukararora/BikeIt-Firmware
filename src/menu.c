@@ -38,7 +38,7 @@ void displayTempPres(BME_data_t *data){
 	displayPrintf(DISPLAY_ROW_BTADDR,"Temp/Baro Menu 2");
 	displayPrintf(DISPLAY_ROW_BTADDR2,"");
 	displayPrintf(DISPLAY_ROW_CONNECTION,"Temp:%0.3f C", data->temperature);
-	displayPrintf(DISPLAY_ROW_PASSKEY,"Pressure:%0.1f Pa", data->pressure);
+	displayPrintf(DISPLAY_ROW_PASSKEY,"Pressure:%d Pa", data->pressure);
 	displayPrintf(DISPLAY_ROW_ACTION,"");
 }
 

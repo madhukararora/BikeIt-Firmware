@@ -53,7 +53,7 @@ void measure_pressure(BME_data_t *dat)
 	uint8_t *p = es_pressure_buffer; /* Pointer to ES pressure buffer needed for converting values to bitstream. */
 
 	/* Convert sensor data to correct pressure format (resolution of 0.1 Pa) */
-	pressure = FLT_TO_UINT32(dat->pressure * 10, 0);
+	pressure = (dat->pressure) * 10;	//FLT_TO_UINT32(dat->pressure * 10, 0);
 	/* Convert pressure to bitstream and place it in the ES Pressure data buffer (es_pressure_buffer) */
 	UINT32_TO_BITSTREAM(p, pressure);
 
@@ -172,12 +172,6 @@ void ble_EventHandler(struct gecko_cmd_packet* evt){
 //		handle_external_signal_event(evt->data.evt_system_external_signal.extsignals);
 		//	printf("Signal is %x\r\n", signal);
 		switch (evt->data.evt_system_external_signal.extsignals){
-		case EXT_SIGNAL_IMU_WAKEUP:
-//			CORE_DECLARE_IRQ_STATE;
-//			CORE_ENTER_CRITICAL();
-//			printf("IMU wakeup\r\n");
-//			CORE_EXIT_CRITICAL();
-			break;
 		default:
 			break;
 		}

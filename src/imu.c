@@ -15,6 +15,7 @@ bno055_opmode_t _mode;
 bno055_page_t _page;
 
 bool BNO055_Init(void){
+	BNO_TRANSFER_DONE = false;
 	/* chip id read try count */
 	uint8_t try_count = 5;
 	bno.dev_addr = BNO055_I2C_ADDR1;
@@ -234,15 +235,15 @@ uint32_t BNO055Read24(uint8_t reg){
 	while(BNO_TRANSFER_DONE == true);
 	BNO_TRANSFER_DONE = false;
 
-	I2C0_Read(BNO055_I2C_ADDR1, data, sizeof(uint8_t));
+	I2C0_Read(BNO055_I2C_ADDR1, &data, sizeof(uint8_t));
 	while(BNO_TRANSFER_DONE == true);
 	BNO_TRANSFER_DONE = false;
 	data <<= 8;
-	I2C0_Read(BNO055_I2C_ADDR1, data, sizeof(uint8_t));
+	I2C0_Read(BNO055_I2C_ADDR1, &data, sizeof(uint8_t));
 	while(BNO_TRANSFER_DONE == true);
 	BNO_TRANSFER_DONE = false;
 	data <<= 8;
-	I2C0_Read(BNO055_I2C_ADDR1, data, sizeof(uint8_t));
+	I2C0_Read(BNO055_I2C_ADDR1, &data, sizeof(uint8_t));
 	while(BNO_TRANSFER_DONE == true);
 	BNO_TRANSFER_DONE = false;
 	data <<= 8;

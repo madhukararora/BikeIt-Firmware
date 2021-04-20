@@ -17,8 +17,8 @@
 #include "ble.h"
 #include "leuart.h"
 #include "menu.h"
-
-
+#include "bme280.h"
+#include "imu.h"
 
 //GLOBAL VARIABLES
 volatile uint32_t eventFlag; //variable to get the event from the IRQ
@@ -37,7 +37,8 @@ typedef enum uint32_t{
 	TIMER_UF = (0x1UL << 1),
 	I2C_TRANSFER_DONE = (0x1UL << 2),
 	PB_PAGE1 = (0x1UL << 3),
-	PB_PAGE2 = (0x1UL << 4)
+	PB_PAGE2 = (0x1UL << 4),
+	EXT_SIGNAL_IMU_WAKEUP = (0x1UL << 5)
 }scheduler_events_t;
 
 
