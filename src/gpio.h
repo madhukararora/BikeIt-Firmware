@@ -9,7 +9,6 @@
 #define SRC_GPIO_H_
 #include <stdbool.h>
 #include <stdint.h>
-#include "scheduler.h"
 
 /*Display enabled Macros*/
 #define GPIO_SET_DISPLAY_EXT_COMIN_IMPLEMENTED 	1
@@ -21,8 +20,6 @@
 #define EXT_SIGNAL_IMU_WAKEUP 0x01
 
 void gpioInit(void);
-void enable_button_interrupts(void);
-void button_interrupt(uint8_t pin);
 uint8_t get_leds(void);
 void set_leds(uint8_t control_byte);
 #if DEVKIT

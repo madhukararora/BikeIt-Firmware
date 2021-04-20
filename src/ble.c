@@ -13,17 +13,27 @@
 
 #define TICKS_PER_SECOND    (32768)
 
-//extern UARTDRV_Handle_t  gnssHandle0;
-
-void measure_navigation(GNSS_data_t *dat)
+void measure_navigation(char gpsarr[])
 {
 	uint8_t ln_buffer[28]; /* Stores the location and navigation data in the Location and Navigation (LN) format. */
 	uint16_t flags = 0x05;   /* LN Flag set to bit 1 for instantaneous speed and bit 2 for location present*/
 
+	char cheader[7], cutctime[10], clatitude[11], clongitude[12], cgspeed[5] = {'\0'};
+//	strncpy(cheader, gpsarr, 6);
+//	strncpy(cutctime, &gpsarr[7], 9);
+	strncpy(clatitude, &gpsarr[19], 10);
+	strncpy(clongitude, &gpsarr[32], 11);
+	strncpy(cgspeed, &gpsarr[46], 4);
+//	displayPrintf(DISPLAY_ROW_BTADDR,"Header:%s", cheader);
+//	displayPrintf(DISPLAY_ROW_BTADDR2,"UTC:%s", cutctime);
+//	displayPrintf(DISPLAY_ROW_CONNECTION,"Lat:%s", clatitude);
+//	displayPrintf(DISPLAY_ROW_PASSKEY,"Lon:%s", clongitude);
+//	displayPrintf(DISPLAY_ROW_ACTION,"Spd:%s", cgspeed);
+
 	// convert strings to floats
-	float flon = strtof(dat->longitude, NULL) * 1000;
-	float flat = strtof(dat->latitude, NULL) * 1000;
-	float fgspeed = strtof(dat->gspeed, NULL) * 100;
+	float flon = strtof(clongitude, NULL) * 1000;
+	float flat = strtof(clatitude, NULL) * 1000;
+	float fgspeed = strtof(cgspeed, NULL) * 100;
 
 	uint16_t groundspeed = (uint16_t)(FLT_TO_UINT32(fgspeed, 0) >> 1);	// convert speed in knots to m/s. units is 1/100 of a m/s
 	int32_t longitude = FLT_TO_UINT32(flon, 0);   // Stores the longitude data read from the sensor in the correct format
@@ -33,7 +43,7 @@ void measure_navigation(GNSS_data_t *dat)
 	/* Convert flags to bitstream and append them in the LN data buffer (ln_buffer) */
 	UINT16_TO_BITSTREAM(p, flags);
 
-	/* Convert GNSS values to bitstream and place it in the LN data buffer (ln_buffer) */
+	/* Convert temperature to bitstream and place it in the ES Pressure data buffer (es_pressure_buffer) */
 	UINT16_TO_BITSTREAM(p, groundspeed);
 	UINT32_TO_BITSTREAM(p, latitude);	// issue with sign conversion
 	UINT32_TO_BITSTREAM(p, longitude);	// issue with sign conversion
@@ -45,7 +55,7 @@ void measure_navigation(GNSS_data_t *dat)
 			0xFF, gattdb_location_and_speed, 12, ln_buffer);
 }
 
-void measure_pressure(BME_data_t *dat)
+void measure_pressure(float pressPa)
 {
 	uint8_t es_pressure_buffer[4]; /* Stores the pressure data in the Environmental Sensing (ES) format. */
 
@@ -53,8 +63,8 @@ void measure_pressure(BME_data_t *dat)
 	uint8_t *p = es_pressure_buffer; /* Pointer to ES pressure buffer needed for converting values to bitstream. */
 
 	/* Convert sensor data to correct pressure format (resolution of 0.1 Pa) */
-	pressure = FLT_TO_UINT32(dat->pressure * 10, 0);
-	/* Convert pressure to bitstream and place it in the ES Pressure data buffer (es_pressure_buffer) */
+	pressure = FLT_TO_UINT32(pressPa * 10, 0);
+	/* Convert temperature to bitstream and place it in the ES Pressure data buffer (es_pressure_buffer) */
 	UINT32_TO_BITSTREAM(p, pressure);
 
 	/* Send indication of the temperature in es_pressure_buffer to all "listening" clients.
@@ -64,7 +74,7 @@ void measure_pressure(BME_data_t *dat)
 			0xFF, gattdb_pressure, 4, es_pressure_buffer);
 }
 
-void measure_temperature(BME_data_t *dat)
+void measure_temperature(float tempC)
 {
 	uint8_t htm_temperature_buffer[5]; /* Stores the temperature data in the Health Thermometer (HTM) format. */
 	uint8_t flags = 0x00;   /* HTM flags set as 0 for Celsius, no time stamp and no temperature type. */
@@ -76,7 +86,7 @@ void measure_temperature(BME_data_t *dat)
 	UINT8_TO_BITSTREAM(p, flags);
 
 	/* Convert sensor data to correct temperature format */
-	temperature = FLT_TO_UINT32(dat->temperature * 1000, -3);
+	temperature = FLT_TO_UINT32(tempC * 1000, -3);
 	/* Convert temperature to bitstream and place it in the HTM temperature data buffer (htm_temperature_buffer) */
 	UINT32_TO_BITSTREAM(p, temperature);
 
@@ -88,13 +98,18 @@ void measure_temperature(BME_data_t *dat)
 }
 
 
+
+
 void ble_EventHandler(struct gecko_cmd_packet* evt){
 
 	static uint8_t connection_handle = 0;
 	int rssi = 0;
 
+
 	/* Handle events */
 	switch (BGLIB_MSG_ID(evt->header)) {
+
+
 	case gecko_evt_system_boot_id: /*indicates device has started and radio is ready*/
 
 		/* Set advertising parameters.
@@ -159,10 +174,10 @@ void ble_EventHandler(struct gecko_cmd_packet* evt){
 			gecko_cmd_system_set_tx_power(TX_PWR_0DB);
 		}
 		else if(rssi > RSSI_NEG85DB && rssi <= RSSI_NEG75DB){
-//			gecko_cmd_system_set_tx_power(TX_PWR_5DB);
+			gecko_cmd_system_set_tx_power(TX_PWR_5DB);
 		}
 		else{
-//			gecko_cmd_system_set_tx_power(TX_PWR_MAX);
+			gecko_cmd_system_set_tx_power(TX_PWR_MAX);
 		}
 
 		break;
