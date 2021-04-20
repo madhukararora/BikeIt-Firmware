@@ -31,8 +31,8 @@
 //#define PMUXD1_STRONG
 #define LEDDBG_WEAK
 //#define LEDDBG_STRONG
-#define GPSTOGGLE_WEAK
-//#define GPSTOGGLE_STRONG
+//#define GPSTOGGLE_WEAK
+#define GPSTOGGLE_STRONG
 #define GPSRESET_WEAK
 //#define GPSRESET_STRONG
 #define GPSEXTINT_WEAK
@@ -57,6 +57,13 @@
 #define SCL_pin       (10)
 #define SDA_port      (gpioPortC)
 #define SDA_pin       (11)
+
+// switch to board
+#define PB0_port	(gpioPortF)
+#define PB0_pin		(6)
+
+#define PB1_port	(gpioPortF)
+#define PB1_pin		(7)
 #endif
 #if BOARD
 #define PMUXD1_port	(gpioPortA)
@@ -110,12 +117,6 @@
 #define SPISCK_port	(gpioPortC)
 #define SPISCK_pin	(11)
 
-// MCU to BNO055 IMU I2C1. Check schematic first. Can be moved to dedicated BNO055/I2C header file
-#define SDABNO_port	(gpioPortD)
-#define SDABNO_pin	(10)
-#define SCLBNO_port	(gpioPortD)
-#define SCLBNO_pin	(11)
-
 // MCU Rx to GPS Tx LEUART0. MCU Tx to GPS Rx LEUART. Check schematic first. Can be moved to dedicated GPS/LEUART header file
 #define UARTRX_port	(gpioPortF)
 #define UARTRX_pin	(3)
@@ -123,6 +124,12 @@
 #define UARTTX_pin	(4)
 #endif
 #if DEVKIT
+// MCU to BNO055 IMU I2C1. Check schematic first. Can be moved to dedicated BNO055/I2C header file
+#define SDABNO_port	(gpioPortD)
+#define SDABNO_pin	(10)
+#define SCLBNO_port	(gpioPortD)
+#define SCLBNO_pin	(11)
+
 #define DISP_port  (gpioPortD)
 #define DISP_pin   (11)
 
@@ -191,7 +198,7 @@ void gpioInit()
 	 * GPS TOGGLE (board)
 	 */
 #ifdef GPSTOGGLE_STRONG
-	GPIO_DriveStrengthSet(LED1_port, gpioDriveStrengthStrongAlternateStrong);
+	GPIO_DriveStrengthSet(GPSTOGGLE_port, gpioDriveStrengthStrongAlternateStrong);
 #endif
 
 #ifdef GPSTOGGLE_WEAK
@@ -221,7 +228,7 @@ void gpioInit()
 #ifdef GPSEXTINT_WEAK
 	GPIO_DriveStrengthSet(GPSEXTINT_port, gpioDriveStrengthWeakAlternateWeak);
 #endif
-	GPIO_PinModeSet(GPSEXTINT_port, GPSEXTINT_pin, gpioModePushPull, false);
+	GPIO_PinModeSet(GPSEXTINT_port, GPSEXTINT_pin, gpioModeWiredAnd, false);
 
 	/*
 	 * IMU nRESET (board) IMU nRESET pin is active low
@@ -239,14 +246,14 @@ void gpioInit()
 	 * IMU EXTINT (not actually EXT) (board) is output to MCU
 	 */
 	GPIO_PinModeSet(IMUEXTINT_port, IMUEXTINT_pin, gpioModeInput, false);
-
+	bnoEnableInterrupts();
+#endif
 	/*
 	 * PB[0:1] are pushbutton inputs
 	 */
 	GPIO_PinModeSet(PB0_port, PB0_pin, gpioModeInputPull, true);
 	GPIO_PinModeSet(PB1_port, PB1_pin, gpioModeInputPull, true);
-#endif
-
+	enable_button_interrupts();
 }
 
 /**
@@ -343,6 +350,21 @@ void sda_disable()
 void scl_disable(){
 	GPIO_PinOutClear(SCL_port,SCL_pin);
 }
+
+/*
+ * disable the I2C0 BNO055 SDA
+ */
+void bnoSDADisable()
+{
+	GPIO_PinOutClear(SDABNO_port,SDABNO_pin);
+}
+/*
+ * disable the I2C0 BNO055 SCL
+ */
+void bnoSCLDisable()
+{
+	GPIO_PinOutClear(SCLBNO_port,SCLBNO_pin);
+}
 #endif
 #if BOARD
 void gpioPmuxD1SetOn()
@@ -420,21 +442,6 @@ void bmeSCLDisable()
 	GPIO_PinOutClear(SCLBME_port,SCLBME_pin);
 }
 
-/*
- * disable the I2C1 BME280 SDA
- */
-void bnoSDADisable()
-{
-	GPIO_PinOutClear(SDABNO_port,SDABNO_pin);
-}
-/*
- * disable the I2C1 BNO055 SCL
- */
-void bnoSCLDisable()
-{
-	GPIO_PinOutClear(SCLBNO_port,SCLBNO_pin);
-}
-
 /***************************************************************************//**
  * This is a callback function that is invoked each time a GPIO interrupt
  * in the IMU occurs. Pin number is passed as parameter.
@@ -450,6 +457,7 @@ void bnoSCLDisable()
 void bnoInterrupt(uint8_t pin)
 {
 	if (GPIO_PinInGet(IMUEXTINT_port, IMUEXTINT_pin) == 1) {
+		BNO055ResetInt();
 		gecko_external_signal(EXT_SIGNAL_IMU_WAKEUP);
 	}
 }
@@ -461,8 +469,44 @@ void bnoEnableInterrupts()
 	GPIO_ExtIntConfig(IMUEXTINT_port, IMUEXTINT_pin, IMUEXTINT_pin, true, false, true);
 
 	GPIOINT_CallbackRegister(IMUEXTINT_pin, bnoInterrupt);
+	BNO055EnableAnyMotion(255, 1);
+	BNO055EnableIntOnXYZ(1, 1, 1);
 }
 #endif
+
+void button_interrupt(uint8_t pin){
+	switch(pin){
+		case BSP_BUTTON0_PIN:
+			if (GPIO_PinInGet(PB0_port, PB0_pin) == 1) {
+			    gecko_external_signal(PB_PAGE2);
+			}
+		break;
+		case BSP_BUTTON1_PIN:
+			if (GPIO_PinInGet(PB1_port, PB1_pin) == 1) {
+			    gecko_external_signal(PB_PAGE1);
+			}
+		break;
+	}
+}
+/*******************************************************************************
+ * Enable button interrupts for PB0, PB1. Both GPIOs are configured to trigger
+ * an interrupt on the rising edge (button released).
+ ******************************************************************************/
+void enable_button_interrupts(void){
+  GPIOINT_Init();
+
+  /* configure interrupt for PB0 and PB1, rising edges */
+  GPIO_ExtIntConfig(PB0_port, PB0_pin, PB0_pin,
+                    true, false, true);
+  GPIO_ExtIntConfig(PB1_port, PB1_pin, PB1_pin,
+                    true, false, true);
+
+
+  /* register the callback function that is invoked when interrupt occurs */
+  GPIOINT_CallbackRegister(PB0_pin, button_interrupt);
+  GPIOINT_CallbackRegister(PB1_pin, button_interrupt);
+
+}
 
 /*Enable the display on the Devkit or Board*/
 void gpioEnableDisplay(void){

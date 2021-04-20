@@ -51,10 +51,13 @@ void I2C0_IRQHandler(void){
 	if(i2c_status == i2cTransferDone){
 		CORE_ENTER_CRITICAL();
 		BME_TRANSFER_DONE = true;
+		BNO_TRANSFER_DONE = true;
 		gecko_external_signal(I2C_TRANSFER_DONE);
 		CORE_EXIT_CRITICAL();
 	}
 }
+
+
 
 
 

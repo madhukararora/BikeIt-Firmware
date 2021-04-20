@@ -15,9 +15,12 @@
 #include "scheduler.h"
 #include "log.h"
 #include "bme280.h"
+#include "imu.h"
 
 //FUNCTION PROTOTYPES
 void LETIMER0_IRQHandler(void);
 void I2C0_IRQHandler(void);
+void I2C1_IRQHandler(void);
+
 
 #endif /* SRC_IRQ_H_ */

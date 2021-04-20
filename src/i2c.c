@@ -20,7 +20,7 @@
 
 
 /*
- *  Initialize the I2C0
+ *  Initialize the I2C0 for BME
  *  SCL : PC10#14
  *  SDA : PC11#16
  */
@@ -71,6 +71,28 @@ void I2C0_Read(uint8_t slaveAddr,uint8_t *data,uint16_t len)
 	NVIC_EnableIRQ(I2C0_IRQn);
 	I2C_TransferInit(I2C0,&transferSequence);
 
+}
+
+/*
+ *  Initialize the I2C0 for BNO
+ *  SCL : PD11#18
+ *  SDA : PD10#18
+ */
+void I2C0_Init_BNO(void){
+
+	I2CSPM_Init_TypeDef i2c_Config = {
+			.port = I2C0,
+			.sclPort = gpioPortD,
+			.sclPin = 11,
+			.sdaPort = gpioPortD,
+			.sdaPin = 10,
+			.portLocationScl = 18,
+			.portLocationSda = 18,
+			.i2cRefFreq = 0,
+			.i2cMaxFreq = I2C_FREQ_STANDARD_MAX,
+			.i2cClhr = i2cClockHLRStandard
+	};
+	I2CSPM_Init(&i2c_Config);
 }
 
 

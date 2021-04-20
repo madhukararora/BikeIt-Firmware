@@ -178,6 +178,8 @@ void process_event(struct gecko_cmd_packet* evt){
 #if DEVKIT
 			scl_disable();
 			sda_disable();
+			bnoSDADisable();
+			bnoSCLDisable();
 #endif
 			nextState = POWER_ON;
 		}
