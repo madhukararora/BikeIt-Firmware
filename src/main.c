@@ -51,6 +51,15 @@ int appMain(gecko_configuration_t *config)
 
 
 	scheduler_Init();
+
+	// must initialize IMU first as it shares I2C0 on different pins
+	// initialize and config IMU, enable interrupts, reset and disable I2C
+	BNO055_Init();
+	bnoEnableInterrupts();
+	I2C_Reset(I2C0);
+	I2C_Enable(I2C0,false);
+	CMU_ClockEnable(cmuClock_I2C0,false);
+
 	gpioLed0SetOn();
 
 	BME280_Init();
@@ -62,6 +71,6 @@ int appMain(gecko_configuration_t *config)
 		}
 		evt = gecko_wait_event();
 		ble_EventHandler(evt);
-		//process_event(evt);
+		process_event(evt);
 	}
 }
