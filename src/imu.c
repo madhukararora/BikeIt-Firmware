@@ -230,23 +230,24 @@ uint16_t BNO055Read16(uint8_t reg){
 
 uint32_t BNO055Read24(uint8_t reg){
 	uint32_t data;
+	uint8_t dat0, dat1, dat2;
+
 	I2C0_Init_BNO();
 	I2C0_Write(BNO055_I2C_ADDR1, &reg, sizeof(uint8_t));
 	while(BNO_TRANSFER_DONE == true);
 	BNO_TRANSFER_DONE = false;
 
-	I2C0_Read(BNO055_I2C_ADDR1, &data, sizeof(uint8_t));
+	I2C0_Read(BNO055_I2C_ADDR1, &dat0, sizeof(uint8_t));
 	while(BNO_TRANSFER_DONE == true);
 	BNO_TRANSFER_DONE = false;
-	data <<= 8;
-	I2C0_Read(BNO055_I2C_ADDR1, &data, sizeof(uint8_t));
+	I2C0_Read(BNO055_I2C_ADDR1, &dat1, sizeof(uint8_t));
 	while(BNO_TRANSFER_DONE == true);
 	BNO_TRANSFER_DONE = false;
-	data <<= 8;
-	I2C0_Read(BNO055_I2C_ADDR1, &data, sizeof(uint8_t));
+	I2C0_Read(BNO055_I2C_ADDR1, &dat2, sizeof(uint8_t));
 	while(BNO_TRANSFER_DONE == true);
 	BNO_TRANSFER_DONE = false;
-	data <<= 8;
+
+	data = BYTES_TO_UINT32(dat0, dat1, dat2, 0);
 
 	return data;
 }
