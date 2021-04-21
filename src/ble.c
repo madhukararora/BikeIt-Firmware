@@ -26,8 +26,8 @@ void measure_navigation(GNSS_data_t *dat)
 	float fgspeed = strtof(dat->gspeed, NULL) * 100;
 
 	uint16_t groundspeed = (uint16_t)(FLT_TO_UINT32(fgspeed, 0) >> 1);	// convert speed in knots to m/s. units is 1/100 of a m/s
-	int32_t longitude = FLT_TO_UINT32(flon, 0);   // Stores the longitude data read from the sensor in the correct format
-	int32_t latitude = FLT_TO_UINT32(flat, 0);  // Stores the latitude data read from the sensor in the correct format
+	uint32_t longitude = FLT_TO_UINT32(flon, 0);   // Stores the longitude data read from the sensor in the correct format
+	uint32_t latitude = FLT_TO_UINT32(flat, 0);  // Stores the latitude data read from the sensor in the correct format
 	uint8_t *p = ln_buffer; /* Pointer to LN buffer needed for converting values to bitstream. */
 
 	/* Convert flags to bitstream and append them in the LN data buffer (ln_buffer) */

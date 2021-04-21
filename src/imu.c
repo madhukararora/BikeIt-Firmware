@@ -208,7 +208,7 @@ uint8_t BNO055Read8(uint8_t reg){
 	I2C0_Init_BNO();
 	I2C0_Write(BNO055_I2C_ADDR1, &reg,sizeof(uint8_t));
 
-	while(BNO_TRANSFER_DONE == true);
+	while(BNO_TRANSFER_DONE == false);
 	BNO_TRANSFER_DONE = false;
 	I2C0_Read(BNO_TRANSFER_DONE, &data, sizeof(uint8_t));
 
@@ -219,10 +219,10 @@ uint16_t BNO055Read16(uint8_t reg){
 	uint8_t data[2];//first byte is MSB, second byte is LSB
 	I2C0_Init_BNO();
 	I2C0_Write(BNO055_I2C_ADDR1, &reg, sizeof(uint8_t));
-	while(BNO_TRANSFER_DONE == true);
+	while(BNO_TRANSFER_DONE == false);
 	BNO_TRANSFER_DONE = false;
 	I2C0_Read(BNO055_I2C_ADDR1, data, sizeof(uint16_t));
-	while(BNO_TRANSFER_DONE == true);
+	while(BNO_TRANSFER_DONE == false);
 	BNO_TRANSFER_DONE = false;
 
 	return (uint16_t)data[0] << 8 | data[1];
@@ -234,17 +234,17 @@ uint32_t BNO055Read24(uint8_t reg){
 
 	I2C0_Init_BNO();
 	I2C0_Write(BNO055_I2C_ADDR1, &reg, sizeof(uint8_t));
-	while(BNO_TRANSFER_DONE == true);
+	while(BNO_TRANSFER_DONE == false);
 	BNO_TRANSFER_DONE = false;
 
 	I2C0_Read(BNO055_I2C_ADDR1, &dat0, sizeof(uint8_t));
-	while(BNO_TRANSFER_DONE == true);
+	while(BNO_TRANSFER_DONE == false);
 	BNO_TRANSFER_DONE = false;
 	I2C0_Read(BNO055_I2C_ADDR1, &dat1, sizeof(uint8_t));
-	while(BNO_TRANSFER_DONE == true);
+	while(BNO_TRANSFER_DONE == false);
 	BNO_TRANSFER_DONE = false;
 	I2C0_Read(BNO055_I2C_ADDR1, &dat2, sizeof(uint8_t));
-	while(BNO_TRANSFER_DONE == true);
+	while(BNO_TRANSFER_DONE == false);
 	BNO_TRANSFER_DONE = false;
 
 	data = BYTES_TO_UINT32(dat0, dat1, dat2, 0);
@@ -269,7 +269,7 @@ void BNO055_WriteRegister(uint8_t reg, uint8_t val){
 	uint8_t data[2] = {reg, val};
 	I2C0_Init_BNO();
 	I2C0_Write(BNO055_I2C_ADDR1, data, sizeof(uint16_t));
-	while(BNO_TRANSFER_DONE == true);
+	while(BNO_TRANSFER_DONE == false);
 	BNO_TRANSFER_DONE = false;
 }
 
