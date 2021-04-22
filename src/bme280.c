@@ -28,7 +28,7 @@ uint8_t BME280Read8(uint8_t reg)
 	I2C0_Init();
 	I2C0_Write(BME280_ADDRESS,&reg,sizeof(uint8_t));
 
-	while(BME_TRANSFER_DONE == true);
+	while(BME_TRANSFER_DONE == false);
 	BME_TRANSFER_DONE = false;
 	I2C0_Read(BME280_ADDRESS,&data,sizeof(uint8_t));
 
@@ -40,10 +40,10 @@ uint16_t BME280Read16(uint8_t reg)
 	uint8_t data[2];//first byte is MSB, second byte is LSB
 	I2C0_Init();
 	I2C0_Write(BME280_ADDRESS,&reg,sizeof(uint8_t));
-	while(BME_TRANSFER_DONE == true);
+	while(BME_TRANSFER_DONE == false);
 	BME_TRANSFER_DONE = false;
 	I2C0_Read(BME280_ADDRESS,data,sizeof(uint16_t));
-	while(BME_TRANSFER_DONE == true);
+	while(BME_TRANSFER_DONE == false);
 	BME_TRANSFER_DONE = false;
 
 	return (uint16_t)data[0] << 8 | data[1];
@@ -53,23 +53,23 @@ uint16_t BME280Read16(uint8_t reg)
 uint32_t BME280Read24(uint8_t reg)
 {
 	uint32_t data;
+	uint8_t dat0, dat1, dat2;
+
 	I2C0_Init();
 	I2C0_Write(BME280_ADDRESS,&reg,sizeof(uint8_t));
-	while(BME_TRANSFER_DONE == true);
+	while(BME_TRANSFER_DONE == false);
 	BME_TRANSFER_DONE = false;
 
-	I2C0_Read(BME280_ADDRESS,&data,sizeof(uint8_t));
-	while(BME_TRANSFER_DONE == true);
+	I2C0_Read(BME280_ADDRESS,&dat0,sizeof(uint8_t));
+	while(BME_TRANSFER_DONE == false);
 	BME_TRANSFER_DONE = false;
-	data <<= 8;
-	I2C0_Read(BME280_ADDRESS,&data,sizeof(uint8_t));
-	while(BME_TRANSFER_DONE == true);
+	I2C0_Read(BME280_ADDRESS,&dat1,sizeof(uint8_t));
+	while(BME_TRANSFER_DONE == false);
 	BME_TRANSFER_DONE = false;
-	data <<= 8;
-	I2C0_Read(BME280_ADDRESS,&data,sizeof(uint8_t));
-	while(BME_TRANSFER_DONE == true);
+	I2C0_Read(BME280_ADDRESS,&dat2,sizeof(uint8_t));
+	while(BME_TRANSFER_DONE == false);
 	BME_TRANSFER_DONE = false;
-	data <<= 8;
+	data = BYTES_TO_UINT32(dat0, dat1, dat2, 0);
 
 	return data;
 
@@ -97,7 +97,7 @@ void BME280_WriteRegister(uint8_t reg,uint8_t val)
 	uint8_t data[2] = {reg,val};
 	I2C0_Init();
 	I2C0_Write(BME280_ADDRESS,data,sizeof(uint16_t));
-	while(BME_TRANSFER_DONE == true);
+	while(BME_TRANSFER_DONE == false);
 	BME_TRANSFER_DONE = false;
 
 }

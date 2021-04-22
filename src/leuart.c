@@ -7,12 +7,18 @@
 
 #include "leuart.h"
 
-#define packetLength 66
+#define packetLength 100
 
 char gnssarray[100];
 UARTDRV_HandleData_t leuartHandle0; /* UART driver handle */
 UARTDRV_Handle_t  gnssHandle0 = &leuartHandle0;
-GNSS_data_t GNRMC_data;
+GNSS_data_t GNRMC_data = {
+		"$GNRMC",
+		"00000.000",
+		"0000.00000",
+		"00000.0000",
+		"0.00"
+};
 
 void LEUART_rx_callback(UARTDRV_Handle_t handle, Ecode_t transferStatus, uint8_t *data, UARTDRV_Count_t transferCount){
 	static  uint8_t rxCnt = 0;
@@ -28,8 +34,6 @@ void LEUART_rx_callback(UARTDRV_Handle_t handle, Ecode_t transferStatus, uint8_t
 			if(strchr(GNRMC_data.latitude, ',') != NULL) return;	// check if gps lock is full (in case of empty values during warmup)
 			strncpy(GNRMC_data.longitude, &gnssarray[32], 11);
 			strncpy(GNRMC_data.gspeed, &gnssarray[46], 4);
-
-			measure_navigation(&GNRMC_data);	// send gnsarray for parsing and send off
 		}
 		memset(gnssarray, '\0', 100);	// reset gnss array
 		rxCnt++;

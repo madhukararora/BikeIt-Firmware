@@ -7,7 +7,7 @@
  */
 
 #include "scheduler.h"
-
+extern GNSS_data_t GNRMC_data;
 // set BME sensor data wherever it should be set
 BME_data_t BME_data = {
 		15.23,
@@ -100,7 +100,7 @@ void process_event(struct gecko_cmd_packet* evt){
 
 	scheduler_states_t currentState;
 	static scheduler_states_t nextState = POWER_ON;
-	static menu_states_t menustate;
+
 
 	currentState = nextState;
 	//LOG_INFO("INSIDE process_event %ld",evt->data.evt_system_external_signal.extsignals);
@@ -111,54 +111,33 @@ void process_event(struct gecko_cmd_packet* evt){
 			CMU_ClockEnable(cmuClock_I2C0,true);
 
 			gpioGpsToggleSetOn();
-			initLEUART();
-
+//			timerWaitUs(1000000);
 			nextState = WRITE_BEGIN;
-			timerWaitUs(80000);
 		}
 		break;
 	case WRITE_BEGIN:
-		if((evt->data.evt_system_external_signal.extsignals) == DELAY_GENERATED){
+//		if((evt->data.evt_system_external_signal.extsignals) == DELAY_GENERATED){
 			sleep_block_on(sleepEM2);
-
+			initLEUART();
+			UARTDRV_Receive(gnssHandle0, leuartbuffer, 66, LEUART_rx_callback);	// start non blocking (LDMA) Rx
+			timerWaitUs(1000000);
+			sleep_block_off(sleepEM2);
 			nextState = WRITE_DONE;
-		}
+//		}
 		break;
 	case WRITE_DONE:
-//		if((evt->data.evt_system_external_signal.extsignals) == I2C_TRANSFER_DONE){
-//			NVIC_DisableIRQ(I2C0_IRQn);
-			sleep_block_off(sleepEM2);
-			timerWaitUs(10000);
-			nextState = READ_BEGIN;
-		//}
-		break;
-	case READ_BEGIN:
 		if((evt->data.evt_system_external_signal.extsignals) == DELAY_GENERATED){
 			sleep_block_on(sleepEM2);
-			nextState = POWER_OFF;
+			measure_navigation(&GNRMC_data);	// send gnsarray for parsing and send off
+			BME_data.pressure += 1;//= getPressure();
+			measure_pressure(&BME_data);
+			BME_data.temperature += 0.1;//= getTemperature();
+			measure_temperature(&BME_data);
+			sleep_block_off(sleepEM2);
+			nextState = WRITE_BEGIN;
 		}
 		break;
 	case POWER_OFF:
-		sleep_block_on(sleepEM2);
-		UARTDRV_Receive(gnssHandle0, leuartbuffer, 66, LEUART_rx_callback);	// start non blocking (LDMA) Rx
-//		BME_data.pressure = getPressure();
-		measure_pressure(&BME_data);
-//		BME_data.temperature = getTemperature();
-		measure_temperature(&BME_data);
-		sleep_block_off(sleepEM2);
-		// switch between menu pages
-		switch(evt->data.evt_system_external_signal.extsignals){
-		case PB_PAGE1:
-			menustate = PAGE1;
-			break;
-		case PB_PAGE2:	// BUG: cannot switch menus when health thermometer service is being indicated
-			menustate = PAGE2;
-			break;
-		default:
-			break;
-		}
-		displayMenu(menustate);
-
 		if((evt->data.evt_system_external_signal.extsignals) == I2C_TRANSFER_DONE){
 			sleep_block_off(sleepEM2);
 			NVIC_DisableIRQ(I2C0_IRQn);
@@ -167,14 +146,14 @@ void process_event(struct gecko_cmd_packet* evt){
 			CMU_ClockEnable(cmuClock_I2C0,false);
 			// disable leuart
 			UARTDRV_DeInit(gnssHandle0);
-#if DEVKIT
-			scl_disable();
-			sda_disable();
-			bnoSDADisable();
-			bnoSCLDisable();
-#endif
-			nextState = POWER_ON;
+//#if DEVKIT
+//			scl_disable();
+//			sda_disable();
+//			bnoSDADisable();
+//			bnoSCLDisable();
+//#endif
 		}
+		nextState = POWER_ON;
 		break;
 	default:
 		break;

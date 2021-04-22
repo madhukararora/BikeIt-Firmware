@@ -91,6 +91,7 @@ void measure_temperature(BME_data_t *dat)
 void ble_EventHandler(struct gecko_cmd_packet* evt){
 
 	static uint8_t connection_handle = 0;
+	static menu_states_t menustate;
 	int rssi = 0;
 
 	/* Handle events */
@@ -172,9 +173,16 @@ void ble_EventHandler(struct gecko_cmd_packet* evt){
 //		handle_external_signal_event(evt->data.evt_system_external_signal.extsignals);
 		//	printf("Signal is %x\r\n", signal);
 		switch (evt->data.evt_system_external_signal.extsignals){
+		case PB_PAGE1:
+			menustate = PAGE1;
+			break;
+		case PB_PAGE2:	// BUG: cannot switch menus when health thermometer service is being indicated
+			menustate = PAGE2;
+			break;
 		default:
 			break;
 		}
+		displayMenu(menustate);
 		break;
 		/* This event is generated when a connected client has either
 		 * 1) changed a Characteristic Client Configuration, meaning that they have enabled

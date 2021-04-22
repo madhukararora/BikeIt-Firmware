@@ -54,15 +54,15 @@ int appMain(gecko_configuration_t *config)
 
 	// must initialize IMU first as it shares I2C0 on different pins
 	// initialize and config IMU, enable interrupts, reset and disable I2C
-	BNO055_Init();
-	bnoEnableInterrupts();
-	I2C_Reset(I2C0);
-	I2C_Enable(I2C0,false);
-	CMU_ClockEnable(cmuClock_I2C0,false);
+//	BNO055_Init();
+//	bnoEnableInterrupts();
+//	I2C_Reset(I2C0);
+//	I2C_Enable(I2C0,false);
+//	CMU_ClockEnable(cmuClock_I2C0,false);
 
 	gpioLed1SetOn();
 
-	BME280_Init();
+//	BME280_Init();
 
 //	SLEEP_SleepBlockBegin(sleepEM3);
 	while(1){
