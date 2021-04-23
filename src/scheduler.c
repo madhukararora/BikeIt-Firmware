@@ -48,11 +48,6 @@ void handle_external_signal_event(uint8_t signal){
 void scheduler_Init(void)
 {
 	eventFlag = 0;
-
-	temp_Si7021.data_8 = 0;
-	temp_Si7021.data_16 = 0;
-	temp_Si7021.temp_code = 0;
-	temp_Si7021.tempC = 0;
 }
 
 /*
@@ -101,7 +96,6 @@ void process_event(struct gecko_cmd_packet* evt){
 	scheduler_states_t currentState;
 	static scheduler_states_t nextState = POWER_ON;
 
-
 	currentState = nextState;
 	//LOG_INFO("INSIDE process_event %ld",evt->data.evt_system_external_signal.extsignals);
 	switch(currentState){
@@ -110,7 +104,8 @@ void process_event(struct gecko_cmd_packet* evt){
 		if((evt->data.evt_system_external_signal.extsignals) == TIMER_UF){
 			CMU_ClockEnable(cmuClock_I2C0,true);
 
-			gpioGpsToggleSetOn();
+//			gpioGpsToggleSetOn();
+			initLEUART();
 //			timerWaitUs(1000000);
 			nextState = WRITE_BEGIN;
 		}
@@ -118,7 +113,7 @@ void process_event(struct gecko_cmd_packet* evt){
 	case WRITE_BEGIN:
 //		if((evt->data.evt_system_external_signal.extsignals) == DELAY_GENERATED){
 			sleep_block_on(sleepEM2);
-			initLEUART();
+			CMU_ClockEnable(cmuClock_I2C0,true);
 			UARTDRV_Receive(gnssHandle0, leuartbuffer, 66, LEUART_rx_callback);	// start non blocking (LDMA) Rx
 			timerWaitUs(1000000);
 			sleep_block_off(sleepEM2);
@@ -128,7 +123,7 @@ void process_event(struct gecko_cmd_packet* evt){
 	case WRITE_DONE:
 		if((evt->data.evt_system_external_signal.extsignals) == DELAY_GENERATED){
 			sleep_block_on(sleepEM2);
-			measure_navigation(&GNRMC_data);	// send gnsarray for parsing and send off
+			measure_navigation(&GNRMC_data);	// send GNRMC_data
 			BME_data.pressure += 1;//= getPressure();
 			measure_pressure(&BME_data);
 			BME_data.temperature += 0.1;//= getTemperature();
@@ -138,22 +133,17 @@ void process_event(struct gecko_cmd_packet* evt){
 		}
 		break;
 	case POWER_OFF:
-		if((evt->data.evt_system_external_signal.extsignals) == I2C_TRANSFER_DONE){
-			sleep_block_off(sleepEM2);
-			NVIC_DisableIRQ(I2C0_IRQn);
-			I2C_Reset(I2C0);
-			I2C_Enable(I2C0,false);
-			CMU_ClockEnable(cmuClock_I2C0,false);
-			// disable leuart
-			UARTDRV_DeInit(gnssHandle0);
+		NVIC_DisableIRQ(I2C0_IRQn);
+		I2C_Reset(I2C0);
+		I2C_Enable(I2C0,false);
+		CMU_ClockEnable(cmuClock_I2C0,false);
 //#if DEVKIT
 //			scl_disable();
 //			sda_disable();
 //			bnoSDADisable();
 //			bnoSCLDisable();
 //#endif
-		}
-		nextState = POWER_ON;
+		nextState = WRITE_BEGIN;
 		break;
 	default:
 		break;

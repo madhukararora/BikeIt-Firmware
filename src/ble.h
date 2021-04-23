@@ -20,8 +20,11 @@ typedef struct GNSS_data_t{
 	char header[7];
 	char utctime[10];
 	char latitude[11];
+	float flat;
 	char longitude[12];
+	float flon;
 	char gspeed[5];
+	uint16_t gspd;
 } GNSS_data_t;
 
 // move to BME280 source/header files

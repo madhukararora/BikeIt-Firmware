@@ -29,9 +29,9 @@ void displayMenu(uint8_t menupage){
 void displayGNSS(GNSS_data_t *data){
 	displayPrintf(DISPLAY_ROW_BTADDR,"GNSS Menu 1");
 	displayPrintf(DISPLAY_ROW_BTADDR2,"UTC:%s", data->utctime);
-	displayPrintf(DISPLAY_ROW_CONNECTION,"Lat:%s", data->latitude);
-	displayPrintf(DISPLAY_ROW_PASSKEY,"Lon:%s", data->longitude);
-	displayPrintf(DISPLAY_ROW_ACTION,"Spd:%s", data->gspeed);
+	displayPrintf(DISPLAY_ROW_CONNECTION,"Lat:%0.2f", data->flat);
+	displayPrintf(DISPLAY_ROW_PASSKEY,"Lon:%0.2f", data->flon);
+	displayPrintf(DISPLAY_ROW_ACTION,"Spd:%d", data->gspd);
 }
 
 void displayTempPres(BME_data_t *data){

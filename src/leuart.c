@@ -7,36 +7,45 @@
 
 #include "leuart.h"
 
-#define packetLength 100
+#define packetLength 66
 
 char gnssarray[100];
 UARTDRV_HandleData_t leuartHandle0; /* UART driver handle */
 UARTDRV_Handle_t  gnssHandle0 = &leuartHandle0;
 GNSS_data_t GNRMC_data = {
 		"$GNRMC",
-		"00000.000",
-		"0000.00000",
+		"0000000.00",
 		"00000.0000",
-		"0.00"
+		0.0,
+		"00000.0000",
+		0.0,
+		"0.00",
+		0
 };
 
 void LEUART_rx_callback(UARTDRV_Handle_t handle, Ecode_t transferStatus, uint8_t *data, UARTDRV_Count_t transferCount){
-	static  uint8_t rxCnt = 0;
 	if(transferStatus == ECODE_EMDRV_UARTDRV_OK){
-		// copy leuart rx data into gnss buffer array
-		memcpy(gnssarray, data, packetLength);
+		char *gnssstr;
 		// check if gnss packet starts with the GNRMC (Recommended Minimum Specific GNSS Data) and UTC time stamp is populated
-		if((strncmp(gnssarray, "$GNRMC", 6) == 0) && !(strncmp(gnssarray, "$GNRMC,,", 8) == 0)){
-			// split gnssarray into data we want
-			strncpy(GNRMC_data.header, gnssarray, 6);
-			strncpy(GNRMC_data.utctime, &gnssarray[7], 9);
-			strncpy(GNRMC_data.latitude, &gnssarray[19], 10);
-			if(strchr(GNRMC_data.latitude, ',') != NULL) return;	// check if gps lock is full (in case of empty values during warmup)
-			strncpy(GNRMC_data.longitude, &gnssarray[32], 11);
-			strncpy(GNRMC_data.gspeed, &gnssarray[46], 4);
+		gpioGpsToggleSetOff();
+		gnssstr = strstr((char *)data, "$GNRMC");
+		if((gnssstr != 0) && (strlen(gnssstr) > 56) && !(strncmp(gnssstr, "$GNRMC,,", 8) == 0)){
+			// split gnssstr into data we want
+			strncpy(GNRMC_data.header, gnssstr, 6);
+			strncpy(GNRMC_data.utctime, &gnssstr[7], 9);
+			strncpy(GNRMC_data.latitude, &gnssstr[19], 10);
+			if(strchr(GNRMC_data.latitude, ',') != NULL) return;	// check if gps lock is complete (in case of empty values during warmup)
+			strncpy(GNRMC_data.longitude, &gnssstr[32], 11);
+			strncpy(GNRMC_data.gspeed, &gnssstr[46], 4);
+
+			// convert strings to floats for display
+			GNRMC_data.flon = strtof(GNRMC_data.longitude, NULL) / 100;
+			GNRMC_data.flat = strtof(GNRMC_data.latitude, NULL) / 100;
+			float fgspeed = strtof(GNRMC_data.gspeed, NULL);
+			GNRMC_data.gspd = (uint16_t)(FLT_TO_UINT32(fgspeed, 0) >> 1);	// convert speed in knots to m/s. units is 1/100 of a m/s
+
+			gpioGpsToggleSetOn();
 		}
-		memset(gnssarray, '\0', 100);	// reset gnss array
-		rxCnt++;
 	}
 }
 

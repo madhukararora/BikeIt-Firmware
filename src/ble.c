@@ -13,28 +13,20 @@
 
 #define TICKS_PER_SECOND    (32768)
 
-//extern UARTDRV_Handle_t  gnssHandle0;
-
 void measure_navigation(GNSS_data_t *dat)
 {
 	uint8_t ln_buffer[28]; /* Stores the location and navigation data in the Location and Navigation (LN) format. */
 	uint16_t flags = 0x05;   /* LN Flag set to bit 1 for instantaneous speed and bit 2 for location present*/
 
-	// convert strings to floats
-	float flon = strtof(dat->longitude, NULL) * 1000;
-	float flat = strtof(dat->latitude, NULL) * 1000;
-	float fgspeed = strtof(dat->gspeed, NULL) * 100;
-
-	uint16_t groundspeed = (uint16_t)(FLT_TO_UINT32(fgspeed, 0) >> 1);	// convert speed in knots to m/s. units is 1/100 of a m/s
-	uint32_t longitude = FLT_TO_UINT32(flon, 0);   // Stores the longitude data read from the sensor in the correct format
-	uint32_t latitude = FLT_TO_UINT32(flat, 0);  // Stores the latitude data read from the sensor in the correct format
+	uint32_t longitude = FLT_TO_UINT32((dat->flon  * 1000), 0);   // Stores the longitude data read from the sensor in the correct format
+	uint32_t latitude = FLT_TO_UINT32((dat->flat  * 1000), 0);  // Stores the latitude data read from the sensor in the correct format
 	uint8_t *p = ln_buffer; /* Pointer to LN buffer needed for converting values to bitstream. */
 
 	/* Convert flags to bitstream and append them in the LN data buffer (ln_buffer) */
 	UINT16_TO_BITSTREAM(p, flags);
 
 	/* Convert GNSS values to bitstream and place it in the LN data buffer (ln_buffer) */
-	UINT16_TO_BITSTREAM(p, groundspeed);
+	UINT16_TO_BITSTREAM(p, (dat->gspd * 100));
 	UINT32_TO_BITSTREAM(p, latitude);	// issue with sign conversion
 	UINT32_TO_BITSTREAM(p, longitude);	// issue with sign conversion
 
