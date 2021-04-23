@@ -23,14 +23,6 @@
 //GLOBAL VARIABLES
 volatile uint32_t eventFlag; //variable to get the event from the IRQ
 
-struct{
-	uint8_t data_8;
-	uint16_t data_16;
-	uint16_t temp_code;
-	float tempC;
-}temp_Si7021;
-
-
 typedef enum uint32_t{
 	NO_PENDING_EVENTS = 0x0,
 	DELAY_GENERATED = (0x1UL << 0),
@@ -44,13 +36,10 @@ typedef enum uint32_t{
 
 typedef enum{
 	POWER_ON,
-	WRITE_BEGIN,
-	WRITE_DONE,
-	READ_BEGIN,
-	READ_DONE,
+	START_DELAY,
+	SENSOR_IO,
 	POWER_OFF
 }scheduler_states_t;
-
 
 
 //FUNCTION PROTOTYPES

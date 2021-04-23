@@ -14,7 +14,7 @@ UARTDRV_HandleData_t leuartHandle0; /* UART driver handle */
 UARTDRV_Handle_t  gnssHandle0 = &leuartHandle0;
 GNSS_data_t GNRMC_data = {
 		"$GNRMC",
-		"0000000.00",
+		"000000.00",
 		"00000.0000",
 		0.0,
 		"00000.0000",
@@ -43,7 +43,6 @@ void LEUART_rx_callback(UARTDRV_Handle_t handle, Ecode_t transferStatus, uint8_t
 			GNRMC_data.flat = strtof(GNRMC_data.latitude, NULL) / 100;
 			float fgspeed = strtof(GNRMC_data.gspeed, NULL);
 			GNRMC_data.gspd = (uint16_t)(FLT_TO_UINT32(fgspeed, 0) >> 1);	// convert speed in knots to m/s. units is 1/100 of a m/s
-
 			gpioGpsToggleSetOn();
 		}
 	}

@@ -102,25 +102,23 @@ void process_event(struct gecko_cmd_packet* evt){
 
 	case POWER_ON:
 		if((evt->data.evt_system_external_signal.extsignals) == TIMER_UF){
-			CMU_ClockEnable(cmuClock_I2C0,true);
-
 //			gpioGpsToggleSetOn();
 			initLEUART();
 //			timerWaitUs(1000000);
-			nextState = WRITE_BEGIN;
+			nextState = START_DELAY;
 		}
 		break;
-	case WRITE_BEGIN:
+	case START_DELAY:
 //		if((evt->data.evt_system_external_signal.extsignals) == DELAY_GENERATED){
 			sleep_block_on(sleepEM2);
 			CMU_ClockEnable(cmuClock_I2C0,true);
-			UARTDRV_Receive(gnssHandle0, leuartbuffer, 66, LEUART_rx_callback);	// start non blocking (LDMA) Rx
 			timerWaitUs(1000000);
 			sleep_block_off(sleepEM2);
-			nextState = WRITE_DONE;
+			nextState = SENSOR_IO;
 //		}
 		break;
-	case WRITE_DONE:
+	case SENSOR_IO:
+		UARTDRV_Receive(gnssHandle0, leuartbuffer, 66, LEUART_rx_callback);	// start non blocking (LDMA) Rx
 		if((evt->data.evt_system_external_signal.extsignals) == DELAY_GENERATED){
 			sleep_block_on(sleepEM2);
 			measure_navigation(&GNRMC_data);	// send GNRMC_data
@@ -129,7 +127,7 @@ void process_event(struct gecko_cmd_packet* evt){
 			BME_data.temperature += 0.1;//= getTemperature();
 			measure_temperature(&BME_data);
 			sleep_block_off(sleepEM2);
-			nextState = WRITE_BEGIN;
+			nextState = POWER_OFF;
 		}
 		break;
 	case POWER_OFF:
@@ -143,7 +141,7 @@ void process_event(struct gecko_cmd_packet* evt){
 //			bnoSDADisable();
 //			bnoSCLDisable();
 //#endif
-		nextState = WRITE_BEGIN;
+		nextState = START_DELAY;
 		break;
 	default:
 		break;

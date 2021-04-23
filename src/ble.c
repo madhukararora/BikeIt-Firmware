@@ -11,7 +11,7 @@
 #include "display.h"
 #include "log.h"
 
-#define TICKS_PER_SECOND    (32768)
+#define TICKS_PER_SECOND    (32768) Loop
 
 void measure_navigation(GNSS_data_t *dat)
 {

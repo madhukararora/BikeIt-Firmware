@@ -60,7 +60,7 @@ int appMain(gecko_configuration_t *config)
 //	I2C_Enable(I2C0,false);
 //	CMU_ClockEnable(cmuClock_I2C0,false);
 
-	gpioLed1SetOn();
+//	gpioLed1SetOn();
 
 //	BME280_Init();
 
