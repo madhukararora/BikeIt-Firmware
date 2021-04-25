@@ -104,6 +104,7 @@ void process_event(struct gecko_cmd_packet* evt){
 		if((evt->data.evt_system_external_signal.extsignals) == TIMER_UF){
 //			gpioGpsToggleSetOn();
 			initLEUART();
+
 //			timerWaitUs(1000000);
 			nextState = START_DELAY;
 		}
@@ -122,25 +123,15 @@ void process_event(struct gecko_cmd_packet* evt){
 		if((evt->data.evt_system_external_signal.extsignals) == DELAY_GENERATED){
 			sleep_block_on(sleepEM2);
 			measure_navigation(&GNRMC_data);	// send GNRMC_data
-			BME_data.pressure += 1;//= getPressure();
-			measure_pressure(&BME_data);
-			BME_data.temperature += 0.1;//= getTemperature();
+			BME_data.temperature = getTemperature();
 			measure_temperature(&BME_data);
+			BME_data.pressure = getPressure();
+			measure_pressure(&BME_data);
 			sleep_block_off(sleepEM2);
 			nextState = POWER_OFF;
 		}
 		break;
 	case POWER_OFF:
-		NVIC_DisableIRQ(I2C0_IRQn);
-		I2C_Reset(I2C0);
-		I2C_Enable(I2C0,false);
-		CMU_ClockEnable(cmuClock_I2C0,false);
-//#if DEVKIT
-//			scl_disable();
-//			sda_disable();
-//			bnoSDADisable();
-//			bnoSCLDisable();
-//#endif
 		nextState = START_DELAY;
 		break;
 	default:

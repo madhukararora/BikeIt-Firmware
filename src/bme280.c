@@ -40,12 +40,12 @@ uint8_t BME280Read8(uint8_t reg)
 
 	while(BME_TRANSFER_DONE == false);
 	BME_TRANSFER_DONE = false;
-	delayApproxOneSecond();
+//	delayApproxOneSecond();
 
 	I2C0_Read(BME280_ADDRESS,&data,sizeof(uint8_t));
 	while(BME_TRANSFER_DONE == false);
 	BME_TRANSFER_DONE = false;
-	delayApproxOneSecond();
+//	delayApproxOneSecond();
 	return data;
 }
 
@@ -55,12 +55,12 @@ uint16_t BME280Read16(uint8_t reg)
 	I2C0_Write(BME280_ADDRESS,&reg,sizeof(uint8_t));
 	while(BME_TRANSFER_DONE == false);
 	BME_TRANSFER_DONE = false;
-	delayApproxOneSecond();
+//	delayApproxOneSecond();
 
 	I2C0_Read(BME280_ADDRESS,data,sizeof(uint16_t));
 	while(BME_TRANSFER_DONE == false);
 	BME_TRANSFER_DONE = false;
-	delayApproxOneSecond();
+//	delayApproxOneSecond();
 	return (uint16_t)data[0] << 8 | data[1];
 
 }
@@ -74,27 +74,27 @@ uint32_t BME280Read24(uint8_t reg)
 	I2C0_Write(BME280_ADDRESS,&reg,sizeof(uint8_t));
 	while(BME_TRANSFER_DONE == false);
 	BME_TRANSFER_DONE = false;
-	delayApproxOneSecond();
+//	delayApproxOneSecond();
 
 	I2C0_Read(BME280_ADDRESS,&dat0,sizeof(uint8_t));
 	while(BME_TRANSFER_DONE == false);
 	BME_TRANSFER_DONE = false;
 
-	delayApproxOneSecond();
+//	delayApproxOneSecond();
 	data = dat0;
 	data = data << 8;
 
 	I2C0_Read(BME280_ADDRESS,&dat1,sizeof(uint8_t));
 	while(BME_TRANSFER_DONE == false);
 	BME_TRANSFER_DONE = false;
-	delayApproxOneSecond();
+//	delayApproxOneSecond();
 	data |= dat1;
 	data = data << 8;
 
 	I2C0_Read(BME280_ADDRESS,&dat2,sizeof(uint8_t));
 	while(BME_TRANSFER_DONE == false);
 	BME_TRANSFER_DONE = false;
-	delayApproxOneSecond();
+//	delayApproxOneSecond();
 
 	data |= dat2;
 
@@ -125,7 +125,7 @@ void BME280_WriteRegister(uint8_t reg,uint8_t val)
 	I2C0_Write(BME280_ADDRESS,data,sizeof(uint16_t));
 	while(BME_TRANSFER_DONE == false);
 	BME_TRANSFER_DONE = false;
-	delayApproxOneSecond();
+//	delayApproxOneSecond();
 
 }
 //initialize the BME280
