@@ -47,13 +47,24 @@ int appMain(gecko_configuration_t *config)
 
 	/*Initialize Display*/
 	displayInit();
-	displayPrintf(DISPLAY_ROW_NAME+1,"BikeIt On");
+	displayPrintf(DISPLAY_ROW_NAME,"BikeIt On");
+
 
 
 	scheduler_Init();
 	gpioLed0SetOn();
-
+	I2C0_Init();
 	BME280_Init();
+
+//	float temp = getTemperature();
+//	displayPrintf(DISPLAY_ROW_NAME+2,"temp : %f",temp);
+//
+//	uint32_t pressure = getPressure();
+//	displayPrintf(DISPLAY_ROW_NAME+3,"pressure : %d",pressure);
+//
+//	float altitude = calcAltitude((float)pressure);
+//	displayPrintf(DISPLAY_ROW_NAME+4,"altitude : %f",altitude);
+
 
 //	SLEEP_SleepBlockBegin(sleepEM3);
 	while(1){
@@ -62,6 +73,16 @@ int appMain(gecko_configuration_t *config)
 		}
 		evt = gecko_wait_event();
 		ble_EventHandler(evt);
-		//process_event(evt);
+		process_event(evt);
+
+		float temp = getTemperature();
+		displayPrintf(DISPLAY_ROW_NAME+2,"temp : %f",temp);
+
+		uint32_t pressure = getPressure();
+		displayPrintf(DISPLAY_ROW_NAME+3,"pressure : %d",pressure);
+
+		float altitude = calcAltitude((float)pressure);
+		displayPrintf(DISPLAY_ROW_NAME+4,"altitude : %0.1f",altitude);
+		displayUpdate();
 	}
 }

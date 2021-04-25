@@ -10,6 +10,7 @@
 #include <stdint.h>
 #include "bme280.h"
 #include "display.h"
+#include "timers.h"
 /* Retarget serial headers */
 #include "retargetserial.h"
 #include <stdio.h>
@@ -21,55 +22,77 @@
 #define log(...)
 #endif
 
-
+static void delayApproxOneSecond(void)
+{
+	/**
+	 * Wait loops are a bad idea in general!  Don't copy this code in future assignments!
+	 * We'll discuss how to do this a better way in the next assignment.
+	 */
+	volatile int i;
+	for (i = 0; i < 3500000; ) {
+		i=i+1;
+	}
+}
 uint8_t BME280Read8(uint8_t reg)
 {
 	uint8_t data;
-	I2C0_Init();
 	I2C0_Write(BME280_ADDRESS,&reg,sizeof(uint8_t));
-
-	while(BME_TRANSFER_DONE == true);
+	while(BME_TRANSFER_DONE == false);
 	BME_TRANSFER_DONE = false;
-	I2C0_Read(BME280_ADDRESS,&data,sizeof(uint8_t));
+	delayApproxOneSecond();
 
+	I2C0_Read(BME280_ADDRESS,&data,sizeof(uint8_t));
+	while(BME_TRANSFER_DONE == false);
+	BME_TRANSFER_DONE = false;
+	delayApproxOneSecond();
 	return data;
 }
 
 uint16_t BME280Read16(uint8_t reg)
 {
 	uint8_t data[2];//first byte is MSB, second byte is LSB
-	I2C0_Init();
 	I2C0_Write(BME280_ADDRESS,&reg,sizeof(uint8_t));
-	while(BME_TRANSFER_DONE == true);
+	while(BME_TRANSFER_DONE == false);
 	BME_TRANSFER_DONE = false;
-	I2C0_Read(BME280_ADDRESS,data,sizeof(uint16_t));
-	while(BME_TRANSFER_DONE == true);
-	BME_TRANSFER_DONE = false;
+	delayApproxOneSecond();
 
+	I2C0_Read(BME280_ADDRESS,data,sizeof(uint16_t));
+	while(BME_TRANSFER_DONE == false);
+	BME_TRANSFER_DONE = false;
+	delayApproxOneSecond();
 	return (uint16_t)data[0] << 8 | data[1];
 
 }
 
 uint32_t BME280Read24(uint8_t reg)
 {
-	uint32_t data;
-	I2C0_Init();
+	uint32_t data = 0;
+	uint8_t dat0, dat1,dat2;
 	I2C0_Write(BME280_ADDRESS,&reg,sizeof(uint8_t));
-	while(BME_TRANSFER_DONE == true);
+	while(BME_TRANSFER_DONE == false);
 	BME_TRANSFER_DONE = false;
+	delayApproxOneSecond();
 
-	I2C0_Read(BME280_ADDRESS,&data,sizeof(uint8_t));
-	while(BME_TRANSFER_DONE == true);
+	I2C0_Read(BME280_ADDRESS,&dat0,sizeof(uint8_t));
+	while(BME_TRANSFER_DONE == false);
 	BME_TRANSFER_DONE = false;
-	data <<= 8;
-	I2C0_Read(BME280_ADDRESS,&data,sizeof(uint8_t));
-	while(BME_TRANSFER_DONE == true);
+	delayApproxOneSecond();
+	data = dat0;
+	data = data << 8;
+
+	I2C0_Read(BME280_ADDRESS,&dat1,sizeof(uint8_t));
+	while(BME_TRANSFER_DONE == false);
 	BME_TRANSFER_DONE = false;
-	data <<= 8;
-	I2C0_Read(BME280_ADDRESS,&data,sizeof(uint8_t));
-	while(BME_TRANSFER_DONE == true);
+	delayApproxOneSecond();
+	data |= dat1;
+	data = data << 8;
+
+	I2C0_Read(BME280_ADDRESS,&dat2,sizeof(uint8_t));
+	while(BME_TRANSFER_DONE == false);
 	BME_TRANSFER_DONE = false;
-	data <<= 8;
+	delayApproxOneSecond();
+
+	data |= dat2;
 
 	return data;
 
@@ -95,10 +118,10 @@ int16_t BME280ReadS16LE(uint8_t reg) {
 void BME280_WriteRegister(uint8_t reg,uint8_t val)
 {
 	uint8_t data[2] = {reg,val};
-	I2C0_Init();
 	I2C0_Write(BME280_ADDRESS,data,sizeof(uint16_t));
-	while(BME_TRANSFER_DONE == true);
+	while(BME_TRANSFER_DONE == false);
 	BME_TRANSFER_DONE = false;
+	delayApproxOneSecond();
 
 }
 //initialize the BME280
@@ -115,8 +138,10 @@ bool BME280_Init(void)
 	if(chip_id != 0x60)
 	{
 		//debug to display
+		displayPrintf(DISPLAY_ROW_NAME+1,"CHIP ID %x",chip_id);
 		return false;
 	}
+	displayPrintf(DISPLAY_ROW_NAME+1,"CHIP ID %x",chip_id);
 	dig_T1 = BME280Read16LE(BME280_REG_DIG_T1);
 	dig_T2 = BME280Read16LE(BME280_REG_DIG_T2);
 	dig_T3 = BME280Read16LE(BME280_REG_DIG_T3);

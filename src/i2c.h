@@ -16,7 +16,7 @@
 #include "em_core.h"
 #include "bme280.h"
 
-
+I2C_TransferSeq_TypeDef transferSequence;
 /* Function Prototypes */
 
 void I2C0_Init(void);
