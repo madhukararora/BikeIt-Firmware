@@ -49,8 +49,10 @@ int appMain(gecko_configuration_t *config)
 	displayInit();
 	displayPrintf(DISPLAY_ROW_NAME,"BikeIt On");
 
-
 	scheduler_Init();
+	gpioLed0SetOn();
+	I2C0_Init();
+	BME280_Init();
 
 	// must initialize IMU first as it shares I2C0 on different pins
 	// initialize and config IMU, enable interrupts, reset and disable I2C
@@ -64,7 +66,6 @@ int appMain(gecko_configuration_t *config)
 
 //	BME280_Init();
 
-//	SLEEP_SleepBlockBegin(sleepEM3);
 	while(1){
 		if(!gecko_event_pending()){
 			logFlush();

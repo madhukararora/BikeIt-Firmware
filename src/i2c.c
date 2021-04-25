@@ -43,7 +43,7 @@ void I2C0_Init(void){
 
 void I2C0_Write(uint8_t slaveAddr,uint8_t *data, uint16_t len)
 {
-	I2C_TransferSeq_TypeDef transferSequence;
+
 
 	uint8_t dataBuf[len];
 	//copy data into a local buffer
@@ -62,9 +62,8 @@ void I2C0_Write(uint8_t slaveAddr,uint8_t *data, uint16_t len)
 
 void I2C0_Read(uint8_t slaveAddr,uint8_t *data,uint16_t len)
 {
-	I2C_TransferSeq_TypeDef transferSequence;
 	transferSequence.addr = slaveAddr << 1;
-	transferSequence.flags = I2C_FLAG_WRITE;
+	transferSequence.flags = I2C_FLAG_READ;
 	transferSequence.buf[0].data = data;
 	transferSequence.buf[0].len = len;
 
