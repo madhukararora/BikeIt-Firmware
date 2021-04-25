@@ -56,17 +56,6 @@ int appMain(gecko_configuration_t *config)
 	I2C0_Init();
 	BME280_Init();
 
-//	float temp = getTemperature();
-//	displayPrintf(DISPLAY_ROW_NAME+2,"temp : %f",temp);
-//
-//	uint32_t pressure = getPressure();
-//	displayPrintf(DISPLAY_ROW_NAME+3,"pressure : %d",pressure);
-//
-//	float altitude = calcAltitude((float)pressure);
-//	displayPrintf(DISPLAY_ROW_NAME+4,"altitude : %f",altitude);
-
-
-//	SLEEP_SleepBlockBegin(sleepEM3);
 	while(1){
 		if(!gecko_event_pending()){
 			logFlush();
