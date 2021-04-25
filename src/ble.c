@@ -11,30 +11,22 @@
 #include "display.h"
 #include "log.h"
 
-#define TICKS_PER_SECOND    (32768)
-
-//extern UARTDRV_Handle_t  gnssHandle0;
+#define TICKS_PER_SECOND    (32768) Loop
 
 void measure_navigation(GNSS_data_t *dat)
 {
 	uint8_t ln_buffer[28]; /* Stores the location and navigation data in the Location and Navigation (LN) format. */
 	uint16_t flags = 0x05;   /* LN Flag set to bit 1 for instantaneous speed and bit 2 for location present*/
 
-	// convert strings to floats
-	float flon = strtof(dat->longitude, NULL) * 1000;
-	float flat = strtof(dat->latitude, NULL) * 1000;
-	float fgspeed = strtof(dat->gspeed, NULL) * 100;
-
-	uint16_t groundspeed = (uint16_t)(FLT_TO_UINT32(fgspeed, 0) >> 1);	// convert speed in knots to m/s. units is 1/100 of a m/s
-	int32_t longitude = FLT_TO_UINT32(flon, 0);   // Stores the longitude data read from the sensor in the correct format
-	int32_t latitude = FLT_TO_UINT32(flat, 0);  // Stores the latitude data read from the sensor in the correct format
+	uint32_t longitude = FLT_TO_UINT32((dat->flon  * 1000), 0);   // Stores the longitude data read from the sensor in the correct format
+	uint32_t latitude = FLT_TO_UINT32((dat->flat  * 1000), 0);  // Stores the latitude data read from the sensor in the correct format
 	uint8_t *p = ln_buffer; /* Pointer to LN buffer needed for converting values to bitstream. */
 
 	/* Convert flags to bitstream and append them in the LN data buffer (ln_buffer) */
 	UINT16_TO_BITSTREAM(p, flags);
 
 	/* Convert GNSS values to bitstream and place it in the LN data buffer (ln_buffer) */
-	UINT16_TO_BITSTREAM(p, groundspeed);
+	UINT16_TO_BITSTREAM(p, (dat->gspd * 100));
 	UINT32_TO_BITSTREAM(p, latitude);	// issue with sign conversion
 	UINT32_TO_BITSTREAM(p, longitude);	// issue with sign conversion
 
@@ -53,7 +45,7 @@ void measure_pressure(BME_data_t *dat)
 	uint8_t *p = es_pressure_buffer; /* Pointer to ES pressure buffer needed for converting values to bitstream. */
 
 	/* Convert sensor data to correct pressure format (resolution of 0.1 Pa) */
-	pressure = FLT_TO_UINT32(dat->pressure * 10, 0);
+	pressure = (dat->pressure) * 10;	//FLT_TO_UINT32(dat->pressure * 10, 0);
 	/* Convert pressure to bitstream and place it in the ES Pressure data buffer (es_pressure_buffer) */
 	UINT32_TO_BITSTREAM(p, pressure);
 
@@ -91,6 +83,7 @@ void measure_temperature(BME_data_t *dat)
 void ble_EventHandler(struct gecko_cmd_packet* evt){
 
 	static uint8_t connection_handle = 0;
+	static menu_states_t menustate;
 	int rssi = 0;
 
 	/* Handle events */
@@ -172,15 +165,16 @@ void ble_EventHandler(struct gecko_cmd_packet* evt){
 //		handle_external_signal_event(evt->data.evt_system_external_signal.extsignals);
 		//	printf("Signal is %x\r\n", signal);
 		switch (evt->data.evt_system_external_signal.extsignals){
-		case EXT_SIGNAL_IMU_WAKEUP:
-//			CORE_DECLARE_IRQ_STATE;
-//			CORE_ENTER_CRITICAL();
-//			printf("IMU wakeup\r\n");
-//			CORE_EXIT_CRITICAL();
+		case PB_PAGE1:
+			menustate = PAGE1;
+			break;
+		case PB_PAGE2:	// BUG: cannot switch menus when health thermometer service is being indicated
+			menustate = PAGE2;
 			break;
 		default:
 			break;
 		}
+		displayMenu(menustate);
 		break;
 		/* This event is generated when a connected client has either
 		 * 1) changed a Characteristic Client Configuration, meaning that they have enabled

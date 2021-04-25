@@ -15,6 +15,7 @@
 #include "gpio.h"
 #include "em_core.h"
 #include "bme280.h"
+#include "imu.h"
 
 I2C_TransferSeq_TypeDef transferSequence;
 /* Function Prototypes */
@@ -22,6 +23,7 @@ I2C_TransferSeq_TypeDef transferSequence;
 void I2C0_Init(void);
 void I2C0_Write(uint8_t slaveAddr,uint8_t *data, uint16_t len);
 void I2C0_Read(uint8_t slaveAddr,uint8_t *data,uint16_t len);
+void I2C0_Init_BNO(void);
 
 
 

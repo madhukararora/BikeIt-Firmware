@@ -80,6 +80,7 @@ int16_t BME280ReadS16(uint8_t reg);
 int16_t BME280ReadS16LE(uint8_t reg);
 void BME280_WriteRegister(uint8_t reg,uint8_t val);
 bool BME280_Init(void);
+
 float getTemperature(void);
 uint32_t getPressure(void);
 float calcAltitude(float pressure);

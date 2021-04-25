@@ -78,9 +78,6 @@
 #define PB1_port	(gpioPortB)
 #define PB1_pin		(13)
 
-#define GPSTOGGLE_port	(gpioPortF)
-#define GPSTOGGLE_pin	(5)
-
 #define GPSRESET_port	(gpioPortF)
 #define GPSRESET_pin	(6)
 
@@ -90,8 +87,7 @@
 #define IMURESET_port	(gpioPortD)
 #define IMURESET_pin	(12)
 
-#define IMUEXTINT_port	(gpioPortD)
-#define IMUEXTINT_pin	(13)
+
 
 // LCD Display GPIO
 #define DISP_port  (gpioPortC)
@@ -117,12 +113,6 @@
 #define SPISCK_port	(gpioPortC)
 #define SPISCK_pin	(11)
 
-// MCU to BNO055 IMU I2C1. Check schematic first. Can be moved to dedicated BNO055/I2C header file
-#define SDABNO_port	(gpioPortD)
-#define SDABNO_pin	(10)
-#define SCLBNO_port	(gpioPortD)
-#define SCLBNO_pin	(11)
-
 // MCU Rx to GPS Tx LEUART0. MCU Tx to GPS Rx LEUART. Check schematic first. Can be moved to dedicated GPS/LEUART header file
 #define UARTRX_port	(gpioPortF)
 #define UARTRX_pin	(3)
@@ -130,6 +120,17 @@
 #define UARTTX_pin	(4)
 #endif
 #if DEVKIT
+#define GPSTOGGLE_port	(gpioPortF)
+#define GPSTOGGLE_pin	(5)
+
+#define IMUEXTINT_port	(gpioPortD)
+#define IMUEXTINT_pin	(13)
+// MCU to BNO055 IMU I2C1. Check schematic first. Can be moved to dedicated BNO055/I2C header file
+#define SDABNO_port	(gpioPortD)
+#define SDABNO_pin	(10)
+#define SCLBNO_port	(gpioPortD)
+#define SCLBNO_pin	(11)
+
 #define DISP_port  (gpioPortD)
 #define DISP_pin   (11)
 
@@ -195,18 +196,6 @@ void gpioInit()
 	GPIO_PinModeSet(LEDDBG_port, LEDDBG_pin, gpioModePushPull, false);
 
 	/*
-	 * GPS TOGGLE (board)
-	 */
-#ifdef GPSTOGGLE_STRONG
-	GPIO_DriveStrengthSet(GPSTOGGLE_port, gpioDriveStrengthStrongAlternateStrong);
-#endif
-
-#ifdef GPSTOGGLE_WEAK
-	GPIO_DriveStrengthSet(GPSTOGGLE_port, gpioDriveStrengthWeakAlternateWeak);
-#endif
-	GPIO_PinModeSet(GPSTOGGLE_port, GPSTOGGLE_pin, gpioModePushPull, false);
-
-	/*
 	 * GPS RESET_N (board) GPS RESET_N pin is pulled up internally
 	 */
 #ifdef GPSRESET_STRONG
@@ -228,7 +217,7 @@ void gpioInit()
 #ifdef GPSEXTINT_WEAK
 	GPIO_DriveStrengthSet(GPSEXTINT_port, gpioDriveStrengthWeakAlternateWeak);
 #endif
-	GPIO_PinModeSet(GPSEXTINT_port, GPSEXTINT_pin, gpioModePushPull, false);
+	GPIO_PinModeSet(GPSEXTINT_port, GPSEXTINT_pin, gpioModeWiredAnd, false);
 
 	/*
 	 * IMU nRESET (board) IMU nRESET pin is active low
@@ -246,7 +235,19 @@ void gpioInit()
 	 * IMU EXTINT (not actually EXT) (board) is output to MCU
 	 */
 	GPIO_PinModeSet(IMUEXTINT_port, IMUEXTINT_pin, gpioModeInput, false);
+	bnoEnableInterrupts();
 #endif
+	/*
+	 * GPS TOGGLE (board)
+	 */
+#ifdef GPSTOGGLE_STRONG
+	GPIO_DriveStrengthSet(GPSTOGGLE_port, gpioDriveStrengthStrongAlternateStrong);
+#endif
+
+#ifdef GPSTOGGLE_WEAK
+	GPIO_DriveStrengthSet(GPSTOGGLE_port, gpioDriveStrengthWeakAlternateWeak);
+#endif
+	GPIO_PinModeSet(GPSTOGGLE_port, GPSTOGGLE_pin, gpioModePushPull, false);
 	/*
 	 * PB[0:1] are pushbutton inputs
 	 */
@@ -349,6 +350,29 @@ void sda_disable()
 void scl_disable(){
 	GPIO_PinOutClear(SCL_port,SCL_pin);
 }
+
+/*
+ * disable the I2C0 BNO055 SDA
+ */
+void bnoSDADisable()
+{
+	GPIO_PinOutClear(SDABNO_port,SDABNO_pin);
+}
+/*
+ * disable the I2C0 BNO055 SCL
+ */
+void bnoSCLDisable()
+{
+	GPIO_PinOutClear(SCLBNO_port,SCLBNO_pin);
+}
+void gpioGpsToggleSetOn()
+{
+	GPIO_PinOutSet(GPSTOGGLE_port,GPSTOGGLE_pin);
+}
+void gpioGpsToggleSetOff()
+{
+	GPIO_PinOutClear(GPSTOGGLE_port,GPSTOGGLE_pin);
+}
 #endif
 #if BOARD
 void gpioPmuxD1SetOn()
@@ -369,14 +393,6 @@ void gpioLedDbgSetOff()
 	GPIO_PinOutClear(LEDDBG_port,LEDDBG_pin);
 }
 
-void gpioGpsToggleSetOn()
-{
-	GPIO_PinOutSet(GPSTOGGLE_port,GPSTOGGLE_pin);
-}
-void gpioGpsToggleSetOff()
-{
-	GPIO_PinOutClear(GPSTOGGLE_port,GPSTOGGLE_pin);
-}
 // RESET_N pin is internally pulled up so MCU pin output should be pulled down to reset
 void gpioGpsResetSetOn()
 {
@@ -425,22 +441,7 @@ void bmeSCLDisable()
 {
 	GPIO_PinOutClear(SCLBME_port,SCLBME_pin);
 }
-
-/*
- * disable the I2C1 BME280 SDA
- */
-void bnoSDADisable()
-{
-	GPIO_PinOutClear(SDABNO_port,SDABNO_pin);
-}
-/*
- * disable the I2C1 BNO055 SCL
- */
-void bnoSCLDisable()
-{
-	GPIO_PinOutClear(SCLBNO_port,SCLBNO_pin);
-}
-
+#endif
 /***************************************************************************//**
  * This is a callback function that is invoked each time a GPIO interrupt
  * in the IMU occurs. Pin number is passed as parameter.
@@ -456,6 +457,7 @@ void bnoSCLDisable()
 void bnoInterrupt(uint8_t pin)
 {
 	if (GPIO_PinInGet(IMUEXTINT_port, IMUEXTINT_pin) == 1) {
+		BNO055ResetInt();
 		gecko_external_signal(EXT_SIGNAL_IMU_WAKEUP);
 	}
 }
@@ -467,9 +469,9 @@ void bnoEnableInterrupts()
 	GPIO_ExtIntConfig(IMUEXTINT_port, IMUEXTINT_pin, IMUEXTINT_pin, true, false, true);
 
 	GPIOINT_CallbackRegister(IMUEXTINT_pin, bnoInterrupt);
+	BNO055EnableAnyMotion(255, 1);
+	BNO055EnableIntOnXYZ(1, 1, 1);
 }
-#endif
-
 void button_interrupt(uint8_t pin){
 	switch(pin){
 		case BSP_BUTTON0_PIN:

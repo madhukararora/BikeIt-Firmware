@@ -17,19 +17,11 @@
 #include "ble.h"
 #include "leuart.h"
 #include "menu.h"
-
-
+#include "bme280.h"
+#include "imu.h"
 
 //GLOBAL VARIABLES
 volatile uint32_t eventFlag; //variable to get the event from the IRQ
-
-struct{
-	uint8_t data_8;
-	uint16_t data_16;
-	uint16_t temp_code;
-	float tempC;
-}temp_Si7021;
-
 
 typedef enum uint32_t{
 	NO_PENDING_EVENTS = 0x0,
@@ -37,19 +29,17 @@ typedef enum uint32_t{
 	TIMER_UF = (0x1UL << 1),
 	I2C_TRANSFER_DONE = (0x1UL << 2),
 	PB_PAGE1 = (0x1UL << 3),
-	PB_PAGE2 = (0x1UL << 4)
+	PB_PAGE2 = (0x1UL << 4),
+	EXT_SIGNAL_IMU_WAKEUP = (0x1UL << 5)
 }scheduler_events_t;
 
 
 typedef enum{
 	POWER_ON,
-	WRITE_BEGIN,
-	WRITE_DONE,
-	READ_BEGIN,
-	READ_DONE,
+	START_DELAY,
+	SENSOR_IO,
 	POWER_OFF
 }scheduler_states_t;
-
 
 
 //FUNCTION PROTOTYPES

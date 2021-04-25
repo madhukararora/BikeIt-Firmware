@@ -18,8 +18,6 @@
 #define BOARD 0
 #define DEVKIT 1
 
-#define EXT_SIGNAL_IMU_WAKEUP 0x01
-
 void gpioInit(void);
 void enable_button_interrupts(void);
 void button_interrupt(uint8_t pin);
@@ -35,14 +33,18 @@ void si7021_enable(void);
 void si7021_disable(void);
 void sda_disable(void);
 void scl_disable(void);
+void bnoSDADisable(void);
+void bnoSCLDisable(void);
+void bnoInterrupt(uint8_t pin);
+void bnoEnableInterrupts(void);
+void gpioGpsToggleSetOn(void);
+void gpioGpsToggleSetOff(void);
 #endif
 #if BOARD
 void gpioLedDbgSetOn(void);
 void gpioLedDbgSetOff(void);
 void gpioPmuxD1SetOn(void);
 void gpioPmuxD1SetOff(void);
-void gpioGpsToggleSetOn(void);
-void gpioGpsToggleSetOff(void);
 void gpioGpsResetSetOn(void);
 void gpioGpsResetSetOff(void);
 void gpioGpsExtIntSetOn(void);
@@ -53,10 +55,6 @@ void gpioGpsExtIntRead(void);
 void gpioSetDisplayExtmode(bool high);
 void bmeSDADisable(void);
 void bmeSCLDisable(void);
-void bnoSDADisable(void);
-void bnoSCLDisable(void);
-void bnoInterrupt(uint8_t pin);
-void bnoEnableInterrupts(void);
 #endif
 
 void gpioEnableDisplay(void);

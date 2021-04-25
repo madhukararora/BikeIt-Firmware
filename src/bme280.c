@@ -37,6 +37,7 @@ uint8_t BME280Read8(uint8_t reg)
 {
 	uint8_t data;
 	I2C0_Write(BME280_ADDRESS,&reg,sizeof(uint8_t));
+
 	while(BME_TRANSFER_DONE == false);
 	BME_TRANSFER_DONE = false;
 	delayApproxOneSecond();
@@ -66,8 +67,10 @@ uint16_t BME280Read16(uint8_t reg)
 
 uint32_t BME280Read24(uint8_t reg)
 {
+
 	uint32_t data = 0;
 	uint8_t dat0, dat1,dat2;
+
 	I2C0_Write(BME280_ADDRESS,&reg,sizeof(uint8_t));
 	while(BME_TRANSFER_DONE == false);
 	BME_TRANSFER_DONE = false;
@@ -76,6 +79,7 @@ uint32_t BME280Read24(uint8_t reg)
 	I2C0_Read(BME280_ADDRESS,&dat0,sizeof(uint8_t));
 	while(BME_TRANSFER_DONE == false);
 	BME_TRANSFER_DONE = false;
+
 	delayApproxOneSecond();
 	data = dat0;
 	data = data << 8;
@@ -127,6 +131,7 @@ void BME280_WriteRegister(uint8_t reg,uint8_t val)
 //initialize the BME280
 bool BME280_Init(void)
 {
+	BME_TRANSFER_DONE = false;
 	/* chip id read try count */
 	uint8_t try_count = 5;
 	uint8_t chip_id = 0;
@@ -215,8 +220,8 @@ uint32_t getPressure(void)
 
 }
 
-float calcAltitude(float pressure) {
-
+float calcAltitude(float pressure)
+{
 	float A = pressure / 101325;
 	float B = 1 / 5.25588;
 	float C = pow(A, B);

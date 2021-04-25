@@ -49,12 +49,22 @@ int appMain(gecko_configuration_t *config)
 	displayInit();
 	displayPrintf(DISPLAY_ROW_NAME,"BikeIt On");
 
-
-
 	scheduler_Init();
 	gpioLed0SetOn();
 	I2C0_Init();
 	BME280_Init();
+
+	// must initialize IMU first as it shares I2C0 on different pins
+	// initialize and config IMU, enable interrupts, reset and disable I2C
+//	BNO055_Init();
+//	bnoEnableInterrupts();
+//	I2C_Reset(I2C0);
+//	I2C_Enable(I2C0,false);
+//	CMU_ClockEnable(cmuClock_I2C0,false);
+
+//	gpioLed1SetOn();
+
+//	BME280_Init();
 
 	while(1){
 		if(!gecko_event_pending()){
@@ -63,15 +73,5 @@ int appMain(gecko_configuration_t *config)
 		evt = gecko_wait_event();
 		ble_EventHandler(evt);
 		process_event(evt);
-
-		float temp = getTemperature();
-		displayPrintf(DISPLAY_ROW_NAME+2,"temp : %f",temp);
-
-		uint32_t pressure = getPressure();
-		displayPrintf(DISPLAY_ROW_NAME+3,"pressure : %d",pressure);
-
-		float altitude = calcAltitude((float)pressure);
-		displayPrintf(DISPLAY_ROW_NAME+4,"altitude : %0.1f",altitude);
-		displayUpdate();
 	}
 }

@@ -7,11 +7,11 @@
  */
 
 #include "scheduler.h"
-
+extern GNSS_data_t GNRMC_data;
 // set BME sensor data wherever it should be set
 BME_data_t BME_data = {
-		1.234,
-		1.2
+		15.23,
+		83730	// DIA
 };
 
 extern UARTDRV_Handle_t  gnssHandle0;
@@ -48,11 +48,6 @@ void handle_external_signal_event(uint8_t signal){
 void scheduler_Init(void)
 {
 	eventFlag = 0;
-
-	temp_Si7021.data_8 = 0;
-	temp_Si7021.data_16 = 0;
-	temp_Si7021.temp_code = 0;
-	temp_Si7021.tempC = 0;
 }
 
 /*
@@ -100,7 +95,6 @@ void process_event(struct gecko_cmd_packet* evt){
 
 	scheduler_states_t currentState;
 	static scheduler_states_t nextState = POWER_ON;
-	static menu_states_t menustate;
 
 	currentState = nextState;
 	//LOG_INFO("INSIDE process_event %ld",evt->data.evt_system_external_signal.extsignals);
@@ -108,79 +102,46 @@ void process_event(struct gecko_cmd_packet* evt){
 
 	case POWER_ON:
 		if((evt->data.evt_system_external_signal.extsignals) == TIMER_UF){
-			CMU_ClockEnable(cmuClock_I2C0,true);
-			//i2cInit();
 //			gpioGpsToggleSetOn();
 			initLEUART();
-#if DEVKIT
-//			si7021_enable();
-#endif
-			nextState = WRITE_BEGIN;
-			timerWaitUs(80000);
+//			timerWaitUs(1000000);
+			nextState = START_DELAY;
 		}
 		break;
-	case WRITE_BEGIN:
-		if((evt->data.evt_system_external_signal.extsignals) == DELAY_GENERATED){
+	case START_DELAY:
+//		if((evt->data.evt_system_external_signal.extsignals) == DELAY_GENERATED){
 			sleep_block_on(sleepEM2);
-//			temp_Si7021.data_8 = 0X04;
-//			i2cWrite(0x10,&temp_Si7021.data_8,sizeof(uint8_t));
-			nextState = WRITE_DONE;
-		}
-		break;
-	case WRITE_DONE:
-//		if((evt->data.evt_system_external_signal.extsignals) == I2C_TRANSFER_DONE){
-//			NVIC_DisableIRQ(I2C0_IRQn);
+			CMU_ClockEnable(cmuClock_I2C0,true);
+			timerWaitUs(1000000);
 			sleep_block_off(sleepEM2);
-			timerWaitUs(10000);
-			nextState = READ_BEGIN;
-		//}
+			nextState = SENSOR_IO;
+//		}
 		break;
-	case READ_BEGIN:
+	case SENSOR_IO:
+		UARTDRV_Receive(gnssHandle0, leuartbuffer, 66, LEUART_rx_callback);	// start non blocking (LDMA) Rx
 		if((evt->data.evt_system_external_signal.extsignals) == DELAY_GENERATED){
 			sleep_block_on(sleepEM2);
-//			temp_Si7021.data_8 = 0XE3;
-//			i2cReadDataBlock(0x40,temp_Si7021.data_8,&temp_Si7021.data_16,sizeof(uint16_t));
+			measure_navigation(&GNRMC_data);	// send GNRMC_data
+			BME_data.pressure += 1;//= getPressure();
+			measure_pressure(&BME_data);
+			BME_data.temperature += 0.1;//= getTemperature();
+			measure_temperature(&BME_data);
+			sleep_block_off(sleepEM2);
 			nextState = POWER_OFF;
 		}
 		break;
 	case POWER_OFF:
-//		LOG_INFO("Getting measurements");
-		sleep_block_on(sleepEM2);
-		UARTDRV_Receive(gnssHandle0, leuartbuffer, 66, LEUART_rx_callback);	// start non blocking (LDMA) Rx
-		measure_pressure(&BME_data);
-		measure_temperature(&BME_data);
-		sleep_block_off(sleepEM2);
-		// switch between menu pages
-		switch(evt->data.evt_system_external_signal.extsignals){
-		case PB_PAGE1:
-			menustate = PAGE1;
-			break;
-		case PB_PAGE2:	// BUG: cannot switch menus when health thermometer service is being indicated
-			menustate = PAGE2;
-			break;
-		default:
-			break;
-		}
-		displayMenu(menustate);
-
-		if((evt->data.evt_system_external_signal.extsignals) == I2C_TRANSFER_DONE){
-			sleep_block_off(sleepEM2);
-			NVIC_DisableIRQ(I2C0_IRQn);
-
-#if DEVKIT
-//			si7021_disable();
-#endif
-			I2C_Reset(I2C0);
-			I2C_Enable(I2C0,false);
-			CMU_ClockEnable(cmuClock_I2C0,false);
-			// disable leuart
-			UARTDRV_DeInit(gnssHandle0);
-#if DEVKIT
-			scl_disable();
-			sda_disable();
-#endif
-			nextState = POWER_ON;
-		}
+		NVIC_DisableIRQ(I2C0_IRQn);
+		I2C_Reset(I2C0);
+		I2C_Enable(I2C0,false);
+		CMU_ClockEnable(cmuClock_I2C0,false);
+//#if DEVKIT
+//			scl_disable();
+//			sda_disable();
+//			bnoSDADisable();
+//			bnoSCLDisable();
+//#endif
+		nextState = START_DELAY;
 		break;
 	default:
 		break;
