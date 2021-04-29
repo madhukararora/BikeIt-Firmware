@@ -24,13 +24,6 @@ void button_interrupt(uint8_t pin);
 uint8_t get_leds(void);
 void set_leds(uint8_t control_byte);
 #if DEVKIT
-void gpioLed0SetOn(void);
-void gpioLed0SetOff(void);
-void gpioLed1SetOn(void);
-void gpioLed1SetOff(void);
-
-void si7021_enable(void);
-void si7021_disable(void);
 void sda_disable(void);
 void scl_disable(void);
 void bnoSDADisable(void);

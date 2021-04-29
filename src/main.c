@@ -39,8 +39,7 @@ int appMain(gecko_configuration_t *config)
 	/* Initialize stack */
 	gecko_init(config);
 
-	/*Enable Loggining, scheduler, GPIO and Oscillator */
-//	logInit();
+	/*Enable scheduler, GPIO and Oscillator */
 	scheduler_Init();
 	gpioInit();
 	oscillatorInit();
@@ -49,25 +48,26 @@ int appMain(gecko_configuration_t *config)
 	gpioLedDbgSetOff();
 
 	/*Initialize Display*/
-//	displayInit();
-//	displayPrintf(DISPLAY_ROW_NAME,"BikeIt On");
+	displayInit();
+	displayPrintf(DISPLAY_ROW_NAME,"BikeIt On");
 	letimer0_Init();
+
+	// must initialize IMU first as it shares I2C0 on different pins
+	// initialize and config IMU, enable interrupts, reset and disable I2C
+	I2C0_Init_BNO();
+	BNO055_Init();
+	BNO055EnableAnyMotion(100, 1);
+	BNO055EnableIntOnXYZ(1, 1, 1);
+	bnoEnableInterrupts();
+	I2C_Reset(I2C0);
+	I2C_Enable(I2C0,false);
+	CMU_ClockEnable(cmuClock_I2C0,false);
+
 	I2C0_Init();
 	BME280_Init();
 
 	initLEUART();
 	gpioGpsToggleSetOn();
-
-	// must initialize IMU first as it shares I2C0 on different pins
-	// initialize and config IMU, enable interrupts, reset and disable I2C
-//	BNO055_Init();
-//	bnoEnableInterrupts();
-//	I2C_Reset(I2C0);
-//	I2C_Enable(I2C0,false);
-//	CMU_ClockEnable(cmuClock_I2C0,false);
-
-
-//	BME280_Init();
 
 	while(1){
 		if(!gecko_event_pending()){

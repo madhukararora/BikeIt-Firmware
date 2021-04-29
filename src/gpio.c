@@ -187,13 +187,13 @@ void gpioInit()
 	GPIO_DriveStrengthSet(IMURESET_port, gpioDriveStrengthWeakAlternateWeak);
 #endif
 	GPIO_PinModeSet(IMURESET_port, IMURESET_pin, gpioModeWiredAnd, true);	// floating
-	GPIO_PinOutSet(IMURESET_port, IMURESET_pin);
+//	GPIO_PinOutSet(IMURESET_port, IMURESET_pin);
 
 	/*
 	 * IMU EXTINT (not actually EXT) (board) is output to MCU
 	 */
-	GPIO_PinModeSet(IMUEXTINT_port, IMUEXTINT_pin, gpioModeInput, false);
-//	bnoEnableInterrupts();
+	GPIO_PinModeSet(IMUEXTINT_port, IMUEXTINT_pin, gpioModeInputPull, true);
+	bnoEnableInterrupts();
 	/*
 	 * GPS TOGGLE (board)
 	 */
@@ -358,6 +358,7 @@ void bmeSCLDisable()
  ******************************************************************************/
 void bnoInterrupt(uint8_t pin)
 {
+	gpioLedDbgSetOn();
 	if (GPIO_PinInGet(IMUEXTINT_port, IMUEXTINT_pin) == 1) {
 		BNO055ResetInt();
 		gecko_external_signal(EXT_SIGNAL_IMU_WAKEUP);
@@ -371,8 +372,6 @@ void bnoEnableInterrupts()
 	GPIO_ExtIntConfig(IMUEXTINT_port, IMUEXTINT_pin, IMUEXTINT_pin, true, false, true);
 
 	GPIOINT_CallbackRegister(IMUEXTINT_pin, bnoInterrupt);
-	BNO055EnableAnyMotion(255, 1);
-	BNO055EnableIntOnXYZ(1, 1, 1);
 }
 
 void button_interrupt(uint8_t pin){

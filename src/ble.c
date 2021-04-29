@@ -171,6 +171,9 @@ void ble_EventHandler(struct gecko_cmd_packet* evt){
 			menustate = PAGE2;
 //			gpioLedDbgSetOff();
 			break;
+		case EXT_SIGNAL_IMU_WAKEUP:
+			gpioLedDbgSetOn();
+			break;
 		default:
 			break;
 		}
