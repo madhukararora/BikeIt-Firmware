@@ -119,7 +119,7 @@ void process_event(struct gecko_cmd_packet* evt){
 //		}
 		break;
 	case SENSOR_IO:
-		UARTDRV_Receive(gnssHandle0, leuartbuffer, 66, LEUART_rx_callback);	// start non blocking (LDMA) Rx
+//		UARTDRV_Receive(gnssHandle0, leuartbuffer, 66, LEUART_rx_callback);	// start non blocking (LDMA) Rx
 		if((evt->data.evt_system_external_signal.extsignals) == DELAY_GENERATED){
 			sleep_block_on(sleepEM2);
 			measure_navigation(&GNRMC_data);	// send GNRMC_data

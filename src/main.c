@@ -47,13 +47,14 @@ int appMain(gecko_configuration_t *config)
 	gpioLedDbgSetOff();
 
 	/*Initialize Display*/
-	displayInit();
-	displayPrintf(DISPLAY_ROW_NAME,"BikeIt On");
+//	displayInit();
+//	displayPrintf(DISPLAY_ROW_NAME,"BikeIt On");
 	letimer0_Init();
 	I2C0_Init();
 	BME280_Init();
-//	gpioLed1SetOn();
-	initLEUART();
+//	float tem = getTemperature();
+//	initLEUART();
+//	gpioGpsToggleSetOn();
 
 	// must initialize IMU first as it shares I2C0 on different pins
 	// initialize and config IMU, enable interrupts, reset and disable I2C

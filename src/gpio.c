@@ -267,9 +267,6 @@ void gpioInit()
  */
 uint8_t get_leds(void)
 {
-#if DEVKIT
-	return ((GPIO_PinOutGet(LED1_port, LED1_pin) << 1 ) | GPIO_PinOutGet(LED0_port, LED0_pin));	// devkit
-#endif
 #if BOARD
 	return GPIO_PinOutGet(LEDDBG_port, LEDDBG_pin);	// board
 #endif
@@ -283,21 +280,6 @@ uint8_t get_leds(void)
  */
 void set_leds(uint8_t control_byte)
 {
-#if DEVKIT
-  /* LED 0 control */
-  if ((control_byte & 0x01) == 1) {
-    GPIO_PinOutSet(LED0_port, LED0_pin);
-  } else {
-    GPIO_PinOutClear(LED0_port, LED0_pin);
-  }
-
-  /* LED 1 control */
-  if (((control_byte >> 1) & 0x01) == 1) {
-    GPIO_PinOutSet(LED1_port, LED1_pin);
-  } else {
-    GPIO_PinOutClear(LED1_port, LED1_pin);
-  }
-#endif
 #if BOARD
   /* LED DEBUG control */
   if ((control_byte & 0x01) == 1) {

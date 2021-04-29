@@ -28,12 +28,12 @@ void I2C0_Init(void){
 
 	I2CSPM_Init_TypeDef i2c_Config = {
 			.port = I2C0,
-			.sclPort = gpioPortC,
-			.sclPin = 10,
-			.sdaPort = gpioPortC,
-			.sdaPin = 11,
-			.portLocationScl = 14,
-			.portLocationSda = 16,
+			.sclPort = gpioPortA,
+			.sclPin = 3,
+			.sdaPort = gpioPortA,
+			.sdaPin = 2,
+			.portLocationScl = 2,
+			.portLocationSda = 2,
 			.i2cRefFreq = 0,
 			.i2cMaxFreq = I2C_FREQ_STANDARD_MAX,
 			.i2cClhr = i2cClockHLRStandard
