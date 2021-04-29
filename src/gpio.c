@@ -45,14 +45,6 @@
 /*
  * MODIFICATION : Modifications made here to include the port and pins of the LED and board GPIO
  */
-#if DEVKIT
-#define	LED0_port (gpioPortF)
-#define LED0_pin  (4)
-#define LED1_port (gpioPortF)
-#define LED1_pin  (5)
-
-#define SI7021EN_port (gpioPortD)
-#define SI7021EN_pin  (15)
 
 #define SCL_port      (gpioPortC)
 #define SCL_pin       (10)
@@ -60,19 +52,12 @@
 #define SDA_pin       (11)
 
 // switch to board
-#define PB0_port	(gpioPortF)
-#define PB0_pin		(6)
-
-#define PB1_port	(gpioPortF)
-#define PB1_pin		(7)
 
 #define LEDDBG_port	(gpioPortB)
 #define LEDDBG_pin	(11)
-#endif
-#if BOARD
+
 #define PMUXD1_port	(gpioPortA)
 #define PMUXD1_pin	(5)
-
 
 
 #define PB0_port	(gpioPortB)
@@ -121,8 +106,7 @@
 #define UARTRX_pin	(3)
 #define UARTTX_port	(gpioPortF)
 #define UARTTX_pin	(4)
-#endif
-#if DEVKIT
+
 #define GPSTOGGLE_port	(gpioPortF)
 #define GPSTOGGLE_pin	(5)
 
@@ -134,45 +118,14 @@
 #define SCLBNO_port	(gpioPortD)
 #define SCLBNO_pin	(11)
 
-#define DISP_port  (gpioPortD)
-#define DISP_pin   (11)
-
-#define EXTCOMIN_port (gpioPortF)
-#define EXTCOMIN_pin  (3)
-
 #define LEUART0_port gpioPortA
 #define LEUART0_RX_pin 3
 #define LEUART0_TX_pin 2
-#endif
+
 
 void gpioInit()
 {
-#if DEVKIT
-	/*
-	 * LED 0
-	 */
 //MODIFICATION : Use of conditional directives to select the drive strength.
-#ifdef LED0_STRONG
-	GPIO_DriveStrengthSet(LED0_port, gpioDriveStrengthStrongAlternateStrong);
-#endif
-
-#ifdef LED0_WEAK
-//	GPIO_DriveStrengthSet(LED0_port, gpioDriveStrengthWeakAlternateWeak);
-#endif
-//	GPIO_PinModeSet(LED0_port, LED0_pin, gpioModePushPull, false);
-
-	/*
-	 * LED 1
-	 */
-#ifdef LED1_STRONG
-	GPIO_DriveStrengthSet(LED1_port, gpioDriveStrengthStrongAlternateStrong);
-#endif
-
-#ifdef LED1_WEAK
-	GPIO_DriveStrengthSet(LED1_port, gpioDriveStrengthWeakAlternateWeak);
-#endif
-	GPIO_PinModeSet(LED1_port, LED1_pin, gpioModePushPull, false);
-#endif
 	GPIO_PinModeSet(BSP_VCOM_ENABLE_PORT, BSP_VCOM_ENABLE_PIN, gpioModeDisabled, 0);
 	/*
 	 * LED DEBUG (board)
@@ -185,7 +138,6 @@ void gpioInit()
 	GPIO_DriveStrengthSet(LEDDBG_port, gpioDriveStrengthWeakAlternateWeak);
 #endif
 	GPIO_PinModeSet(LEDDBG_port, LEDDBG_pin, gpioModePushPull, false);
-#if BOARD
 	/*
 	 * PMUX D1 (board)
 	 */
@@ -209,7 +161,7 @@ void gpioInit()
 #ifdef GPSRESET_WEAK
 	GPIO_DriveStrengthSet(GPSRESET_port, gpioDriveStrengthWeakAlternateWeak);
 #endif
-	GPIO_PinModeSet(GPSRESET_port, GPSRESET_pin, gpioModePushPull, false);	// may need different mode than gpioModePushPull
+	GPIO_PinModeSet(GPSRESET_port, GPSRESET_pin, gpioModeWiredAnd, true);
 
 	/*
 	 * GPS EXTINT (board) leave open if unused
@@ -222,6 +174,7 @@ void gpioInit()
 	GPIO_DriveStrengthSet(GPSEXTINT_port, gpioDriveStrengthWeakAlternateWeak);
 #endif
 	GPIO_PinModeSet(GPSEXTINT_port, GPSEXTINT_pin, gpioModeWiredAnd, false);
+	GPIO_PinOutSet(GPSEXTINT_port, GPSEXTINT_pin);
 
 	/*
 	 * IMU nRESET (board) IMU nRESET pin is active low
@@ -233,14 +186,14 @@ void gpioInit()
 #ifdef IMURESET_WEAK
 	GPIO_DriveStrengthSet(IMURESET_port, gpioDriveStrengthWeakAlternateWeak);
 #endif
-	GPIO_PinModeSet(IMURESET_port, IMURESET_pin, gpioModePushPull, true);	// may need different mode than gpioModePushPull and high idle
+	GPIO_PinModeSet(IMURESET_port, IMURESET_pin, gpioModeWiredAnd, true);	// floating
+	GPIO_PinOutSet(IMURESET_port, IMURESET_pin);
 
 	/*
 	 * IMU EXTINT (not actually EXT) (board) is output to MCU
 	 */
 	GPIO_PinModeSet(IMUEXTINT_port, IMUEXTINT_pin, gpioModeInput, false);
-	bnoEnableInterrupts();
-#endif
+//	bnoEnableInterrupts();
 	/*
 	 * GPS TOGGLE (board)
 	 */
@@ -275,54 +228,18 @@ uint8_t get_leds(void)
 /**
  * @brief LED control function
  * bit 0 = LED0
- * bit 1 = LED1
- * bits 2-7 = don't care
+ * bits 1-7 = don't care
  */
 void set_leds(uint8_t control_byte)
 {
-#if BOARD
   /* LED DEBUG control */
   if ((control_byte & 0x01) == 1) {
-    GPIO_PinOutSet(LEDDBG_port, LEDDBG_pin);
-  } else {
     GPIO_PinOutClear(LEDDBG_port, LEDDBG_pin);
+  } else {
+    GPIO_PinOutSet(LEDDBG_port, LEDDBG_pin);
   }
-#endif
 }
 
-#if DEVKIT
-void gpioLed0SetOn()
-{
-	GPIO_PinOutSet(LED0_port,LED0_pin);
-}
-void gpioLed0SetOff()
-{
-	GPIO_PinOutClear(LED0_port,LED0_pin);
-}
-void gpioLed1SetOn()
-{
-	GPIO_PinOutSet(LED1_port,LED1_pin);
-}
-void gpioLed1SetOff()
-{
-	GPIO_PinOutClear(LED1_port,LED1_pin);
-}
-
-/*
- * sets the enable pin to the temperature sensor
- */
-void si7021_enable()
-{
-	GPIO_PinOutSet(SI7021EN_port,SI7021EN_pin);
-}
-
-/*
- * clears the enable pin to the temperature sensor
- */
-void si7021_disable()
-{
-	GPIO_PinOutClear(SI7021EN_port,SI7021EN_pin);
-}
 /*
  * disable the I2C0 SDA
  */
@@ -359,8 +276,7 @@ void gpioGpsToggleSetOff()
 {
 	GPIO_PinOutClear(GPSTOGGLE_port,GPSTOGGLE_pin);
 }
-#endif
-#if BOARD
+
 void gpioPmuxD1SetOn()
 {
 	GPIO_PinOutSet(PMUXD1_port,LEDDBG_pin);
@@ -372,21 +288,21 @@ void gpioPmuxD1SetOff()
 
 void gpioLedDbgSetOn()
 {
-	GPIO_PinOutSet(LEDDBG_port,LEDDBG_pin);
+	GPIO_PinOutClear(LEDDBG_port,LEDDBG_pin);
 }
 void gpioLedDbgSetOff()
 {
-	GPIO_PinOutClear(LEDDBG_port,LEDDBG_pin);
+	GPIO_PinOutSet(LEDDBG_port,LEDDBG_pin);
 }
 
 // RESET_N pin is internally pulled up so MCU pin output should be pulled down to reset
 void gpioGpsResetSetOn()
 {
-	GPIO_PinOutSet(GPSRESET_port,GPSRESET_pin);
+	GPIO_PinOutSet(GPSRESET_port, GPSRESET_pin);
 }
 void gpioGpsResetSetOff()
 {
-	GPIO_PinOutClear(GPSRESET_port,GPSRESET_port);
+	GPIO_PinOutClear(GPSRESET_port, GPSRESET_port);
 }
 // EXTINT pin should be left open if unused
 void gpioGpsExtIntSetOn()
@@ -427,7 +343,7 @@ void bmeSCLDisable()
 {
 	GPIO_PinOutClear(SCLBME_port,SCLBME_pin);
 }
-#endif
+
 /***************************************************************************//**
  * This is a callback function that is invoked each time a GPIO interrupt
  * in the IMU occurs. Pin number is passed as parameter.
@@ -517,10 +433,4 @@ void gpioSetDisplayExtmode(bool high){
 		GPIO_PinOutClear(EXTMODE_port,EXTMODE_pin);
 	}
 }
-
-
-//GPIO_DbgLocationSet();	// Sets the pin location of the debug pins (Serial Wire interface). Should be 0 (PF2). References DBG_SWOEnable() in em_dbg.c
-//GPIO_DbgSWDClkEnable();	// Enable/disable serial wire clock pin.
-//GPIO_DbgSWDIOEnable();	// Enable/disable serial wire data I/O pin.
-//GPIO_DbgSWOEnable();	// Enable/Disable serial wire output pin.
 #endif
