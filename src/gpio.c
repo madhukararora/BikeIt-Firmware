@@ -26,11 +26,12 @@
 //#define LED0_STRONG
 #define LED1_WEAK
 //#define LED1_STRONG
+#define LEDDBG_WEAK
+//#define LEDDBG_STRONG
 #if BOARD
 #define PMUXD1_WEAK
 //#define PMUXD1_STRONG
-#define LEDDBG_WEAK
-//#define LEDDBG_STRONG
+
 //#define GPSTOGGLE_WEAK
 #define GPSTOGGLE_STRONG
 #define GPSRESET_WEAK
@@ -64,13 +65,15 @@
 
 #define PB1_port	(gpioPortF)
 #define PB1_pin		(7)
+
+#define LEDDBG_port	(gpioPortB)
+#define LEDDBG_pin	(11)
 #endif
 #if BOARD
 #define PMUXD1_port	(gpioPortA)
 #define PMUXD1_pin	(5)
 
-#define LEDDBG_port	(gpioPortB)
-#define LEDDBG_pin	(11)
+
 
 #define PB0_port	(gpioPortB)
 #define PB0_pin		(12)
@@ -171,6 +174,17 @@ void gpioInit()
 	GPIO_PinModeSet(LED1_port, LED1_pin, gpioModePushPull, false);
 #endif
 	GPIO_PinModeSet(BSP_VCOM_ENABLE_PORT, BSP_VCOM_ENABLE_PIN, gpioModeDisabled, 0);
+	/*
+	 * LED DEBUG (board)
+	 */
+#ifdef LEDDBG_STRONG
+	GPIO_DriveStrengthSet(LEDDBG_port, gpioDriveStrengthStrongAlternateStrong);
+#endif
+
+#ifdef LEDDBG_WEAK
+	GPIO_DriveStrengthSet(LEDDBG_port, gpioDriveStrengthWeakAlternateWeak);
+#endif
+	GPIO_PinModeSet(LEDDBG_port, LEDDBG_pin, gpioModePushPull, false);
 #if BOARD
 	/*
 	 * PMUX D1 (board)
@@ -183,17 +197,7 @@ void gpioInit()
 	GPIO_DriveStrengthSet(PMUXD1_port, gpioDriveStrengthWeakAlternateWeak);
 #endif
 	GPIO_PinModeSet(PMUXD1_port, PMUXD1_pin, gpioModePushPull, false);
-	/*
-	 * LED DEBUG (board)
-	 */
-#ifdef LEDDBG_STRONG
-	GPIO_DriveStrengthSet(LEDDBG_port, gpioDriveStrengthStrongAlternateStrong);
-#endif
 
-#ifdef LEDDBG_WEAK
-	GPIO_DriveStrengthSet(LEDDBG_port, gpioDriveStrengthWeakAlternateWeak);
-#endif
-	GPIO_PinModeSet(LEDDBG_port, LEDDBG_pin, gpioModePushPull, false);
 
 	/*
 	 * GPS RESET_N (board) GPS RESET_N pin is pulled up internally

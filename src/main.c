@@ -44,6 +44,7 @@ int appMain(gecko_configuration_t *config)
 	scheduler_Init();
 	gpioInit();
 	oscillatorInit();
+	gpioLedDbgSetOff();
 
 	/*Initialize Display*/
 	displayInit();
@@ -51,7 +52,7 @@ int appMain(gecko_configuration_t *config)
 	letimer0_Init();
 	I2C0_Init();
 	BME280_Init();
-	gpioLed1SetOn();
+//	gpioLed1SetOn();
 	initLEUART();
 
 	// must initialize IMU first as it shares I2C0 on different pins

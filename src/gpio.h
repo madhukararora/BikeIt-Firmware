@@ -15,7 +15,7 @@
 #define GPIO_SET_DISPLAY_EXT_COMIN_IMPLEMENTED 	1
 #define GPIO_DISPLAY_SUPPORT_IMPLEMENTED		1
 
-#define BOARD 0
+#define BOARD 1
 #define DEVKIT 1
 
 void gpioInit(void);
