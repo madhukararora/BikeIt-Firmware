@@ -162,14 +162,14 @@ void ble_EventHandler(struct gecko_cmd_packet* evt){
 
 	case gecko_evt_system_external_signal_id:/*indicates external signal has been received*/
 		// handle external event from IMU
-//		handle_external_signal_event(evt->data.evt_system_external_signal.extsignals);
-		//	printf("Signal is %x\r\n", signal);
 		switch (evt->data.evt_system_external_signal.extsignals){
 		case PB_PAGE1:
 			menustate = PAGE1;
+//			gpioLedDbgSetOn();
 			break;
 		case PB_PAGE2:	// BUG: cannot switch menus when health thermometer service is being indicated
 			menustate = PAGE2;
+//			gpioLedDbgSetOff();
 			break;
 		default:
 			break;

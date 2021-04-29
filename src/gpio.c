@@ -268,11 +268,11 @@ void bnoSCLDisable()
 {
 	GPIO_PinOutClear(SCLBNO_port,SCLBNO_pin);
 }
-void gpioGpsToggleSetOn()
+void gpioGpsToggleSetOff()
 {
 	GPIO_PinOutSet(GPSTOGGLE_port,GPSTOGGLE_pin);
 }
-void gpioGpsToggleSetOff()
+void gpioGpsToggleSetOn()
 {
 	GPIO_PinOutClear(GPSTOGGLE_port,GPSTOGGLE_pin);
 }
@@ -374,15 +374,18 @@ void bnoEnableInterrupts()
 	BNO055EnableAnyMotion(255, 1);
 	BNO055EnableIntOnXYZ(1, 1, 1);
 }
+
 void button_interrupt(uint8_t pin){
 	switch(pin){
-		case BSP_BUTTON0_PIN:
+		case PB0_pin:
 			if (GPIO_PinInGet(PB0_port, PB0_pin) == 1) {
+//				gpioLedDbgSetOn();
 			    gecko_external_signal(PB_PAGE2);
 			}
 		break;
-		case BSP_BUTTON1_PIN:
+		case PB1_pin:
 			if (GPIO_PinInGet(PB1_port, PB1_pin) == 1) {
+//				gpioLedDbgSetOff();
 			    gecko_external_signal(PB_PAGE1);
 			}
 		break;

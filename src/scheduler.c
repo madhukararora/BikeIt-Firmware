@@ -112,15 +112,15 @@ void process_event(struct gecko_cmd_packet* evt){
 	case START_DELAY:
 //		if((evt->data.evt_system_external_signal.extsignals) == DELAY_GENERATED){
 			sleep_block_on(sleepEM2);
-			CMU_ClockEnable(cmuClock_I2C0,true);
-			timerWaitUs(2000000);
+//			CMU_ClockEnable(cmuClock_I2C0,true);
+//			timerWaitUs(2000000);
 			sleep_block_off(sleepEM2);
 			nextState = SENSOR_IO;
 //		}
 		break;
 	case SENSOR_IO:
-//		UARTDRV_Receive(gnssHandle0, leuartbuffer, 66, LEUART_rx_callback);	// start non blocking (LDMA) Rx
-		if((evt->data.evt_system_external_signal.extsignals) == DELAY_GENERATED){
+		UARTDRV_Receive(gnssHandle0, leuartbuffer, 66, LEUART_rx_callback);	// start non blocking (LDMA) Rx
+//		if((evt->data.evt_system_external_signal.extsignals) == DELAY_GENERATED){
 			sleep_block_on(sleepEM2);
 			measure_navigation(&GNRMC_data);	// send GNRMC_data
 			BME_data.temperature = getTemperature();
@@ -129,7 +129,7 @@ void process_event(struct gecko_cmd_packet* evt){
 			measure_pressure(&BME_data);
 			sleep_block_off(sleepEM2);
 			nextState = POWER_OFF;
-		}
+//		}
 		break;
 	case POWER_OFF:
 		nextState = POWER_ON;
