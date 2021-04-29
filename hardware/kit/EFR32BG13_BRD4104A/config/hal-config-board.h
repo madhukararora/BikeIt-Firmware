@@ -257,7 +257,7 @@
 
 // $[SPIDISPLAY]
 //Default Board Config
-#define DEVKITDISP 1
+#define DEVKITDISP 0
 
 #if DEVKITDISP
 #define BSP_SPIDISPLAY_ENABLE_PIN                     (15U)

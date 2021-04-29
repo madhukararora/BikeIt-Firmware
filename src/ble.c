@@ -107,7 +107,7 @@ void ble_EventHandler(struct gecko_cmd_packet* evt){
 		LOG_INFO("connection opened\r\n");
 
 		/*EXTRA CREDIT : Enable timer when bluetooth connection opened*/
-		letimer0_Init();
+//		letimer0_Init();
 
 		connection_handle = evt->data.evt_le_connection_opened.connection;
 		//connection interval 75ms, slave latency 300ms. 1.25ms unit

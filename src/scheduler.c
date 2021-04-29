@@ -103,7 +103,7 @@ void process_event(struct gecko_cmd_packet* evt){
 	case POWER_ON:
 		if((evt->data.evt_system_external_signal.extsignals) == TIMER_UF){
 //			gpioGpsToggleSetOn();
-			initLEUART();
+//			initLEUART();
 
 //			timerWaitUs(1000000);
 			nextState = START_DELAY;
@@ -113,7 +113,7 @@ void process_event(struct gecko_cmd_packet* evt){
 //		if((evt->data.evt_system_external_signal.extsignals) == DELAY_GENERATED){
 			sleep_block_on(sleepEM2);
 			CMU_ClockEnable(cmuClock_I2C0,true);
-			timerWaitUs(1000000);
+			timerWaitUs(2000000);
 			sleep_block_off(sleepEM2);
 			nextState = SENSOR_IO;
 //		}
@@ -132,7 +132,7 @@ void process_event(struct gecko_cmd_packet* evt){
 		}
 		break;
 	case POWER_OFF:
-		nextState = START_DELAY;
+		nextState = POWER_ON;
 		break;
 	default:
 		break;
