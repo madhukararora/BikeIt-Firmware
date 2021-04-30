@@ -12,14 +12,18 @@
 #include "log.h"
 
 #define TICKS_PER_SECOND    (32768)
+#define FLT_TO_INT32(m, e)           (((int32_t)(m) & 0x00FFFFFFU) | (int32_t)((int32_t)(e) << 24))
+
+#define INT32_TO_BITSTREAM(p, n)     { *(p)++ = (int8_t)(n); *(p)++ = (int8_t)((n) >> 8); \
+                                        *(p)++ = (int8_t)((n) >> 16); *(p)++ = (int8_t)((n) >> 24); }
 
 void measure_navigation(GNSS_data_t *dat)
 {
 	uint8_t ln_buffer[28]; /* Stores the location and navigation data in the Location and Navigation (LN) format. */
 	uint16_t flags = 0x05;   /* LN Flag set to bit 1 for instantaneous speed and bit 2 for location present*/
 
-	uint32_t longitude = FLT_TO_UINT32((dat->flon  * 1000), 0);   // Stores the longitude data read from the sensor in the correct format
-	uint32_t latitude = FLT_TO_UINT32((dat->flat  * 1000), 0);  // Stores the latitude data read from the sensor in the correct format
+	int32_t longitude = FLT_TO_INT32((dat->flon  * 1000), 0);   // Stores the longitude data read from the sensor in the correct format
+	int32_t latitude = FLT_TO_INT32((dat->flat  * 1000), 0);  // Stores the latitude data read from the sensor in the correct format
 	uint8_t *p = ln_buffer; /* Pointer to LN buffer needed for converting values to bitstream. */
 
 	/* Convert flags to bitstream and append them in the LN data buffer (ln_buffer) */
@@ -27,8 +31,8 @@ void measure_navigation(GNSS_data_t *dat)
 
 	/* Convert GNSS values to bitstream and place it in the LN data buffer (ln_buffer) */
 	UINT16_TO_BITSTREAM(p, (dat->gspd * 100));
-	UINT32_TO_BITSTREAM(p, latitude);	// issue with sign conversion
-	UINT32_TO_BITSTREAM(p, longitude);	// issue with sign conversion
+	INT32_TO_BITSTREAM(p, latitude);	// issue with sign conversion
+	INT32_TO_BITSTREAM(p, longitude);	// issue with sign conversion
 
 	/* Send indication of the temperature in ln_buffer to all "listening" clients.
 	 * This enables the Location and Navigation in the EFR Connect app to display the temperature.

@@ -268,11 +268,11 @@ void bnoSCLDisable()
 {
 	GPIO_PinOutClear(SCLBNO_port,SCLBNO_pin);
 }
-void gpioGpsToggleSetOff()
+void gpioGpsToggleSetOn()
 {
 	GPIO_PinOutSet(GPSTOGGLE_port,GPSTOGGLE_pin);
 }
-void gpioGpsToggleSetOn()
+void gpioGpsToggleSetOff()
 {
 	GPIO_PinOutClear(GPSTOGGLE_port,GPSTOGGLE_pin);
 }

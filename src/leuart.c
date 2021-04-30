@@ -15,12 +15,12 @@ UARTDRV_Handle_t  gnssHandle0 = &leuartHandle0;
 GNSS_data_t GNRMC_data = {
 		"$GNRMC",
 		"000000.00",
-		"00000.0000",
-		0.0,
-		"00000.0000",
-		0.0,
-		"0.00",
-		0
+		"3935.24000",
+		3935.24000,
+		"10514.2400",
+		10514.2400,
+		"2.00",
+		1
 };
 
 void LEUART_rx_callback(UARTDRV_Handle_t handle, Ecode_t transferStatus, uint8_t *data, UARTDRV_Count_t transferCount){
