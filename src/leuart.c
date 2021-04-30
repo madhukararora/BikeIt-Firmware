@@ -43,9 +43,9 @@ void LEUART_rx_callback(UARTDRV_Handle_t handle, Ecode_t transferStatus, uint8_t
 			GNRMC_data.flat = strtof(GNRMC_data.latitude, NULL) / 100;
 			float fgspeed = strtof(GNRMC_data.gspeed, NULL);
 			GNRMC_data.gspd = (uint16_t)(FLT_TO_UINT32(fgspeed, 0) >> 1);	// convert speed in knots to m/s. units is 1/100 of a m/s
-			gpioGpsToggleSetOn();
 		}
 	}
+	gpioGpsToggleSetOn();
 }
 
 void initLEUART(void){
