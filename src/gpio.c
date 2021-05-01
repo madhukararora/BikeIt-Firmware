@@ -360,7 +360,8 @@ void bnoInterrupt(uint8_t pin)
 {
 	gpioLedDbgSetOn();
 	if (GPIO_PinInGet(IMUEXTINT_port, IMUEXTINT_pin) == 1) {
-		BNO055ResetInt();
+//		BNO055ResetInt();
+		gpioLedDbgSetOn();
 		gecko_external_signal(EXT_SIGNAL_IMU_WAKEUP);
 	}
 }

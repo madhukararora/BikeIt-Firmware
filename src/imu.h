@@ -248,6 +248,27 @@ volatile bool BNO_TRANSFER_DONE;
 #define BNO055_REMAP_SIGN_P6				(0x07)
 #define BNO055_REMAP_SIGN_P7				(0x05)
 
+/* Accel data Z-LSB register*/
+#define BNO055_ACCEL_DATA_Z_LSB_VALUEZ_POS	(0)
+#define BNO055_ACCEL_DATA_Z_LSB_VALUEZ_MSK	(0xFF)
+#define BNO055_ACCEL_DATA_Z_LSB_VALUEZ_LEN	(8)
+#define BNO055_ACCEL_DATA_Z_LSB_VALUEZ_REG	(0x0C)
+
+/* Accel data Z-MSB register*/
+#define BNO055_ACCEL_DATA_Z_MSB_VALUEZ_POS	(0)
+#define BNO055_ACCEL_DATA_Z_MSB_VALUEZ_MSK	(0xFF)
+#define BNO055_ACCEL_DATA_Z_MSB_VALUEZ_LEN	(8)
+#define BNO055_ACCEL_DATA_Z_MSB_VALUEZ_REG	(0x0D)
+
+#define BNO055_SENSOR_DATA_LSB				(0)
+#define BNO055_SENSOR_DATA_MSB				(1)
+
+#define BNO055_GET_BITSLICE(regvar, bitname) \
+    ((regvar & bitname##_MSK) >> bitname##_POS)
+
+#define BNO055_SET_BITSLICE(regvar, bitname, val) \
+    ((regvar & ~bitname##_MSK) | ((val << bitname##_POS) & bitname##_MSK))
+
 typedef struct bno055_t
 {
     uint8_t chip_id; /**< chip_id of bno055 */
@@ -301,6 +322,10 @@ int16_t BNO055ReadS16(uint8_t reg);
 int16_t BNO055ReadS16LE(uint8_t reg);
 void BNO055_WriteRegister(uint8_t reg, uint8_t val);
 bool BNO055_Init(void);
+int8_t BNO055ReadTemp(void);
+void getSystemStatus(uint8_t *system_status, uint8_t *self_test_result, uint8_t *system_error);
+void bno055_read_accel_z(int16_t *accel_z);
+float bno055_convert_float_accel_z_msq(void);
 void BNO055SetMode(bno055_powermode_t mode);
 void BNO055SetPage(bno055_page_t page);
 void BNO055ResetInt(void);

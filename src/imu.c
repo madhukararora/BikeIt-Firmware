@@ -31,8 +31,10 @@ bool BNO055_Init(void){
 
 	BNO055SetMode(OPERATION_MODE_CONFIG);
 	//delay 50
+	displayPrintf(DISPLAY_ROW_NAME,"delay");
 	BNO055_WriteRegister(BNO055_PWR_MODE_ADDR, POWER_MODE_LOWPOWER);
 	//delay 10
+	displayPrintf(DISPLAY_ROW_NAME,"delay");
 
 	BNO055SetPage(PAGE_0);
 
@@ -47,14 +49,69 @@ bool BNO055_Init(void){
 	// axis mapping
 	BNO055_WriteRegister(BNO055_AXIS_MAP_CONFIG_ADDR, BNO055_REMAP_CONFIG_P0); // P0-P7, Default is P1
 //	delay(10);
+	displayPrintf(DISPLAY_ROW_NAME,"delay");
 	BNO055_WriteRegister(BNO055_AXIS_MAP_SIGN_ADDR, BNO055_REMAP_SIGN_P0); // P0-P7, Default is P1
 //	delay(10);
+	displayPrintf(DISPLAY_ROW_NAME,"delay");
 
 	BNO055_WriteRegister(BNO055_SYS_TRIGGER_ADDR, 0x0);
 	//delay 10
+	displayPrintf(DISPLAY_ROW_NAME,"delay");
 	BNO055SetMode(OPERATION_MODE_ACCONLY);
 
 	return true;
+}
+
+void getSystemStatus(uint8_t *system_status, uint8_t *self_test_result, uint8_t *system_error) {
+	BNO055SetPage(PAGE_0);
+
+	*system_status = BNO055Read8(BNO055_SYS_STAT_ADDR);
+	*self_test_result = BNO055Read8(BNO055_SELFTEST_RESULT_ADDR);
+	*system_error = BNO055Read8(BNO055_SYS_ERR_ADDR);
+
+	displayPrintf(DISPLAY_ROW_NAME,"delay");
+}
+
+void bno055_read_accel_z(int16_t *accel_z){
+	uint8_t data[2] = {0, 0};
+	uint16_t rawdat = 0;
+
+    // Need to be on page 0 to get into config mode
+    bno055_page_t lastPage = _page;
+    if (lastPage != PAGE_0) BNO055SetPage(PAGE_0);
+
+    rawdat = BNO055Read16(BNO055_ACCEL_DATA_Z_LSB_VALUEZ_REG);
+
+    data[BNO055_SENSOR_DATA_LSB] = UINT16_TO_BYTE0(rawdat);
+    data[BNO055_SENSOR_DATA_MSB] = UINT16_TO_BYTE1(rawdat);
+
+//    data[BNO055_SENSOR_DATA_LSB] = BNO055_GET_BITSLICE(data[BNO055_SENSOR_DATA_LSB], BNO055_ACCEL_DATA_Z_LSB_VALUEZ);
+//    data[BNO055_SENSOR_DATA_MSB] = BNO055_GET_BITSLICE(data[BNO055_SENSOR_DATA_MSB], BNO055_ACCEL_DATA_Z_MSB_VALUEZ);
+
+    *accel_z = (int16_t)((((int32_t)((int16_t)data[BNO055_SENSOR_DATA_MSB])) << 8) | (data[BNO055_SENSOR_DATA_LSB]));
+}
+
+float bno055_convert_float_accel_z_msq(void){
+	int16_t reg_accel_z = 0;
+	float data_f = 0.0;
+
+	bno055_read_accel_z(&reg_accel_z);
+	displayPrintf(DISPLAY_ROW_NAME,"delay");
+
+	data_f = (float)(reg_accel_z / 1000.0);
+	return data_f;
+}
+
+int8_t BNO055ReadTemp(void){
+	uint8_t dat = 0;
+
+    // Need to be on page 0 to get into config mode
+    bno055_page_t lastPage = _page;
+    if (lastPage != PAGE_0) BNO055SetPage(PAGE_0);
+
+    dat = BNO055Read8(BNO055_TEMP_ADDR);
+
+    return (int8_t)dat;
 }
 
 void BNO055ResetInt(void){
@@ -73,16 +130,20 @@ void BNO055EnableIntOnXYZ(uint8_t x, uint8_t y, uint8_t z){
     // Need to be on page 0 to get into config mode
     bno055_page_t lastPage = _page;
     if (lastPage != PAGE_0) BNO055SetPage(PAGE_0);
+    displayPrintf(DISPLAY_ROW_NAME,"delay");
 
     // Must be in config mode, so force it
     bno055_opmode_t lastMode = _mode;
     BNO055SetMode(OPERATION_MODE_CONFIG);
+    displayPrintf(DISPLAY_ROW_NAME,"delay");
 
     // Change to page 1 for interrupt settings
     BNO055SetPage(PAGE_1);
+    displayPrintf(DISPLAY_ROW_NAME,"delay");
 
     // Read to get the current settings
     int8_t intSettings = (int8_t)(BNO055Read8(BNO055_ACCEL_INTR_SETTINGS_ADDR));
+    displayPrintf(DISPLAY_ROW_NAME,"delay");
 
     // Set the flags as requested--binary choice, so set or unset
     intSettings = BNO055SliceValueIntoRegister(x ? 0x01 : 0x00, intSettings, BNO055_ACC_INT_Settings_ACC_X_MSK, BNO055_ACC_INT_Settings_ACC_X_POS);
@@ -92,10 +153,13 @@ void BNO055EnableIntOnXYZ(uint8_t x, uint8_t y, uint8_t z){
     // Write back the entire register
     BNO055_WriteRegister(BNO055_ACCEL_INTR_SETTINGS_ADDR, intSettings);
 //    delay(30);
+    displayPrintf(DISPLAY_ROW_NAME,"delay");
 
     // Return the mode to the last mode
     BNO055SetPage(PAGE_0);
+    displayPrintf(DISPLAY_ROW_NAME,"delay");
     BNO055SetMode(lastMode);
+    displayPrintf(DISPLAY_ROW_NAME,"delay");
 
     // Change the page back to whichever it was initially
     if (lastPage != PAGE_0) BNO055SetPage(lastPage);
@@ -108,32 +172,41 @@ void BNO055EnableAnyMotion(uint8_t threshold, uint8_t duration){
 
     // Must be in config mode, so force it
     bno055_opmode_t lastMode = _mode;
+    displayPrintf(DISPLAY_ROW_NAME,"delay");
     BNO055SetMode(OPERATION_MODE_CONFIG);
+    displayPrintf(DISPLAY_ROW_NAME,"delay");
 
     // Change to page 1 for interrupt settings
     BNO055SetPage(PAGE_1);
+    displayPrintf(DISPLAY_ROW_NAME,"delay");
 
     // Set duration (bits 1-6)
     int8_t intSettings = (int8_t)(BNO055Read8(BNO055_ACCEL_INTR_SETTINGS_ADDR));
     intSettings = BNO055SliceValueIntoRegister(duration, intSettings, BNO055_ACC_INT_Settings_AM_DUR_MSK, BNO055_ACC_INT_Settings_AM_DUR_POS);
     BNO055_WriteRegister(BNO055_ACCEL_INTR_SETTINGS_ADDR, intSettings);
+    displayPrintf(DISPLAY_ROW_NAME,"delay");
 
     // Set the threshold (full byte)
     int8_t threshSettings = (int8_t)(BNO055Read8(BNO055_ACCEL_ANY_MOTION_THRES_ADDR));
     threshSettings = BNO055SliceValueIntoRegister(threshold, threshSettings, BNO055_ACC_AM_THRES_MSK, BNO055_ACC_AM_THRES_POS);
     BNO055_WriteRegister(BNO055_ACCEL_ANY_MOTION_THRES_ADDR, threshSettings);
+    displayPrintf(DISPLAY_ROW_NAME,"delay");
 
     // Enable the interrupt
     BNO055SetInterruptEnableAccelAM(1);
+    displayPrintf(DISPLAY_ROW_NAME,"delay");
 
     // Fire on the pin
     BNO055SetInterruptMaskAccelAM(1);
+    displayPrintf(DISPLAY_ROW_NAME,"delay");
 
 //    delay(30);
+    displayPrintf(DISPLAY_ROW_NAME,"delay");
 
     // Return the mode to the last mode
     BNO055SetPage(PAGE_0);
     BNO055SetMode(lastMode);
+    displayPrintf(DISPLAY_ROW_NAME,"delay");
 
     // Change the page back to whichever it was initially
     if (lastPage != PAGE_0) BNO055SetPage(lastPage);

@@ -49,16 +49,26 @@ int appMain(gecko_configuration_t *config)
 
 	/*Initialize Display*/
 	displayInit();
-	displayPrintf(DISPLAY_ROW_NAME,"BikeIt On");
+	displayPrintf(DISPLAY_ROW_NAME,"A");
 	letimer0_Init();
 
 	// must initialize IMU first as it shares I2C0 on different pins
 	// initialize and config IMU, enable interrupts, reset and disable I2C
 	I2C0_Init_BNO();
+//	displayPrintf(DISPLAY_ROW_NAME,"B");
 	BNO055_Init();
-	BNO055EnableAnyMotion(100, 1);
+	displayPrintf(DISPLAY_ROW_NAME,"C");
+	BNO055EnableAnyMotion(255, 1);
 	BNO055EnableIntOnXYZ(1, 1, 1);
 	bnoEnableInterrupts();
+
+	uint8_t sys_status, self_test_res, sys_err;
+	getSystemStatus(sys_status, self_test_res, sys_err);
+
+	float accelz = bno055_convert_float_accel_z_msq();
+	int8_t tem = BNO055ReadTemp();
+	displayPrintf(DISPLAY_ROW_NAME,":%d", tem);
+	displayPrintf(DISPLAY_ROW_NAME,":%0.2f", accelz);
 	I2C_Reset(I2C0);
 //	I2C_Enable(I2C0,false);
 //	CMU_ClockEnable(cmuClock_I2C0,false);
