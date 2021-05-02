@@ -114,7 +114,11 @@ void process_event(struct gecko_cmd_packet* evt){
 		BNO055_Init();
 		displayPrintf(DISPLAY_ROW_MAX," ");
 		float accelz = fabsf(BNO055ConvertFloatAccelZ());
-		displayPrintf(DISPLAY_ROW_MAX,":%0.2f", accelz);
+		if (accelz <= 9.300){
+			gpioLedDbgSetOff();
+		} else {
+			gpioLedDbgSetOn();
+		}
 		I2C_Reset(I2C0);
 		I2C0_Init();
 		BME280_Init();
