@@ -28,6 +28,8 @@
 #include "display.h"
 #include "leuart.h"
 
+extern UARTDRV_Handle_t  gnssHandle0;
+
 int appMain(gecko_configuration_t *config)
 {
 	struct gecko_cmd_packet* evt;

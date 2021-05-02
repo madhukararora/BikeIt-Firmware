@@ -30,13 +30,13 @@ typedef enum uint32_t{
 	I2C_TRANSFER_DONE = (0x1UL << 2),
 	PB_PAGE1 = (0x1UL << 3),
 	PB_PAGE2 = (0x1UL << 4),
-	EXT_SIGNAL_IMU_WAKEUP = (0x1UL << 5)
+	UART_RX = (0x1UL << 5)
 }scheduler_events_t;
 
 
 typedef enum{
 	POWER_ON,
-	START_DELAY,
+	IMU_WAKEUP,
 	SENSOR_IO,
 	POWER_OFF
 }scheduler_states_t;

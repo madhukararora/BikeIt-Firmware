@@ -14,8 +14,6 @@ BME_data_t BME_data = {
 		83730	// DIA
 };
 
-extern UARTDRV_Handle_t  gnssHandle0;
-
 static void sleep_block_on(SLEEP_EnergyMode_t sleep_mode){
 	CORE_DECLARE_IRQ_STATE;
 	CORE_ENTER_CRITICAL();
@@ -104,10 +102,10 @@ void process_event(struct gecko_cmd_packet* evt){
 		if((evt->data.evt_system_external_signal.extsignals) == TIMER_UF){
 			gpioGpsToggleSetOn();
 //			timerWaitUs(1000000);
-			nextState = START_DELAY;
+			nextState = IMU_WAKEUP;
 		}
 		break;
-	case START_DELAY:
+	case IMU_WAKEUP:
 		sleep_block_on(sleepEM2);
 		NVIC_DisableIRQ(I2C0_IRQn);
 		I2C0_Init_BNO();
@@ -126,7 +124,6 @@ void process_event(struct gecko_cmd_packet* evt){
 		nextState = SENSOR_IO;
 		break;
 	case SENSOR_IO:
-		UARTDRV_Receive(gnssHandle0, leuartbuffer, 66, LEUART_rx_callback);	// start non blocking (LDMA) Rx
 //		if((evt->data.evt_system_external_signal.extsignals) == DELAY_GENERATED){
 			sleep_block_on(sleepEM2);
 			measure_navigation(&GNRMC_data);	// send GNRMC_data

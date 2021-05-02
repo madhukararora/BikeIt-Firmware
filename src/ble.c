@@ -9,7 +9,9 @@
 
 #include "ble.h"
 #include "display.h"
-#include "log.h"
+#include "leuart.h"
+
+extern UARTDRV_Handle_t  gnssHandle0;
 
 #define TICKS_PER_SECOND    (32768)
 #define FLT_TO_INT32(m, e)           (((int32_t)(m) & 0x00FFFFFFU) | (int32_t)((int32_t)(e) << 24))
@@ -100,10 +102,10 @@ void ble_EventHandler(struct gecko_cmd_packet* evt){
 		 */
 		gecko_cmd_le_gap_set_advertise_timing(0, 400, 400, 0, 0);
 
-
-
 		/* Start general advertising and enable connections. */
 		gecko_cmd_le_gap_start_advertising(0, le_gap_general_discoverable, le_gap_connectable_scannable);
+
+		gecko_cmd_hardware_set_soft_timer(TICKS_PER_SECOND, UART_RX, false);
 		break;
 
 	case gecko_evt_le_connection_opened_id: /*indicates new connection was opened and role of BT Module*/
@@ -120,6 +122,7 @@ void ble_EventHandler(struct gecko_cmd_packet* evt){
 
 	case gecko_evt_le_connection_closed_id: /*indicates connection was closed*/
 
+		gecko_cmd_hardware_set_soft_timer(0, UART_RX, 0);
 		/*disable timer when connection closed*/
 		LETIMER_IntDisable(LETIMER0,LETIMER_IEN_UF);
 
@@ -175,14 +178,20 @@ void ble_EventHandler(struct gecko_cmd_packet* evt){
 			menustate = PAGE2;
 //			gpioLedDbgSetOff();
 			break;
-		case EXT_SIGNAL_IMU_WAKEUP:
-			gpioLedDbgSetOn();
-			break;
 		default:
 			break;
 		}
 		displayMenu(menustate);
 		break;
+	case gecko_evt_hardware_soft_timer_id:
+		switch (evt->data.evt_hardware_soft_timer.handle){
+		case UART_RX:
+			UARTDRV_Receive(gnssHandle0, leuartbuffer, 66, LEUART_rx_callback);	// start non blocking (LDMA) Rx
+			break;
+		default:
+			break;
+		}
+			break;
 		/* This event is generated when a connected client has either
 		 * 1) changed a Characteristic Client Configuration, meaning that they have enabled
 		 * or disabled Notifications or Indications, or
