@@ -55,17 +55,20 @@ int appMain(gecko_configuration_t *config)
 	// must initialize IMU first as it shares I2C0 on different pins
 	// initialize and config IMU, enable interrupts, reset and disable I2C
 	I2C0_Init_BNO();
-//	displayPrintf(DISPLAY_ROW_NAME,"B");
+
 	BNO055_Init();
 	displayPrintf(DISPLAY_ROW_NAME,"C");
 	BNO055EnableAnyMotion(255, 1);
+	displayPrintf(DISPLAY_ROW_NAME,"B");
 	BNO055EnableIntOnXYZ(1, 1, 1);
+	displayPrintf(DISPLAY_ROW_NAME,"B");
 	bnoEnableInterrupts();
+//	displayPrintf(DISPLAY_ROW_NAME,"C");
 
 	uint8_t sys_status, self_test_res, sys_err;
-	getSystemStatus(sys_status, self_test_res, sys_err);
+	BNO055GetSysStatus(sys_status, self_test_res, sys_err);
 
-	float accelz = bno055_convert_float_accel_z_msq();
+	float accelz = BNO055ConvertFloatAccelZ();
 	int8_t tem = BNO055ReadTemp();
 	displayPrintf(DISPLAY_ROW_NAME,":%d", tem);
 	displayPrintf(DISPLAY_ROW_NAME,":%0.2f", accelz);
