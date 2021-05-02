@@ -49,14 +49,14 @@ bool BNO055_Init(void){
 	// axis mapping
 	BNO055_WriteRegister(BNO055_AXIS_MAP_CONFIG_ADDR, BNO055_REMAP_CONFIG_P0); // P0-P7, Default is P1
 //	delay(10);
-	displayPrintf(DISPLAY_ROW_NAME," ");
+	displayPrintf(DISPLAY_ROW_MAX," ");
 	BNO055_WriteRegister(BNO055_AXIS_MAP_SIGN_ADDR, BNO055_REMAP_SIGN_P0); // P0-P7, Default is P1
 //	delay(10);
-	displayPrintf(DISPLAY_ROW_NAME," ");
+	displayPrintf(DISPLAY_ROW_MAX," ");
 
 	BNO055_WriteRegister(BNO055_SYS_TRIGGER_ADDR, 0x0);
 	//delay 10
-	displayPrintf(DISPLAY_ROW_NAME," ");
+	displayPrintf(DISPLAY_ROW_MAX," ");
 	BNO055SetMode(OPERATION_MODE_ACCONLY);
 
 	return true;
@@ -69,7 +69,7 @@ void BNO055GetSysStatus(uint8_t *system_status, uint8_t *self_test_result, uint8
 	*self_test_result = BNO055Read8(BNO055_SELFTEST_RESULT_ADDR);
 	*system_error = BNO055Read8(BNO055_SYS_ERR_ADDR);
 
-	displayPrintf(DISPLAY_ROW_NAME," ");
+	displayPrintf(DISPLAY_ROW_MAX," ");
 }
 
 void BNO055ReadAccelZ(int16_t *accel_z){
@@ -93,7 +93,7 @@ float BNO055ConvertFloatAccelZ(void){
 	float data_f = 0.0;
 
 	BNO055ReadAccelZ(&reg_accel_z);
-	displayPrintf(DISPLAY_ROW_NAME," ");
+	displayPrintf(DISPLAY_ROW_MAX," ");
 
 	data_f = (float)(reg_accel_z / 1000.0);
 	return data_f;
@@ -119,7 +119,7 @@ void BNO055ResetInt(void){
     // Write back the entire register
     BNO055_WriteRegister(BNO055_SYS_TRIGGER_ADDR, sysTrigger);
 //    delay(30);
-    displayPrintf(DISPLAY_ROW_NAME," ");
+    displayPrintf(DISPLAY_ROW_MAX," ");
 }
 
 void BNO055EnableIntOnXYZ(uint8_t x, uint8_t y, uint8_t z){
@@ -145,7 +145,7 @@ void BNO055EnableIntOnXYZ(uint8_t x, uint8_t y, uint8_t z){
     // Write back the entire register
     BNO055_WriteRegister(BNO055_ACCEL_INTR_SETTINGS_ADDR, intSettings);
 //    delay(30);
-    displayPrintf(DISPLAY_ROW_NAME," ");
+    displayPrintf(DISPLAY_ROW_MAX," ");
 
     // Return the mode to the last mode
     BNO055SetPage(PAGE_0);
@@ -184,7 +184,7 @@ void BNO055EnableAnyMotion(uint8_t threshold, uint8_t duration){
     BNO055SetInterruptMaskAccelAM(1);
 
 //    delay(30);
-    displayPrintf(DISPLAY_ROW_NAME," ");
+    displayPrintf(DISPLAY_ROW_MAX," ");
 
     // Return the mode to the last mode
     BNO055SetPage(PAGE_0);
@@ -214,7 +214,7 @@ void BNO055DisableAnyMotion(void){
     BNO055SetInterruptMaskAccelAM(0);
 
 //    delay(30);
-    displayPrintf(DISPLAY_ROW_NAME," ");
+    displayPrintf(DISPLAY_ROW_MAX," ");
 
     // Return the mode to the last mode
     BNO055SetPage(PAGE_0);
@@ -252,14 +252,14 @@ void BNO055SetMode(bno055_powermode_t mode){
 	_mode = mode;
 	BNO055_WriteRegister(BNO055_OPR_MODE_ADDR, _mode);
 	//delay 30
-	displayPrintf(DISPLAY_ROW_NAME," ");
+	displayPrintf(DISPLAY_ROW_MAX," ");
 }
 
 void BNO055SetPage(bno055_page_t page){
 	_page = page;
 	BNO055_WriteRegister(BNO055_PAGE_ID_ADDR, _page);
 	//delay 30
-	displayPrintf(DISPLAY_ROW_NAME," ");
+	displayPrintf(DISPLAY_ROW_MAX," ");
 }
 
 uint8_t BNO055Read8(uint8_t reg){

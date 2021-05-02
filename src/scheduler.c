@@ -108,13 +108,18 @@ void process_event(struct gecko_cmd_packet* evt){
 		}
 		break;
 	case START_DELAY:
-//		if((evt->data.evt_system_external_signal.extsignals) == DELAY_GENERATED){
-//			sleep_block_on(sleepEM2);
-//			CMU_ClockEnable(cmuClock_I2C0,true);
-//			timerWaitUs(2000000);
-//			sleep_block_off(sleepEM2);
-			nextState = SENSOR_IO;
-//		}
+		sleep_block_on(sleepEM2);
+		NVIC_DisableIRQ(I2C0_IRQn);
+		I2C0_Init_BNO();
+		BNO055_Init();
+		displayPrintf(DISPLAY_ROW_MAX," ");
+		float accelz = fabsf(BNO055ConvertFloatAccelZ());
+		displayPrintf(DISPLAY_ROW_MAX,":%0.2f", accelz);
+		I2C_Reset(I2C0);
+		I2C0_Init();
+		BME280_Init();
+		sleep_block_off(sleepEM2);
+		nextState = SENSOR_IO;
 		break;
 	case SENSOR_IO:
 		UARTDRV_Receive(gnssHandle0, leuartbuffer, 66, LEUART_rx_callback);	// start non blocking (LDMA) Rx
