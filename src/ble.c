@@ -172,11 +172,11 @@ void ble_EventHandler(struct gecko_cmd_packet* evt){
 		switch (evt->data.evt_system_external_signal.extsignals){
 		case PB_PAGE1:
 			menustate = PAGE1;
-//			gpioLedDbgSetOn();
+			gpioLedDbgSetOn();
 			break;
 		case PB_PAGE2:	// BUG: cannot switch menus when health thermometer service is being indicated
 			menustate = PAGE2;
-//			gpioLedDbgSetOff();
+			gpioLedDbgSetOff();
 			break;
 		default:
 			break;

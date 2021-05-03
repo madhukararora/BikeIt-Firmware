@@ -378,13 +378,13 @@ void button_interrupt(uint8_t pin){
 	switch(pin){
 		case PB0_pin:
 			if (GPIO_PinInGet(PB0_port, PB0_pin) == 1) {
-//				gpioLedDbgSetOn();
+				gpioLedDbgSetOn();
 			    gecko_external_signal(PB_PAGE2);
 			}
 		break;
 		case PB1_pin:
 			if (GPIO_PinInGet(PB1_port, PB1_pin) == 1) {
-//				gpioLedDbgSetOff();
+				gpioLedDbgSetOff();
 			    gecko_external_signal(PB_PAGE1);
 			}
 		break;
